@@ -222,7 +222,7 @@ def test_a_damaged_csv_is_reported(tmp_path: Path) -> None:
     assert problems(tmp_path, rooms_csv="")[0].endswith("the first line must be the columns "
                                                         "building,number,profile,seats,extra,"
                                                         "without")  # fmt: skip
-    assert "the first line must be" in problems(tmp_path, rooms_csv="﻿" + ROOMS)[0]
+    assert "the first line must be" in problems(tmp_path, rooms_csv="\ufeff" + ROOMS)[0]
     # An unclosed quote is not read as a value running to the end of the file.
     assert problems(tmp_path, rooms_csv=ROOMS + 'ALD,"105\nALD,106,standard,40,,\n') == [
         f"{rooms} line 5: not CSV: unexpected end of data"
