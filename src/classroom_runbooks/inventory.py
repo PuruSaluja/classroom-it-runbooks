@@ -30,6 +30,7 @@ import io
 import re
 import sys
 import tomllib
+import unicodedata
 from collections import Counter
 from collections.abc import Collection, Sequence
 from dataclasses import dataclass
@@ -46,10 +47,11 @@ GENERATED = (
 ROOM_COLUMNS = ("building", "number", "profile", "seats", "extra", "without")
 MAX_COUNT = 99
 """The most of one kind of equipment a room type or a room's extras can list."""
-_CODE = re.compile(r"^[A-Z]{2,4}$")
-_SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-_NUMBER = re.compile(r"^[0-9]{3,4}[A-Z]?$")
-_EXTRA = re.compile(r"^([a-z0-9]+(?:-[a-z0-9]+)*)(?:\*([0-9]+))?$")
+# Matched whole (fullmatch), since "$" would also match before a final newline.
+_CODE = re.compile(r"[A-Z]{2,4}")
+_SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+_NUMBER = re.compile(r"[0-9]{3,4}[A-Z]?")
+_EXTRA = re.compile(r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:\*([0-9]+))?")
 
 
 class InventoryError(ValueError):
@@ -177,6 +179,16 @@ def _text(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip()) and value == value.strip()
 
 
+def _name(value: object) -> bool:
+    """Text a page can show in a heading or a table cell: one line, without a '|'."""
+    return _text(value) and not any(
+        c == "|" or unicodedata.category(c) in ("Cc", "Zl", "Zp") for c in value
+    )
+
+
+NAME_RULE = "one line of text without spaces at its ends or a '|'"
+
+
 def _count(value: object) -> bool:
     return type(value) is int and 1 <= value <= MAX_COUNT
 
@@ -191,10 +203,10 @@ def _buildings(path: Path, problems: list[str], rejected: set[str]) -> list[Buil
     buildings = []
     for i, entry in enumerate(_entries(path, "building", {"code", "name"}, problems), 1):
         code, name = entry["code"], entry["name"]
-        if not isinstance(code, str) or not _CODE.match(code):
+        if not isinstance(code, str) or not _CODE.fullmatch(code):
             problems.append(f"{path}: building {i}: a code is 2 to 4 capital letters, not {code!r}")
-        elif not _text(name):
-            problems.append(f"{path}: building {code}: name must be text without end spaces")
+        elif not _name(name):
+            problems.append(f"{path}: building {code}: a name is {NAME_RULE}: {name!r}")
             rejected.add(f"building {code}")
         else:
             buildings.append(Building(code, name))
@@ -210,7 +222,7 @@ def _equipment(
     items = []
     for i, entry in enumerate(_entries(path, "equipment", fields, problems), 1):
         item_id = entry["id"]
-        if not isinstance(item_id, str) or not _SLUG.match(item_id):
+        if not isinstance(item_id, str) or not _SLUG.fullmatch(item_id):
             problems.append(
                 f"{path}: equipment {i}: an id is lower-case words joined by hyphens, "
                 f"not {item_id!r}"
@@ -218,14 +230,14 @@ def _equipment(
             continue
         where = f"{path}: equipment {item_id}"
         rejected.add(f"equipment {item_id}")  # until it passes
-        if not _text(entry["name"]):
-            problems.append(f"{where}: name must be text without end spaces")
+        if not _name(entry["name"]):
+            problems.append(f"{where}: a name is {NAME_RULE}: {entry['name']!r}")
         elif not isinstance(entry["category"], str) or entry["category"] not in categories:
             problems.append(
                 f"{where}: category {entry['category']!r} is not a runbook category "
                 f"({', '.join(categories)})"
             )
-        elif not isinstance(entry["kind"], str) or not _SLUG.match(entry["kind"]):
+        elif not isinstance(entry["kind"], str) or not _SLUG.fullmatch(entry["kind"]):
             problems.append(f"{where}: kind is lower-case words joined by hyphens")
         else:
             items.append(Equipment(item_id, entry["name"], entry["category"], entry["kind"]))
@@ -242,7 +254,7 @@ def _profiles(
     profiles = []
     for i, entry in enumerate(_entries(path, "profile", fields, problems), 1):
         profile_id = entry["id"]
-        if not isinstance(profile_id, str) or not _SLUG.match(profile_id):
+        if not isinstance(profile_id, str) or not _SLUG.fullmatch(profile_id):
             problems.append(
                 f"{path}: profile {i}: an id is lower-case words joined by hyphens, "
                 f"not {profile_id!r}"
@@ -251,8 +263,8 @@ def _profiles(
         where = f"{path}: profile {profile_id}"
         rejected.add(f"profile {profile_id}")  # until it passes
         seats, fitted = entry["seats"], entry["equipment"]
-        if not _text(entry["name"]):
-            problems.append(f"{where}: name must be text without end spaces")
+        if not _name(entry["name"]):
+            problems.append(f"{where}: a name is {NAME_RULE}: {entry['name']!r}")
             continue
         if not (
             isinstance(seats, list)
@@ -348,7 +360,7 @@ def _room(
     said = len(problems)
     if building not in buildings and f"building {building}" not in rejected:
         problems.append(f"{where}: building {building!r} is not in buildings.toml")
-    if not _NUMBER.match(number):
+    if not _NUMBER.fullmatch(number):
         problems.append(
             f"{where}: a room number is 3 or 4 digits and an optional capital, not {number!r}"
         )
@@ -363,7 +375,7 @@ def _room(
         problems.append(f"{where}: {seats} seats is outside {profile.name}'s {low} to {high}")
     extra: dict[str, int] = {}
     for word in values["extra"].split():
-        match = _EXTRA.match(word)
+        match = _EXTRA.fullmatch(word)
         count = int(match.group(2) or 1) if match else 0
         if match and f"equipment {match.group(1)}" in rejected:
             continue

@@ -239,7 +239,27 @@ def test_a_damaged_csv_is_reported(tmp_path: Path) -> None:
         ("buildings_toml", "[[building]]\ncode = 'ald'\nname = 'A'\n",
          "a code is 2 to 4 capital letters, not 'ald'"),
         ("buildings_toml", "[[building]]\ncode = 'ALD'\nname = ' A'\n",
-         "building ALD: name must be text"),
+         "building ALD: a name is one line of text without spaces at its ends or a '|': ' A'"),
+        # A name is a page's heading and a table cell, so one line without a '|'.
+        ("buildings_toml", BUILDINGS.replace('"Alder Hall"', '"Alder\\nHall"'),
+         "building ALD: a name is one line"),
+        ("buildings_toml", BUILDINGS.replace('"Alder Hall"', '"Alder | Hall"'),
+         "building ALD: a name is one line"),
+        ("buildings_toml", BUILDINGS.replace('"Alder Hall"', '"Alder\\u2028Hall"'),
+         "building ALD: a name is one line"),
+        # "$" alone would also match before a final newline.
+        ("buildings_toml", BUILDINGS.replace('"ALD"', '"ALD\\n"'),
+         "a code is 2 to 4 capital letters, not 'ALD\\n'"),
+        ("equipment_toml", EQUIPMENT.replace('"webcam"', '"webcam\\n"', 1),
+         "an id is lower-case words joined by hyphens, not 'webcam\\n'"),
+        ("equipment_toml", EQUIPMENT.replace('"camera"', '"camera\\n"'),
+         "equipment webcam: kind is lower-case words"),
+        ("equipment_toml", EQUIPMENT.replace('"Webcam"', '"Web|cam"'),
+         "equipment webcam: a name is one line"),
+        ("profiles_toml", PROFILES.replace('"standard"', '"standard\\n"'),
+         "an id is lower-case words joined by hyphens, not 'standard\\n'"),
+        ("profiles_toml", PROFILES.replace('"Standard classroom"', '"Standard\\tclassroom"'),
+         "profile standard: a name is one line"),
         ("buildings_toml", BUILDINGS + "[[building]]\ncode = 'ALD'\nname = 'Other'\n",
          "the code ALD is used more than once"),
         ("buildings_toml", "building = 3\n", "no [[building]] entries"),
@@ -412,8 +432,10 @@ def test_an_entry_reported_where_it_is_defined_is_not_reported_again_where_used(
         found = problems(tmp_path / str(i), equipment_toml=EQUIPMENT.replace(old, new))
         assert len(found) == 1 and "equipment.toml: equipment " in found[0], found
     found = problems(tmp_path / "b", buildings_toml=BUILDINGS.replace('"Alder Hall"', '""'))
-    assert found == [f"{tmp_path / 'b' / 'inventory' / 'buildings.toml'}: building ALD: "
-                     "name must be text without end spaces"]  # fmt: skip
+    assert found == [
+        f"{tmp_path / 'b' / 'inventory' / 'buildings.toml'}: building ALD: "
+        "a name is one line of text without spaces at its ends or a '|': ''"
+    ]
     # A row's other problems are still reported.
     rows = ROOMS + "ALD,10,standard,40,,\n"
     found = problems(tmp_path / "c", buildings_toml=BUILDINGS.replace('"Alder Hall"', '""'),
