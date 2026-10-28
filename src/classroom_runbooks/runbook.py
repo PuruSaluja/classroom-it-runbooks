@@ -44,7 +44,6 @@ DEFAULT_TEMPLATE = Path("templates/runbook.md")
 MAX_TITLE = 80
 """The longest title, in characters: a fault in a few words, as it would be reported."""
 MAX_SLUG = 50
-_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 
 
 class RunbookError(ValueError):
@@ -98,25 +97,17 @@ def parse(text: str) -> Page:
         raise RunbookError(f"the front matter is not YAML: {exc}") from None
     if not isinstance(meta, dict):
         raise RunbookError("the front matter is not a set of keys and values")
-    heading, sections, fence = None, [], None
-    for line in lines[end + 1 :]:
-        opened = _FENCE.match(line)
-        if fence is not None:
-            # A fence closes with at least as many of the same character.
-            if opened and opened.group(1)[0] == fence[0] and len(opened.group(1)) >= len(fence):
-                fence = None
-        elif opened:
-            fence = opened.group(1)
-        elif line.startswith("## "):
+    heading, sections = None, []
+    body = lines[end + 1 :]
+    for line, code in zip(body, structure.code_lines(body), strict=True):
+        if not code and line.startswith("## "):
             sections.append((line[3:].strip(), []))
-            continue
-        elif line.startswith("# ") and heading is None and not sections:
+        elif not code and line.startswith("# ") and heading is None and not sections:
             heading = line[2:].strip()
-            continue
-        if sections:
+        elif sections:
             sections[-1][1].append(line)
     return Page(
-        meta, heading, tuple((name, "\n".join(body).strip("\n")) for name, body in sections)
+        meta, heading, tuple((name, "\n".join(text).strip("\n")) for name, text in sections)
     )
 
 

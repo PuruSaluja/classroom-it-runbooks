@@ -36,6 +36,7 @@ _SECTION_PATH = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+
 _PREFIX = re.compile(r"^[A-Z]{2,4}$")
 # A Markdown link's target: [text](target) or [text](target "title").
 _LINK = re.compile(r"\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
+_FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 
 
 class StructureError(ValueError):
@@ -148,10 +149,37 @@ def load(path: Path = DEFAULT_STRUCTURE) -> tuple[Section, ...]:
         raise StructureError(f"{path}: {exc}") from None
 
 
+def code_lines(lines: Sequence[str]) -> list[bool]:
+    """For each line, whether it is in a fenced code block, the fences included.
+
+    A fence opens with three or more backticks or tildes, indented at most three spaces,
+    and closes on a line of only at least as many of the same character; one left open
+    runs to the end, as Markdown has it.
+    """
+    flags, fence = [], None
+    for line in lines:
+        if fence is not None:
+            flags.append(True)
+            mark = re.escape(fence[0])
+            if re.fullmatch(rf" {{0,3}}{mark}{{{len(fence)},}}[ \t]*", line):
+                fence = None
+        elif opened := _FENCE.match(line):
+            fence = opened.group(1)
+            flags.append(True)
+        else:
+            flags.append(False)
+    return flags
+
+
 def links(markdown: str) -> set[str]:
-    """The relative targets a page links to, without any ``#anchor``, as written."""
+    """The relative targets a page links to, without any ``#anchor``, as written.
+
+    A link in a fenced code block is shown, not followed, so it is not one.
+    """
+    lines = markdown.splitlines()
+    prose = "\n".join(line for line, code in zip(lines, code_lines(lines), strict=True) if not code)
     targets = set()
-    for target in _LINK.findall(markdown):
+    for target in _LINK.findall(prose):
         if re.match(r"^[a-z][a-z0-9+.-]*:", target) or target.startswith("#"):
             continue
         targets.add(target.split("#", 1)[0])

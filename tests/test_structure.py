@@ -6,6 +6,7 @@ from classroom_runbooks.structure import (
     Section,
     StructureError,
     check,
+    code_lines,
     links,
     load,
     main,
@@ -156,6 +157,24 @@ def test_links_are_relative_targets_without_anchors() -> None:
         '[d](#top) [e](<av/index.md>) [f](av/index.md "Audio") [g](mailto:a@b.c)'
     )
     assert links(text) == {"start/index.md", "./runbooks/index.md", "av/index.md"}
+
+
+def test_a_link_in_a_code_fence_is_shown_not_followed() -> None:
+    text = (
+        "[a](a.md)\n```markdown\n[b](b.md)\n```python\n[c](c.md)\n```\n[d](d.md)\n"
+        "  ~~~~\n[e](e.md)\n~~~\n[f](f.md)\n~~~~~\n[g](g.md)\n    ```\n[h](h.md)\n```\n[i](i.md)\n"
+    )
+    # A fence closes on a line of only its own mark, at least as long; four spaces in is
+    # not a fence; one left open runs to the end.
+    assert links(text) == {"a.md", "d.md", "g.md", "h.md"}
+
+
+def test_code_lines_marks_each_fenced_line_and_its_fences() -> None:
+    lines = ["text", "``` text", "code", "``` ", "text", "~~~", "```", "~~~ x", "~~~", "text"]
+    assert code_lines(lines) == [False, True, True, True, False, True, True, True, True, False]
+    # Only a fence's own mark closes it.
+    assert code_lines(["```", "~~~", "in code", "```", "text"]) == [True] * 4 + [False]
+    assert code_lines([]) == []
 
 
 def test_a_link_counts_however_its_relative_path_is_written(tmp_path: Path) -> None:
