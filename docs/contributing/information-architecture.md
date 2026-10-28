@@ -61,7 +61,9 @@ How this site is organised, and why. The layout is defined in one file,
 `docs/` against it: every section's folder exists with an `index.md` titled
 as the section is; no folder is outside the structure (an `assets` folder,
 anywhere, holds images); and the home page and each parent index link the
-sections below them. It runs in CI with the tests.
+sections below them. It runs in CI with the tests, which also check that
+every inline relative link reaches a file and that every page, not only
+the section indexes, is reached by following links from the home page.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.

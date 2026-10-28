@@ -55,7 +55,8 @@ python -m classroom_runbooks.structure    # check docs/ against structure.toml
 The check prints the outline and fails if a section's folder or titled
 index page is missing, a folder under `docs/` is not a section, or a page
 does not link the sections below it. CI runs it with the tests, which also
-check that every relative link in `docs/` reaches a file.
+check that every inline relative link in `docs/` reaches a file and that
+every page can be reached by following links from the home page.
 
 ## Parts
 
