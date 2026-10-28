@@ -419,6 +419,32 @@ def test_the_command_writes_and_checks_the_pages(
         main([*args, "--write", "--check"])
 
 
+@pytest.mark.parametrize(
+    ("name", "old", "new", "expected"),
+    [
+        ("buildings_toml", '"ALD"', '"ALD\\n"', "a code is 2 to 4 capital letters, not 'ALD\\n'"),
+        ("buildings_toml", '"ALD"', '"ald"', "a code is 2 to 4 capital letters, not 'ald'"),
+        ("buildings_toml", '"ALD"', '" ALD "', "a code is 2 to 4 capital letters, not ' ALD '"),
+        ("profiles_toml", '"standard"', '"Standard"', "an id is lower-case words"),
+        ("equipment_toml", '"webcam"', '"webcam\\n"', "an id is lower-case words"),
+    ],
+)  # fmt: skip
+def test_a_refused_code_or_id_is_reported_once_not_on_every_row_using_it(
+    tmp_path: Path, name: str, old: str, new: str, expected: str
+) -> None:
+    # The rows name the code as it was meant (ALD, standard, webcam).
+    original = {"buildings_toml": BUILDINGS, "profiles_toml": PROFILES,
+                "equipment_toml": EQUIPMENT}[name]  # fmt: skip
+    found = problems(tmp_path, **{name: original.replace(old, new, 1)})
+    assert len(found) == 1 and expected in found[0], found
+
+
+def test_a_name_no_entry_was_meant_as_is_still_reported_on_each_row(tmp_path: Path) -> None:
+    found = problems(tmp_path, buildings_toml=BUILDINGS.replace('"ALD"', '"ald"'),
+                     rooms_csv=ROOMS + "XYZ,101,standard,40,,\n")  # fmt: skip
+    assert len(found) == 2 and "line 5: building 'XYZ' is not in buildings.toml" in found[1]
+
+
 def test_an_entry_reported_where_it_is_defined_is_not_reported_again_where_used(
     tmp_path: Path,
 ) -> None:
@@ -475,6 +501,7 @@ def test_unreadable_pages_are_reported_and_unwritable_ones_stop_the_command(
     assert check_pages(rendered, rooms) == [f"{rooms / 'ald.md'} is not UTF-8 text"]
     (rooms / "ald.md").unlink()
     (rooms / "ald.md").mkdir()  # a folder where a page goes
+    assert check_pages(rendered, rooms) == [f"{rooms / 'ald.md'} is a folder where the page goes"]
     structure = tmp_path / "structure.toml"
     structure.write_text(STRUCTURE, encoding="utf-8")
     args = ["--inventory", str(tmp_path / "inventory"), "--structure", str(structure),

@@ -33,7 +33,7 @@ import sys
 import tomllib
 import unicodedata
 from collections import Counter
-from collections.abc import Collection, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -200,12 +200,23 @@ def _unique(path: Path, name: str, values: list[str], problems: list[str]) -> No
         problems.append(f"{path}: the {name} {', '.join(repeated)} is used more than once")
 
 
+def _refused(value: object, case: Callable[[str], str], kind: str, rejected: set[str]) -> None:
+    """Mark a refused code or id as reported, as the rooms most likely write it.
+
+    A code "ALD\\n" or "ald" was meant as ALD, which the rooms use: its own problem is
+    reported once, not again on every row that names it.
+    """
+    if isinstance(value, str) and value.strip():
+        rejected.add(f"{kind} {case(value.strip())}")
+
+
 def _buildings(path: Path, problems: list[str], rejected: set[str]) -> list[Building]:
     buildings = []
     for i, entry in enumerate(_entries(path, "building", {"code", "name"}, problems), 1):
         code, name = entry["code"], entry["name"]
         if not isinstance(code, str) or not _CODE.fullmatch(code):
             problems.append(f"{path}: building {i}: a code is 2 to 4 capital letters, not {code!r}")
+            _refused(code, str.upper, "building", rejected)
         elif not _name(name):
             problems.append(f"{path}: building {code}: a name is {NAME_RULE}: {name!r}")
             rejected.add(f"building {code}")
@@ -228,6 +239,7 @@ def _equipment(
                 f"{path}: equipment {i}: an id is lower-case words joined by hyphens, "
                 f"not {item_id!r}"
             )
+            _refused(item_id, str.lower, "equipment", rejected)
             continue
         where = f"{path}: equipment {item_id}"
         rejected.add(f"equipment {item_id}")  # until it passes
@@ -260,6 +272,7 @@ def _profiles(
                 f"{path}: profile {i}: an id is lower-case words joined by hyphens, "
                 f"not {profile_id!r}"
             )
+            _refused(profile_id, str.lower, "profile", rejected)
             continue
         where = f"{path}: profile {profile_id}"
         rejected.add(f"profile {profile_id}")  # until it passes
@@ -554,6 +567,9 @@ def check_pages(rendered: dict[str, str], folder: Path) -> list[str]:
     problems = []
     for name, text in rendered.items():
         path = folder / name
+        if path.is_dir():
+            problems.append(f"{path} is a folder where the page goes")
+            continue
         if not path.is_file():
             problems.append(f"{path} is missing")
             continue
