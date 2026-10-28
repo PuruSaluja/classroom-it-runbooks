@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from classroom_runbooks import runbook
 from classroom_runbooks.structure import check, links, load
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,3 +47,27 @@ def test_the_architecture_page_lists_every_section() -> None:
     )
     for s in SECTIONS:
         assert f"| {s.title} | `{s.path}/` |" in page, s.path
+
+
+def test_the_template_page_shows_the_template_as_it_is() -> None:
+    page = (ROOT / "docs" / "contributing" / "runbook-template.md").read_text(encoding="utf-8")
+    template = (ROOT / "templates" / "runbook.md").read_text(encoding="utf-8")
+    shown = page.split("````markdown\n", 1)[1].split("\n````", 1)[0] + "\n"
+    assert shown == template
+
+
+def test_the_template_page_explains_every_field_and_section() -> None:
+    page = (ROOT / "docs" / "contributing" / "runbook-template.md").read_text(encoding="utf-8")
+    for field in runbook.FIELDS:
+        assert f"| `{field}` |" in page, field
+    rows = [line.split(" | ")[0][2:] for line in page.splitlines() if line.startswith("| ")]
+    assert [row for row in rows if row in runbook.SECTIONS] == list(runbook.SECTIONS)
+
+
+def test_the_template_s_links_reach_a_file_from_a_runbook_s_folder() -> None:
+    template = (ROOT / "templates" / "runbook.md").read_text(encoding="utf-8")
+    targets = links(template)
+    assert targets
+    for s in (s for s in SECTIONS if s.prefix):
+        for target in targets:
+            assert (ROOT / "docs" / s.path / target).is_file(), (s.path, target)

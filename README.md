@@ -6,8 +6,9 @@ peripherals and account access), written in Markdown, with Python tools that
 check them and export them to ServiceNow's knowledge base.
 
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
-> to them, and the room inventory with its pages are in place; the runbooks
-> and the other tools are built in the order of [Parts](#parts).
+> to them, the room inventory with its pages, and the runbook template and
+> conventions are in place; the runbooks and the other tools are built in
+> the order of [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -99,13 +100,33 @@ and a removal of the same item, a damaged CSV). The pages are never edited
 by hand: CI runs `--check`, which fails on a page that is missing, edited,
 or no longer given by the inventory.
 
+## Writing a runbook
+
+Every runbook starts from [`templates/runbook.md`](templates/runbook.md):
+YAML front matter (`id`, `title`, `equipment`, `status`, `reviewed`), the
+title as its heading, and six sections in order: Symptoms, Before you
+start, Checks, Fix, Escalate, Close the ticket.
+
+```bash
+python -m classroom_runbooks.runbook new AV "Projector shows no signal" --equipment laser-projector
+```
+
+writes a draft into `docs/runbooks/av/` with the category's next number
+(`rb-av-001-projector-shows-no-signal.md`), its equipment checked against
+the inventory, and never over an existing file.
+[The template page](docs/contributing/runbook-template.md) explains each
+part, and [the authoring conventions](docs/contributing/authoring-conventions.md)
+say how to write them: one fault per runbook, titled as it is reported;
+checks that change nothing before fixes; one action per step with what
+to expect; what a technician must not do; and no credentials, ever.
+
 ## Parts
 
 | Part | State |
 | --- | --- |
 | Repository scaffold and information architecture | done |
 | Room inventory: 200+ classrooms with equipment profiles | done (220 rooms) |
-| Runbook template and authoring conventions | to come |
+| Runbook template and authoring conventions | done |
 | AV runbooks: projectors, displays, audio, cabling, control systems | to come |
 | Network, peripheral and account-access runbooks | to come |
 | Escalation matrix, shift handoff and the onboarding path for new technicians | to come |
