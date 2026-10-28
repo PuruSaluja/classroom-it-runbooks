@@ -5,7 +5,9 @@ description = "Runbooks, room inventory and procedures for classroom IT support,
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0",
+]
 
 [project.optional-dependencies]
 dev = [
