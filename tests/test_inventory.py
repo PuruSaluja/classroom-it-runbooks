@@ -445,3 +445,39 @@ def test_an_entry_reported_where_it_is_defined_is_not_reported_again_where_used(
     found = problems(tmp_path / "d", profiles_toml=PROFILES.replace("[20, 60]", "[60, 20]"),
                      rooms_csv=ROOMS + "ALD,105,lab,40,,\n")  # fmt: skip
     assert len(found) == 2 and "line 5: room type 'lab' is not in profiles.toml" in found[1]
+
+
+def test_a_room_type_no_room_is_of_is_reported_with_equipment_only_it_lists(
+    tmp_path: Path,
+) -> None:
+    studio = (
+        '\n[[profile]]\nid = "studio"\nname = "Studio"\nseats = [5, 9]\n'
+        "equipment = { webcam = 1 }\n"
+    )
+    # Webcam is then in a type, but in no room.
+    rooms = ROOMS.replace("webcam ", "")
+    folder = tmp_path / "inventory"
+    assert problems(tmp_path, profiles_toml=PROFILES + studio, rooms_csv=rooms) == [
+        f"{folder / 'rooms.csv'}: no room is of type studio",
+        f"{folder / 'equipment.toml'}: no room has webcam",
+    ]
+
+
+def test_unreadable_pages_are_reported_and_unwritable_ones_stop_the_command(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    rendered = pages(load(write(tmp_path / "inventory"), CATEGORIES), SECTIONS)
+    rooms = tmp_path / "rooms"
+    rooms.mkdir()
+    for name, text in rendered.items():
+        (rooms / name).write_text(text, encoding="utf-8", newline="\n")
+    (rooms / "ald.md").write_bytes(b"\xff\xfe")
+    assert check_pages(rendered, rooms) == [f"{rooms / 'ald.md'} is not UTF-8 text"]
+    (rooms / "ald.md").unlink()
+    (rooms / "ald.md").mkdir()  # a folder where a page goes
+    structure = tmp_path / "structure.toml"
+    structure.write_text(STRUCTURE, encoding="utf-8")
+    args = ["--inventory", str(tmp_path / "inventory"), "--structure", str(structure),
+            "--rooms", str(rooms), "--write"]  # fmt: skip
+    assert main(args) == 1
+    assert f"error: {rooms / 'ald.md'} cannot be written: " in capsys.readouterr().err

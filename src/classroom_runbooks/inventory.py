@@ -14,7 +14,8 @@ The inventory is data, kept in ``inventory/`` at the repository's root:
 A room's identifier is its building's code and its number: ``ALD-104``.
 
 ``python -m classroom_runbooks.inventory`` reads and checks it all and prints a
-summary; every problem found is listed, with the file and line, and the exit code is 1.
+summary; every problem found is listed, with its file and its line or entry, and the
+exit code is 1.
 The inventory is also the source of the pages in ``docs/rooms/``: an index of the
 buildings, room types and equipment, and a page per building with each room and its
 equipment, linked to the runbook category that covers it. ``--write`` writes them, and
@@ -427,8 +428,11 @@ def load(folder: Path, categories: Collection[str]) -> Inventory:
         empty = [b.code for b in buildings if not any(r.building == b.code for r in rooms)]
         if empty:
             problems.append(f"{folder / 'rooms.csv'}: no rooms in {', '.join(empty)}")
-        unused = [e.id for e in equipment if not any(e.id in dict(p.equipment) for p in profiles)
-                  and not any(e.id in dict(r.equipment) for r in rooms)]  # fmt: skip
+        # Counted from the rooms: a type no room is of fits nothing.
+        types = [p.id for p in profiles if not any(r.profile == p.id for r in rooms)]
+        if types:
+            problems.append(f"{folder / 'rooms.csv'}: no room is of type {', '.join(types)}")
+        unused = [e.id for e in equipment if not any(e.id in dict(r.equipment) for r in rooms)]
         if unused:
             problems.append(f"{folder / 'equipment.toml'}: no room has {', '.join(unused)}")
     if problems:
@@ -552,8 +556,16 @@ def check_pages(rendered: dict[str, str], folder: Path) -> list[str]:
         path = folder / name
         if not path.is_file():
             problems.append(f"{path} is missing")
-        elif path.read_text(encoding="utf-8") != text:
-            problems.append(f"{path} is not the page the inventory gives")
+            continue
+        try:
+            written = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            problems.append(f"{path} is not UTF-8 text")
+        except OSError as exc:
+            problems.append(f"{path} cannot be read: {exc.strerror or exc}")
+        else:
+            if written != text:
+                problems.append(f"{path} is not the page the inventory gives")
     extra = sorted(p.name for p in folder.glob("*.md") if p.name not in rendered)
     problems += [f"{folder / name} is not a page the inventory gives" for name in extra]
     return problems
@@ -593,7 +605,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"error: {args.rooms} is not a folder", file=sys.stderr)
             return 1
         for name, text in rendered.items():
-            (args.rooms / name).write_bytes(text.encode("utf-8"))
+            try:
+                (args.rooms / name).write_bytes(text.encode("utf-8"))
+            except OSError as exc:
+                print(f"error: {args.rooms / name} cannot be written: {exc.strerror or exc}",
+                      file=sys.stderr)  # fmt: skip
+                return 1
         print(f"wrote {len(rendered)} pages to {args.rooms}")
     if args.write or args.check:
         problems = check_pages(rendered, args.rooms)
