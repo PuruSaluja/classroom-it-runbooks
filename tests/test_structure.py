@@ -177,6 +177,41 @@ def test_split_lines_breaks_at_lf_crlf_and_cr_only() -> None:
     assert split_lines("no end") == ["no end"]
 
 
+def test_a_link_in_an_indented_code_block_is_shown_not_followed() -> None:
+    text = "\n".join([
+        "    [a](a.md)",      # indented at the top: code
+        "text",
+        "    [b](b.md)",      # continues the paragraph above: text
+        "",
+        "    [c](c.md)",      # after a blank line: code
+        "",
+        "    [d](d.md)",      # the same block, across a blank line
+        "x",
+        "- item",
+        "",
+        "    [e](e.md)",      # the item's own text, not code
+        "",
+        "para",
+        "",
+        "\t[f](f.md)",        # a tab counts as four spaces
+        "",
+        "1. step",
+        "   [g](g.md)",       # under a numbered item
+        "",
+        "```",
+        "    [h](h.md)",      # in a fence
+        "```",
+        "    [i](i.md)",      # straight after a fence: no paragraph is open, so code
+        "# Heading",
+        "    [j](j.md)",      # straight after a heading: code too
+        "***",
+        "    [k](k.md)",      # and after a thematic break
+        "a line",
+        "    [l](l.md)",      # but this continues the paragraph
+    ])  # fmt: skip
+    assert links(text) == {"b.md", "e.md", "g.md", "l.md"}
+
+
 def test_a_link_in_a_code_span_is_shown_not_followed() -> None:
     text = "See `[x](x.md)` and [y](y.md); ``[z](z.md) ` still code`` [w](w.md); ` [v](v.md)"
     # A span closes with a run of as many backticks; a lone one opens nothing.

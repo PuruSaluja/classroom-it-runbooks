@@ -40,6 +40,9 @@ _LINK = re.compile(r"\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
 # A code span: a run of backticks, then text, then a run of the same length.
 _CODE_SPAN = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 _FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+_LIST_ITEM = re.compile(r" {0,3}(?:[-*+]|[0-9]{1,9}[.)])(?:[ \t]|$)")
+# An ATX heading or a thematic break (---, ***, ___): neither leaves a paragraph open.
+_HEADING_OR_BREAK = re.compile(r" {0,3}(?:#{1,6}(?:[ \t]|$)|([-*_])[ \t]*(?:\1[ \t]*){2,}$)")
 
 
 class StructureError(ValueError):
@@ -163,13 +166,16 @@ def split_lines(text: str) -> list[str]:
 
 
 def code_lines(lines: Sequence[str]) -> list[bool]:
-    """For each line, whether it is in a fenced code block, the fences included.
+    """For each line, whether it is in a code block, a fenced block's fences included.
 
     A fence opens with three or more backticks or tildes, indented at most three spaces,
     and closes on a line of only at least as many of the same character; one left open
-    runs to the end, as Markdown has it.
+    runs to the end, as Markdown has it. An indented block is lines indented four spaces
+    or a tab where no paragraph is open (at the top, after a blank line, a heading or a
+    fenced block), running across blank lines; in a list such lines are the item's text.
     """
     flags, fence = [], None
+    indented, paragraph, in_list = False, False, False
     for line in lines:
         if fence is not None:
             flags.append(True)
@@ -179,8 +185,21 @@ def code_lines(lines: Sequence[str]) -> list[bool]:
         elif opened := _FENCE.match(line):
             fence = opened.group(1)
             flags.append(True)
+            indented = paragraph = in_list = False
+        elif not line.strip():
+            flags.append(indented)
+            paragraph = False
+        elif line.expandtabs(4).startswith("    "):
+            indented = indented or not (paragraph or in_list)
+            flags.append(indented)
         else:
             flags.append(False)
+            indented = False
+            paragraph = not _HEADING_OR_BREAK.match(line)
+            if _LIST_ITEM.match(line):
+                in_list = True
+            elif not line.startswith(" "):
+                in_list = False
     return flags
 
 
