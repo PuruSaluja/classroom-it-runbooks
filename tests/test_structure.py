@@ -11,6 +11,7 @@ from classroom_runbooks.structure import (
     load,
     main,
     parse,
+    split_lines,
     tree,
 )
 
@@ -167,6 +168,13 @@ def test_a_link_in_a_code_fence_is_shown_not_followed() -> None:
     # A fence closes on a line of only its own mark, at least as long; four spaces in is
     # not a fence; one left open runs to the end.
     assert links(text) == {"a.md", "d.md", "g.md", "h.md"}
+
+
+def test_split_lines_breaks_at_lf_crlf_and_cr_only() -> None:
+    assert split_lines("a\nb\r\nc\rd\x0ce\u2028f\x85g\n") == ["a", "b", "c", "d\x0ce\u2028f\x85g"]
+    assert split_lines("") == []
+    assert split_lines("a\n\n") == ["a", ""]
+    assert split_lines("no end") == ["no end"]
 
 
 def test_a_link_in_a_code_span_is_shown_not_followed() -> None:

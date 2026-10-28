@@ -91,6 +91,33 @@ def test_a_damaged_page_is_refused(text: str, expected: str) -> None:
     assert expected in str(caught.value)
 
 
+@pytest.mark.parametrize(
+    "value",
+    ["2026-13-45", "2026-02-30", "!!float abc", "!!int x1", "!!timestamp nope",
+     "[" * 5000 + "]" * 5000],
+)  # fmt: skip
+def test_a_value_yaml_cannot_build_is_refused_not_raised(value: str) -> None:
+    with pytest.raises(RunbookError, match="the front matter has a value YAML cannot read"):
+        parse(f"---\nreviewed: {value}\n---\n")
+
+
+def test_headings_are_read_as_markdown_reads_them() -> None:
+    page = parse(
+        "---\nid: x\n---\n   # Title #\n## Symptoms ##\n  ## Checks\n    ## indented code\n"
+        "##\tFix\n### Detail\n##Not a heading\n## Close the ticket   \n"
+    )
+    assert page.heading == "Title"
+    assert [name for name, _ in page.sections] == ["Symptoms", "Checks", "Fix", "Close the ticket"]
+    assert page.sections[2][1] == "### Detail\n##Not a heading"
+    assert parse("---\nid: x\n---\n##\n").sections == (("", ""),)
+
+
+def test_lines_break_only_where_markdown_breaks_them() -> None:
+    # A form feed or U+2028 is a character within a line, not a line break.
+    page = parse("---\nid: x\n---\r\n## One\rtext\x0cmore\u2028still\n## Two\n")
+    assert page.sections == (("One", "text\x0cmore\u2028still"), ("Two", ""))
+
+
 def test_front_matter_is_any_yaml_mapping_including_merge_keys() -> None:
     text = "---\nbase: &base {status: draft, reviewed: 2026-10-01}\n<<: *base\nid: x\n---\n"
     assert parse(text).meta == {

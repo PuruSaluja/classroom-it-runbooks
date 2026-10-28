@@ -152,6 +152,16 @@ def load(path: Path = DEFAULT_STRUCTURE) -> tuple[Section, ...]:
         raise StructureError(f"{path}: {exc}") from None
 
 
+def split_lines(text: str) -> list[str]:
+    """A page's lines, broken only where Markdown breaks them: at LF, CRLF or CR.
+
+    ``str.splitlines`` also breaks at form feeds, U+2028 and other separators, which in
+    Markdown are characters within a line.
+    """
+    lines = re.split(r"\r\n|\r|\n", text)
+    return lines[:-1] if lines and lines[-1] == "" else lines
+
+
 def code_lines(lines: Sequence[str]) -> list[bool]:
     """For each line, whether it is in a fenced code block, the fences included.
 
@@ -179,7 +189,7 @@ def links(markdown: str) -> set[str]:
 
     A link in a fenced code block or a code span is shown, not followed, so it is not one.
     """
-    lines = markdown.splitlines()
+    lines = split_lines(markdown)
     prose = "\n".join(line for line, code in zip(lines, code_lines(lines), strict=True) if not code)
     targets = set()
     for target in _LINK.findall(_CODE_SPAN.sub("", prose)):
@@ -223,7 +233,7 @@ def check(sections: Sequence[Section], docs: Path = DEFAULT_DOCS) -> list[str]:
         if text is None:
             continue
         pages[s.path] = text
-        first = text.splitlines()[0] if text else ""
+        first = split_lines(text)[0] if text else ""
         if first != f"# {s.title}":
             problems.append(f"{index} starts {first!r}, not '# {s.title}'")
     known = {s.path for s in sections}

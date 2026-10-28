@@ -44,6 +44,8 @@ DEFAULT_TEMPLATE = Path("templates/runbook.md")
 MAX_TITLE = 80
 """The longest title, in characters: a fault in a few words, as it would be reported."""
 MAX_SLUG = 50
+# An ATX heading: up to three spaces, the #s, then its text without any closing #s.
+_HEADING = re.compile(r" {0,3}(#{1,6})(?:[ \t]+(.*?))??(?:[ \t]+#+)?[ \t]*")
 
 
 class RunbookError(ValueError):
@@ -82,7 +84,7 @@ _Loader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _mapping
 
 def parse(text: str) -> Page:
     """A runbook's text, read into its front matter, heading and sections."""
-    lines = text.splitlines()
+    lines = structure.split_lines(text)
     if not lines or lines[0] != "---":
         raise RunbookError("a runbook starts with front matter: its first line is '---'")
     try:
@@ -95,15 +97,21 @@ def parse(text: str) -> Page:
         meta = yaml.load("\n" + "\n".join(lines[1:end]), Loader=_Loader)  # a SafeLoader
     except yaml.YAMLError as exc:
         raise RunbookError(f"the front matter is not YAML: {exc}") from None
+    except (ValueError, TypeError, AttributeError, RecursionError) as exc:
+        # YAML's constructors raise these for a value it cannot build, such as the date
+        # 2026-02-30 or `!!float abc`, and nesting too deep raises RecursionError.
+        raise RunbookError(f"the front matter has a value YAML cannot read: {exc}") from None
     if not isinstance(meta, dict):
         raise RunbookError("the front matter is not a set of keys and values")
     heading, sections = None, []
     body = lines[end + 1 :]
     for line, code in zip(body, structure.code_lines(body), strict=True):
-        if not code and line.startswith("## "):
-            sections.append((line[3:].strip(), []))
-        elif not code and line.startswith("# ") and heading is None and not sections:
-            heading = line[2:].strip()
+        found = None if code else _HEADING.fullmatch(line)
+        level = len(found.group(1)) if found else 0
+        if level == 2:
+            sections.append((found.group(2) or "", []))
+        elif level == 1 and heading is None and not sections:
+            heading = found.group(2) or ""
         elif sections:
             sections[-1][1].append(line)
     return Page(
