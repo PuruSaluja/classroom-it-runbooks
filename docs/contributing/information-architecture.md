@@ -53,7 +53,10 @@ How this site is organised, and why. The layout is defined in one file,
   identifier always means the same runbook.
 - A runbook's file is named by its identifier in lower case and a short
   slug: `runbooks/av/rb-av-001-projector-no-signal.md`.
-- Room identifiers are set with the inventory.
+- A room's identifier is its building's code (2 to 4 capital letters) and
+  its room number (3 or 4 digits, and a capital letter if the building
+  uses one, as in `201A`): `ALD-104`. Each building's page in Rooms has a
+  heading per room, so `rooms/ald.md#ald-104` links straight to it.
 
 ## What is checked
 
@@ -64,6 +67,11 @@ anywhere, holds images); and the home page and each parent index link the
 sections below them. It runs in CI with the tests, which also check that
 every inline relative link reaches a file and that every page, not only
 the section indexes, is reached by following links from the home page.
+
+`python -m classroom_runbooks.inventory --check` checks the room inventory
+in `inventory/` (known buildings, room types and equipment, seats within
+each type's range, no room twice) and that the pages in `rooms/` are the
+ones it gives; `--write` writes them. Edit the inventory, never a room page.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.
