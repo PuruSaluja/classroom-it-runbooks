@@ -15,6 +15,11 @@ A room's identifier is its building's code and its number: ``ALD-104``.
 
 ``python -m classroom_runbooks.inventory`` reads and checks it all and prints a
 summary; every problem found is listed, with the file and line, and the exit code is 1.
+The inventory is also the source of the pages in ``docs/rooms/``: an index of the
+buildings, room types and equipment, and a page per building with each room and its
+equipment, linked to the runbook category that covers it. ``--write`` writes them, and
+``--check`` fails if they are not what the inventory gives (or if the folder holds a
+page it does not give), so a page is never edited by hand and left behind.
 """
 
 from __future__ import annotations
@@ -33,6 +38,11 @@ from pathlib import Path
 from classroom_runbooks import structure
 
 DEFAULT_INVENTORY = Path("inventory")
+DEFAULT_ROOMS_PAGES = Path("docs/rooms")
+GENERATED = (
+    "<!-- Written from inventory/ by `python -m classroom_runbooks.inventory --write`: "
+    "edit the inventory, not this page. -->"
+)
 ROOM_COLUMNS = ("building", "number", "profile", "seats", "extra", "without")
 MAX_COUNT = 99
 """The most of one kind of equipment a room type or a room's extras can list."""
@@ -436,6 +446,107 @@ def summary(inventory: Inventory) -> list[str]:
     return lines
 
 
+def _counted(name: str, count: int) -> str:
+    return f"{name} ×{count}" if count > 1 else name
+
+
+def _differences(inventory: Inventory, room: Room) -> str:
+    """How a room differs from its type, in words; empty if it does not."""
+    fitted, has = dict(inventory.profile(room.profile).equipment), dict(room.equipment)
+    added, missing = [], []
+    for item in inventory.equipment:
+        more = has.get(item.id, 0) - fitted.get(item.id, 0)
+        if more > 0:
+            added.append(_counted(item.name, more))
+        elif item.id in fitted and item.id not in has:
+            missing.append(item.name)
+    said = [f"also {', '.join(added)}"] * bool(added) + [f"no {', '.join(missing)}"] * bool(missing)
+    return f" Unlike its type: {'; '.join(said)}." if said else ""
+
+
+def pages(inventory: Inventory, sections: Sequence[structure.Section]) -> dict[str, str]:
+    """The pages of ``docs/rooms/`` by file name: the index and one per building."""
+    runbooks = {s.prefix: s for s in sections if s.prefix}
+
+    def link(category: str, text: str) -> str:
+        return f"[{text}](../{runbooks[category].path}/index.md)"
+
+    rooms = inventory.rooms
+    in_rooms: Counter[str] = Counter()
+    devices: Counter[str] = Counter()
+    for room in rooms:
+        for item, count in room.equipment:
+            in_rooms[item] += 1
+            devices[item] += count
+    index = [
+        "# Rooms", "", GENERATED, "",
+        "The room inventory: each building's rooms and each room's equipment, linked to the",
+        "runbooks for that equipment. **The rooms are illustrative:** the buildings, rooms and",
+        "equipment are made up to resemble a large campus, not taken from any institution.", "",
+        f"{len(rooms)} rooms in {len(inventory.buildings)} buildings, "
+        f"{sum(r.seats for r in rooms):,} seats.", "",
+        "A room's identifier is its building's code and its room number: `ALD-104` is room 104",
+        "in Alder Hall. Quote it in tickets and handoff notes.", "",
+        "## Buildings", "",
+        "| Building | Code | Rooms | Seats |", "| --- | --- | ---: | ---: |",
+    ]  # fmt: skip
+    for b in inventory.buildings:
+        here = [r for r in rooms if r.building == b.code]
+        index.append(f"| [{b.name}]({b.code.lower()}.md) | {b.code} | {len(here)} | "
+                     f"{sum(r.seats for r in here):,} |")  # fmt: skip
+    index += ["", "## Room types", "",
+              "Each room has its type's equipment unless its entry says otherwise.", "",
+              "| Type | Rooms | Seats | Fitted with |", "| --- | ---: | --- | --- |"]  # fmt: skip
+    order = [e.id for e in inventory.equipment]
+    for p in inventory.profiles:
+        listed = sorted(p.equipment, key=lambda pair: order.index(pair[0]))
+        fitted = ", ".join(_counted(inventory.item(i).name, n) for i, n in listed)
+        count = sum(r.profile == p.id for r in rooms)
+        index.append(f"| {p.name} | {count} | {p.seats[0]}–{p.seats[1]} | {fitted} |")
+    index += ["", "## Equipment", "", "| Equipment | Runbooks | Rooms with it | In all |",
+              "| --- | --- | ---: | ---: |"]  # fmt: skip
+    for e in inventory.equipment:
+        index.append(f"| {e.name} | {link(e.category, runbooks[e.category].title)} | "
+                     f"{in_rooms[e.id]} | {devices[e.id]:,} |")  # fmt: skip
+    result = {"index.md": "\n".join(index) + "\n"}
+    for b in inventory.buildings:
+        here = [r for r in rooms if r.building == b.code]
+        page = [
+            f"# {b.name} ({b.code})", "", GENERATED, "",
+            f"{len(here)} rooms, {sum(r.seats for r in here):,} seats. "
+            "[All buildings](index.md)", "",
+            "| Room | Type | Seats |", "| --- | --- | ---: |",
+        ]  # fmt: skip
+        page += [f"| [{r.id}](#{r.id.lower()}) | {inventory.profile(r.profile).name} | "
+                 f"{r.seats} |" for r in here]  # fmt: skip
+        for r in here:
+            page += ["", f"## {r.id}", "",
+                     f"{inventory.profile(r.profile).name}, {r.seats} seats."
+                     f"{_differences(inventory, r)}", ""]  # fmt: skip
+            by_category: dict[str, list[str]] = {}
+            for item, count in r.equipment:
+                e = inventory.item(item)
+                by_category.setdefault(e.category, []).append(_counted(e.name, count))
+            page += [f"- **{runbooks[c].title}** ({link(c, 'runbooks')}): {', '.join(names)}"
+                     for c, names in by_category.items()]  # fmt: skip
+        result[f"{b.code.lower()}.md"] = "\n".join(page) + "\n"
+    return result
+
+
+def check_pages(rendered: dict[str, str], folder: Path) -> list[str]:
+    """How the pages in ``folder`` differ from ``rendered``; empty when they match."""
+    problems = []
+    for name, text in rendered.items():
+        path = folder / name
+        if not path.is_file():
+            problems.append(f"{path} is missing")
+        elif path.read_text(encoding="utf-8") != text:
+            problems.append(f"{path} is not the page the inventory gives")
+    extra = sorted(p.name for p in folder.glob("*.md") if p.name not in rendered)
+    problems += [f"{folder / name} is not a page the inventory gives" for name in extra]
+    return problems
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m classroom_runbooks.inventory",
@@ -443,6 +554,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     parser.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
     parser.add_argument("--structure", type=Path, default=structure.DEFAULT_STRUCTURE)
+    parser.add_argument("--rooms", type=Path, default=DEFAULT_ROOMS_PAGES,
+                        help=f"the room pages' folder (default {DEFAULT_ROOMS_PAGES})")  # fmt: skip
+    action = parser.add_mutually_exclusive_group()
+    action.add_argument("--write", action="store_true", help="write the room pages")
+    action.add_argument(
+        "--check", action="store_true",
+        help="also fail if the room pages are not what the inventory gives",
+    )  # fmt: skip
     args = parser.parse_args(argv)
     try:
         sections = structure.load(args.structure)
@@ -456,6 +575,23 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"{len(exc.problems)} problems")
         return 1
     print("\n".join(summary(inventory)))
+    rendered = pages(inventory, sections)
+    if args.write:
+        if not args.rooms.is_dir():
+            print(f"error: {args.rooms} is not a folder", file=sys.stderr)
+            return 1
+        for name, text in rendered.items():
+            (args.rooms / name).write_bytes(text.encode("utf-8"))
+        print(f"wrote {len(rendered)} pages to {args.rooms}")
+    if args.write or args.check:
+        problems = check_pages(rendered, args.rooms)
+        for problem in problems:
+            print(f"problem: {problem}", file=sys.stderr)
+        if problems:
+            hint = "remove the pages it does not give" if args.write else "`--write` writes them"
+            print(f"{len(problems)} problems; {hint}")
+            return 1
+        print(f"{len(rendered)} room pages match the inventory")
     return 0
 
 

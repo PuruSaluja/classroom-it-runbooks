@@ -64,3 +64,6 @@ jobs:
 
       - name: Check the docs layout
         run: python -m classroom_runbooks.structure
+
+      - name: Check the room inventory and its pages
+        run: python -m classroom_runbooks.inventory --check

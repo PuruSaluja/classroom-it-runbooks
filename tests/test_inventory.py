@@ -3,15 +3,19 @@ from pathlib import Path
 import pytest
 
 from classroom_runbooks.inventory import (
+    GENERATED,
     Building,
     Equipment,
     InventoryError,
     Profile,
     Room,
+    check_pages,
     load,
     main,
+    pages,
     summary,
 )
+from classroom_runbooks.structure import parse
 
 CATEGORIES = ("AV", "NET")
 BUILDINGS = """
@@ -55,6 +59,28 @@ name = "Standard classroom"
 seats = [20, 60]
 equipment = { wall-port = 2, projector = 1, speakers = 1 }
 """
+STRUCTURE = """
+[[section]]
+path = "runbooks"
+title = "Runbooks"
+audience = ["technicians"]
+purpose = "Faults."
+
+[[section]]
+path = "runbooks/av"
+title = "Audio-visual"
+audience = ["technicians"]
+purpose = "AV."
+prefix = "AV"
+
+[[section]]
+path = "runbooks/network"
+title = "Network"
+audience = ["technicians"]
+purpose = "Network."
+prefix = "NET"
+"""
+SECTIONS = parse(STRUCTURE)
 ROOMS = """building,number,profile,seats,extra,without
 ALD,101,standard,40,,
 ALD,102,standard,24,webcam wall-port*2,speakers
@@ -284,14 +310,7 @@ def test_the_command_prints_the_summary_or_every_problem(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     structure = tmp_path / "structure.toml"
-    structure.write_text(
-        '[[section]]\npath = "runbooks"\ntitle = "Runbooks"\naudience = ["technicians"]\n'
-        'purpose = "Faults."\n\n[[section]]\npath = "runbooks/av"\ntitle = "AV"\n'
-        'audience = ["technicians"]\npurpose = "AV."\nprefix = "AV"\n\n'
-        '[[section]]\npath = "runbooks/net"\ntitle = "Network"\n'
-        'audience = ["technicians"]\npurpose = "Network."\nprefix = "NET"\n',
-        encoding="utf-8",
-    )
+    structure.write_text(STRUCTURE, encoding="utf-8")
     folder = write(tmp_path / "inventory")
     args = ["--inventory", str(folder), "--structure", str(structure)]
     assert main(args) == 0
@@ -303,6 +322,81 @@ def test_the_command_prints_the_summary_or_every_problem(
     assert err.count("problem: ") == 2
     assert main(["--inventory", str(folder), "--structure", str(tmp_path / "none.toml")]) == 1
     assert "error: " in capsys.readouterr().err
+
+
+def test_the_pages_are_an_index_and_one_page_per_building(tmp_path: Path) -> None:
+    rendered = pages(load(write(tmp_path), CATEGORIES), SECTIONS)
+    assert list(rendered) == ["index.md", "ald.md", "bir.md"]
+    index = rendered["index.md"].splitlines()
+    assert index[:3] == ["# Rooms", "", GENERATED]
+    assert "3 rooms in 2 buildings, 124 seats." in index
+    assert "| [Alder Hall](ald.md) | ALD | 2 | 64 |" in index
+    assert ("| Standard classroom | 3 | 20–60 | Projector, Ceiling speakers, "
+            "Wall network port ×2 |") in index  # fmt: skip
+    assert "| Webcam | [Audio-visual](../runbooks/av/index.md) | 1 | 1 |" in index
+    assert "| Wall network port | [Network](../runbooks/network/index.md) | 3 | 8 |" in index
+    assert rendered["ald.md"] == "\n".join([
+        "# Alder Hall (ALD)", "", GENERATED, "",
+        "2 rooms, 64 seats. [All buildings](index.md)", "",
+        "| Room | Type | Seats |", "| --- | --- | ---: |",
+        "| [ALD-101](#ald-101) | Standard classroom | 40 |",
+        "| [ALD-102](#ald-102) | Standard classroom | 24 |", "",
+        "## ALD-101", "", "Standard classroom, 40 seats.", "",
+        "- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Projector, Ceiling speakers",
+        "- **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2", "",
+        "## ALD-102", "",
+        "Standard classroom, 24 seats. Unlike its type: also Wall network port ×2, Webcam; "
+        "no Ceiling speakers.", "",
+        "- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Projector, Webcam",
+        "- **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×4", "",
+    ])  # fmt: skip
+
+
+def test_pages_are_checked_against_the_inventory(tmp_path: Path) -> None:
+    rendered = pages(load(write(tmp_path / "inventory"), CATEGORIES), SECTIONS)
+    rooms = tmp_path / "rooms"
+    rooms.mkdir()
+    assert check_pages(rendered, rooms) == [f"{rooms / n} is missing" for n in rendered]
+    for name, text in rendered.items():
+        # A Windows checkout's CRLFs are the same page.
+        (rooms / name).write_bytes(text.replace("\n", "\r\n").encode("utf-8"))
+    assert check_pages(rendered, rooms) == []
+    (rooms / "ald.md").write_text(rendered["ald.md"].replace("40 seats", "41 seats"), "utf-8")
+    (rooms / "ced.md").write_text("# Cedar Hall\n", encoding="utf-8")
+    (rooms / "notes.txt").write_text("not a page\n", encoding="utf-8")
+    assert check_pages(rendered, rooms) == [
+        f"{rooms / 'ald.md'} is not the page the inventory gives",
+        f"{rooms / 'ced.md'} is not a page the inventory gives",
+    ]
+
+
+def test_the_command_writes_and_checks_the_pages(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    structure = tmp_path / "structure.toml"
+    structure.write_text(STRUCTURE, encoding="utf-8")
+    rooms = tmp_path / "rooms"
+    rooms.mkdir()
+    args = ["--inventory", str(write(tmp_path / "inventory")), "--structure", str(structure),
+            "--rooms", str(rooms)]  # fmt: skip
+    assert main([*args, "--check"]) == 1
+    assert capsys.readouterr().out.endswith("3 problems; `--write` writes them\n")
+    assert main([*args, "--write"]) == 0
+    assert capsys.readouterr().out.endswith(
+        f"wrote 3 pages to {rooms}\n3 room pages match the inventory\n"
+    )
+    assert sorted(p.name for p in rooms.iterdir()) == ["ald.md", "bir.md", "index.md"]
+    assert b"\r" not in (rooms / "ald.md").read_bytes()
+    assert main([*args, "--check"]) == 0
+    (rooms / "old.md").write_text("# Old Hall\n", encoding="utf-8")
+    assert main([*args, "--write"]) == 1
+    out, err = capsys.readouterr()
+    assert out.endswith("1 problems; remove the pages it does not give\n")
+    assert f"problem: {rooms / 'old.md'} is not a page the inventory gives" in err
+    assert main([*args[:4], "--rooms", str(tmp_path / "none"), "--write"]) == 1
+    assert "is not a folder" in capsys.readouterr().err
+    with pytest.raises(SystemExit):
+        main([*args, "--write", "--check"])
 
 
 def test_an_entry_reported_where_it_is_defined_is_not_reported_again_where_used(

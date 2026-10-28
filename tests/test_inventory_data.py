@@ -46,3 +46,9 @@ def test_the_script_plans_every_building_and_only_those() -> None:
     assert list(make_inventory.PLANS) == codes
     profiles = {p.id for p in inventory.load(ROOT / "inventory", CATEGORIES).profiles}
     assert set(make_inventory.EXTRAS) == set(make_inventory.WITHOUT) == profiles
+
+
+def test_the_room_pages_are_the_ones_the_inventory_gives() -> None:
+    sections = structure.load(ROOT / "structure.toml")
+    rendered = inventory.pages(inventory.load(ROOT / "inventory", CATEGORIES), sections)
+    assert inventory.check_pages(rendered, ROOT / "docs" / "rooms") == []
