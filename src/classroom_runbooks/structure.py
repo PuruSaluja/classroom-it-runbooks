@@ -82,6 +82,8 @@ def parse(text: str) -> tuple[Section, ...]:
     sections: list[Section] = []
     for i, entry in enumerate(entries, 1):
         where = f"section {i}"
+        if not isinstance(entry, dict):
+            raise StructureError(f"{where} is not a table of keys: {entry!r}")
         extra = sorted(set(entry) - {"path", "title", "audience", "purpose", "prefix"})
         if extra:
             raise StructureError(f"{where}: unknown keys {', '.join(extra)}")
@@ -130,6 +132,10 @@ def _check_together(sections: list[Section]) -> None:
 
 
 def load(path: Path = DEFAULT_STRUCTURE) -> tuple[Section, ...]:
+    if Path(path).is_dir():
+        raise StructureError(
+            f"{path} is a folder; the structure is a file, such as {DEFAULT_STRUCTURE}"
+        )
     try:
         text = Path(path).read_text(encoding="utf-8")
     except FileNotFoundError:
@@ -152,6 +158,17 @@ def links(markdown: str) -> set[str]:
     return targets
 
 
+def _page(path: Path, problems: list[str]) -> str | None:
+    """A page's text, or None with the reason added to ``problems``."""
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        problems.append(f"{path} is not UTF-8 text")
+    except OSError as exc:
+        problems.append(f"{path} cannot be read: {exc.strerror or exc}")
+    return None
+
+
 def _links_to(page: Path, markdown: str, target: Path) -> bool:
     return any((page.parent / t).resolve() == target.resolve() for t in links(markdown))
 
@@ -171,7 +188,9 @@ def check(sections: Sequence[Section], docs: Path = DEFAULT_DOCS) -> list[str]:
         if not index.is_file():
             problems.append(f"{index} is missing: section {s.title!r} has no index page")
             continue
-        text = index.read_text(encoding="utf-8")
+        text = _page(index, problems)
+        if text is None:
+            continue
         pages[s.path] = text
         first = text.splitlines()[0] if text else ""
         if first != f"# {s.title}":
@@ -183,8 +202,8 @@ def check(sections: Sequence[Section], docs: Path = DEFAULT_DOCS) -> list[str]:
             continue
         if relative not in known:
             problems.append(f"{folder} is not a section in the structure")
-    if home.is_file():
-        text = home.read_text(encoding="utf-8")
+    text = _page(home, problems) if home.is_file() else None
+    if text is not None:
         for s in sections:
             if s.parent is None and not _links_to(home, text, docs / s.path / "index.md"):
                 problems.append(f"{home} does not link to {s.path}/index.md ({s.title})")

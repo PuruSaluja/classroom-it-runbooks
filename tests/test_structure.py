@@ -199,3 +199,27 @@ def test_a_missing_or_unreadable_structure_is_named(tmp_path: Path, capsys) -> N
 
 def test_docs_that_are_not_a_folder_are_one_problem(tmp_path: Path) -> None:
     assert check(parse(GOOD), tmp_path / "none") == [f"{tmp_path / 'none'} is not a folder"]
+
+
+@pytest.mark.parametrize("entries", ["[1, 2]", '["start"]', "[[1]]"])
+def test_a_section_entry_that_is_not_a_table_is_refused(entries) -> None:
+    with pytest.raises(StructureError, match="section 1 is not a table of keys"):
+        parse(f"section = {entries}")
+
+
+def test_a_page_that_is_not_utf_8_is_a_problem_not_a_crash(tmp_path: Path) -> None:
+    sections = parse(GOOD)
+    write_tree(tmp_path, sections)
+    (tmp_path / "rooms").mkdir()
+    (tmp_path / "start" / "index.md").write_bytes(b"\xff\xfe# Start here")
+    (tmp_path / "index.md").write_bytes(b"# Home \xe9t\xe9")
+    problems = check(sections, tmp_path)
+    assert f"{tmp_path / 'start' / 'index.md'} is not UTF-8 text" in problems
+    assert f"{tmp_path / 'index.md'} is not UTF-8 text" in problems
+    assert any(p.endswith("rooms is not a section in the structure") for p in problems)
+    assert len(problems) == 3
+
+
+def test_a_folder_given_as_the_structure_is_named(tmp_path: Path, capsys) -> None:
+    assert main(["--structure", str(tmp_path)]) == 1
+    assert f"{tmp_path} is a folder; the structure is a file" in capsys.readouterr().err
