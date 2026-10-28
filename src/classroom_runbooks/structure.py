@@ -190,7 +190,8 @@ def code_lines(lines: Sequence[str]) -> list[bool]:
             flags.append(indented)
             paragraph = False
         elif line.expandtabs(4).startswith("    "):
-            indented = indented or not (paragraph or in_list)
+            # Lines in a block change neither, so the block runs on by the same test.
+            indented = not (paragraph or in_list)
             flags.append(indented)
         else:
             flags.append(False)
