@@ -94,9 +94,11 @@ python -m classroom_runbooks.inventory --write    # write docs/rooms/ from it
 python -m classroom_runbooks.inventory --check    # fail if docs/rooms/ is not what it gives
 ```
 
-Every problem is listed with its file and line (an unknown building, type
-or equipment id, seats outside the type's range, a repeated room, an extra
-and a removal of the same item, a damaged CSV). The pages are never edited
+Every problem is listed with its file, and its line in `rooms.csv` or its
+entry in a TOML file (an unknown building, type or equipment id, seats
+outside the type's range, a repeated room, an extra and a removal of the
+same item, a name a page cannot show, a room type or piece of equipment no
+room has, a damaged CSV). The pages are never edited
 by hand: CI runs `--check`, which fails on a page that is missing, edited,
 or no longer given by the inventory.
 

@@ -70,7 +70,8 @@ the section indexes, is reached by following links from the home page.
 
 `python -m classroom_runbooks.inventory --check` checks the room inventory
 in `inventory/` (known buildings, room types and equipment, seats within
-each type's range, no room twice) and that the pages in `rooms/` are the
+each type's range, no room twice, every building, type and piece of
+equipment in some room) and that the pages in `rooms/` are the
 ones it gives; `--write` writes them. Edit the inventory, never a room page.
 
 To add a section, add it to `structure.toml`, create its folder with an
