@@ -1,0 +1,43 @@
+# The buildings that have classrooms. Made up: the names and codes are not any
+# university's. A code is 2 to 4 capital letters and starts every room identifier in
+# the building (ALD-104).
+
+[[building]]
+code = "ALD"
+name = "Alder Hall"
+
+[[building]]
+code = "BIR"
+name = "Birch Science Center"
+
+[[building]]
+code = "CED"
+name = "Cedar Hall"
+
+[[building]]
+code = "ELM"
+name = "Elm Street Building"
+
+[[building]]
+code = "HAW"
+name = "Hawthorn Hall"
+
+[[building]]
+code = "LAU"
+name = "Laurel Library"
+
+[[building]]
+code = "MAP"
+name = "Maple Lecture Center"
+
+[[building]]
+code = "OAK"
+name = "Oak Engineering Building"
+
+[[building]]
+code = "PIN"
+name = "Pine Learning Commons"
+
+[[building]]
+code = "WIL"
+name = "Willow Hall"

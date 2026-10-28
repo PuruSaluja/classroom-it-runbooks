@@ -1,0 +1,39 @@
+# Room types: how many seats a room of the type has, and the equipment it is fitted
+# with, by count. A room in rooms.csv takes its type's equipment and lists only how
+# it differs (`extra`, `without`).
+
+[[profile]]
+id = "seminar"
+name = "Seminar room"
+seats = [10, 24]
+equipment = { flat-panel-display = 1, table-inputs = 1, wireless-presentation = 1, button-panel = 1, wall-port = 2, wifi-ap = 1 }
+
+[[profile]]
+id = "standard"
+name = "Standard classroom"
+seats = [25, 65]
+equipment = { laser-projector = 1, projection-screen = 1, ceiling-speakers = 1, audio-processor = 1, lectern-inputs = 1, presentation-switcher = 1, button-panel = 1, lectern-network = 1, wall-port = 2, wifi-ap = 1, document-camera = 1, keyboard-mouse = 1, usb-hub = 1, lectern-computer = 1 }
+
+[[profile]]
+id = "hybrid"
+name = "Hybrid classroom"
+seats = [24, 70]
+equipment = { laser-projector = 1, projection-screen = 1, confidence-monitor = 1, ceiling-speakers = 1, audio-processor = 1, ceiling-mic-array = 1, lectern-inputs = 1, presentation-switcher = 1, control-processor = 1, lectern-network = 1, wall-port = 2, wifi-ap = 1, document-camera = 1, webcam = 1, keyboard-mouse = 1, usb-hub = 1, lectern-computer = 1 }
+
+[[profile]]
+id = "lecture-hall"
+name = "Lecture hall"
+seats = [100, 320]
+equipment = { laser-projector = 2, projection-screen = 2, confidence-monitor = 1, ceiling-speakers = 1, audio-processor = 1, gooseneck-mic = 1, wireless-mic-handheld = 2, wireless-mic-lapel = 1, assistive-listening = 1, lectern-inputs = 1, hdbaset-extender = 2, presentation-switcher = 1, control-processor = 1, lecture-capture = 1, lectern-network = 1, wall-port = 4, wifi-ap = 3, document-camera = 1, keyboard-mouse = 1, wireless-presenter = 1, usb-hub = 1, lectern-computer = 1 }
+
+[[profile]]
+id = "active-learning"
+name = "Active learning classroom"
+seats = [36, 90]
+equipment = { flat-panel-display = 6, interactive-display = 1, ceiling-speakers = 1, audio-processor = 1, wireless-mic-handheld = 1, table-inputs = 6, lectern-inputs = 1, presentation-switcher = 1, control-processor = 1, wireless-presentation = 1, lectern-network = 1, wall-port = 4, wifi-ap = 2, keyboard-mouse = 1, lectern-computer = 1 }
+
+[[profile]]
+id = "computer-lab"
+name = "Computer lab"
+seats = [20, 40]
+equipment = { short-throw-projector = 1, ceiling-speakers = 1, audio-processor = 1, lectern-inputs = 1, presentation-switcher = 1, button-panel = 1, lectern-network = 1, room-switch = 1, wall-port = 2, wifi-ap = 1, keyboard-mouse = 1, lectern-computer = 1, lab-workstations = 1 }

@@ -1,0 +1,204 @@
+# Every kind of equipment a classroom can have. `category` is the runbook category
+# (a prefix in structure.toml) a room's page files it under; runbooks in other
+# categories may cover it too. `kind` groups it within the category. Room pages list
+# a room's equipment in this file's order.
+
+# Audio-visual: projection
+[[equipment]]
+id = "laser-projector"
+name = "Laser projector"
+category = "AV"
+kind = "projector"
+
+[[equipment]]
+id = "short-throw-projector"
+name = "Short-throw projector"
+category = "AV"
+kind = "projector"
+
+[[equipment]]
+id = "projection-screen"
+name = "Motorized projection screen"
+category = "AV"
+kind = "projector"
+
+# Audio-visual: displays
+[[equipment]]
+id = "flat-panel-display"
+name = "Flat-panel display"
+category = "AV"
+kind = "display"
+
+[[equipment]]
+id = "interactive-display"
+name = "Interactive touch display"
+category = "AV"
+kind = "display"
+
+[[equipment]]
+id = "confidence-monitor"
+name = "Confidence monitor"
+category = "AV"
+kind = "display"
+
+# Audio-visual: audio
+[[equipment]]
+id = "ceiling-speakers"
+name = "Ceiling speakers"
+category = "AV"
+kind = "audio"
+
+[[equipment]]
+id = "audio-processor"
+name = "Audio processor and amplifier"
+category = "AV"
+kind = "audio"
+
+[[equipment]]
+id = "gooseneck-mic"
+name = "Lectern gooseneck microphone"
+category = "AV"
+kind = "audio"
+
+[[equipment]]
+id = "wireless-mic-handheld"
+name = "Wireless handheld microphone"
+category = "AV"
+kind = "audio"
+
+[[equipment]]
+id = "wireless-mic-lapel"
+name = "Wireless lapel microphone"
+category = "AV"
+kind = "audio"
+
+[[equipment]]
+id = "ceiling-mic-array"
+name = "Ceiling microphone array"
+category = "AV"
+kind = "audio"
+
+[[equipment]]
+id = "assistive-listening"
+name = "Assistive listening system"
+category = "AV"
+kind = "audio"
+
+# Audio-visual: cabling
+[[equipment]]
+id = "lectern-inputs"
+name = "Lectern HDMI and USB-C inputs"
+category = "AV"
+kind = "cabling"
+
+[[equipment]]
+id = "table-inputs"
+name = "Table HDMI and USB-C inputs"
+category = "AV"
+kind = "cabling"
+
+[[equipment]]
+id = "hdbaset-extender"
+name = "HDBaseT video extender"
+category = "AV"
+kind = "cabling"
+
+# Audio-visual: control systems
+[[equipment]]
+id = "presentation-switcher"
+name = "Presentation switcher"
+category = "AV"
+kind = "control"
+
+[[equipment]]
+id = "control-processor"
+name = "Control processor and touch panel"
+category = "AV"
+kind = "control"
+
+[[equipment]]
+id = "button-panel"
+name = "Wall button panel"
+category = "AV"
+kind = "control"
+
+[[equipment]]
+id = "wireless-presentation"
+name = "Wireless presentation receiver"
+category = "AV"
+kind = "control"
+
+[[equipment]]
+id = "lecture-capture"
+name = "Lecture capture appliance and camera"
+category = "AV"
+kind = "control"
+
+# Network
+[[equipment]]
+id = "lectern-network"
+name = "Lectern network connection"
+category = "NET"
+kind = "wired"
+
+[[equipment]]
+id = "wall-port"
+name = "Wall network port"
+category = "NET"
+kind = "wired"
+
+[[equipment]]
+id = "room-switch"
+name = "Room network switch"
+category = "NET"
+kind = "wired"
+
+[[equipment]]
+id = "wifi-ap"
+name = "Wi-Fi access point"
+category = "NET"
+kind = "wireless"
+
+# Peripherals
+[[equipment]]
+id = "document-camera"
+name = "Document camera"
+category = "PER"
+kind = "camera"
+
+[[equipment]]
+id = "webcam"
+name = "Room webcam"
+category = "PER"
+kind = "camera"
+
+[[equipment]]
+id = "keyboard-mouse"
+name = "Wireless keyboard and mouse"
+category = "PER"
+kind = "input"
+
+[[equipment]]
+id = "wireless-presenter"
+name = "Wireless presenter"
+category = "PER"
+kind = "input"
+
+[[equipment]]
+id = "usb-hub"
+name = "Lectern USB hub"
+category = "PER"
+kind = "hub"
+
+# Account access: the computers instructors and students sign in to
+[[equipment]]
+id = "lectern-computer"
+name = "Lectern computer"
+category = "ACC"
+kind = "computer"
+
+[[equipment]]
+id = "lab-workstations"
+name = "Student workstations (one set)"
+category = "ACC"
+kind = "computer"
