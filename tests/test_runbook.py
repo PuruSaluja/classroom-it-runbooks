@@ -225,9 +225,12 @@ def test_a_new_runbook_is_the_template_filled_in(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "title",
     ['Can\'t sign in: "account locked"', "# not a heading", "Wi-Fi: 50% packet loss #2",
-     "Écran noir — no signal", "yes", "2026-10-28", "[1, 2]", "- item", "'quoted'", "\\path"],
+     "Écran noir — no signal", "yes", "2026-10-28", "[1, 2]", "- item", "'quoted'", "\\path",
+     # The template's own lines, which are replaced in one pass, so never twice.
+     "reviewed: YYYY-MM-DD", "equipment: [equipment-id]", "id: RB-XX-000",
+     "# The fault, as an instructor would report it"],
 )  # fmt: skip
-def test_any_title_reads_back_as_written(tmp_path: Path, title: str) -> None:
+def test_a_title_it_takes_reads_back_as_written(tmp_path: Path, title: str) -> None:
     page = read(new(TEMPLATE, tmp_path, "AV", title, ["wall-port"], KNOWN, DAY))
     assert page.meta["title"] == title
     assert page.heading == title
@@ -240,6 +243,13 @@ def test_any_title_reads_back_as_written(tmp_path: Path, title: str) -> None:
         (" Padded", ["wall-port"], "one line of text"),
         ("Two\nlines", ["wall-port"], "one line of text"),
         ("Two\rlines", ["wall-port"], "one line of text"),
+        # YAML or Markdown would read these back as line breaks or drop them.
+        ("Line\u2028separator", ["wall-port"], "or control characters"),
+        ("Para\u2029separator", ["wall-port"], "or control characters"),
+        ("Next\x85line", ["wall-port"], "or control characters"),
+        ("Form\x0cfeed", ["wall-port"], "or control characters"),
+        ("Tab\there", ["wall-port"], "or control characters"),
+        ("Bell\x07", ["wall-port"], "or control characters"),
         ("x" * 81, ["wall-port"], "at most 80 characters; this is 81"),
         ("???", ["wall-port"], "needs a letter or digit"),
         ("No signal", [], "name the equipment"),
@@ -282,7 +292,15 @@ def test_the_command_writes_a_draft_into_the_category_s_folder(
     assert main(["new", "XX", "No signal", "--equipment", "wall-port", *args]) == 1
     assert "'XX' is not a runbook category (AV, NET, PER, ACC)" in capsys.readouterr().err
     assert main(["new", "NET", "No link", "--equipment", "wall-port", *args]) == 1
-    assert "error: " in capsys.readouterr().err  # the network folder is not there
+    network = docs / "runbooks" / "network"
+    assert f"error: {network} is not a folder; is --docs" in capsys.readouterr().err
+    bad = tmp_path / "bad.md"
+    bad.write_bytes(b"\xff\xfe---")
+    for template, said in ((bad, "is not UTF-8 text"), (tmp_path, "is a folder"),
+                           (tmp_path / "none.md", "is missing")):  # fmt: skip
+        assert main(["new", "AV", "No signal", "--equipment", "wall-port", *args[:-1],
+                     str(template)]) == 1  # fmt: skip
+        assert f"error: {template} {said}" in capsys.readouterr().err
     assert main(["new", "AV", "No signal", "--equipment", "projector", *args]) == 1
     assert "not in the inventory's equipment: projector" in capsys.readouterr().err
     broken = tmp_path / "inventory"

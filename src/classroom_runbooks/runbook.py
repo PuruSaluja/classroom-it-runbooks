@@ -166,8 +166,16 @@ def new(
     today: datetime.date,
 ) -> Path:
     """Write a draft runbook from ``template`` into ``folder``; its path."""
-    if title != title.strip() or not title or "\n" in title or "\r" in title:
-        raise RunbookError("a title is one line of text without spaces at its ends")
+    # Control characters and line or paragraph separators (U+2028, U+0085) would not
+    # read back as written: YAML and Markdown treat some of them as line breaks.
+    if (
+        not title
+        or title != title.strip()
+        or any(unicodedata.category(c) in ("Cc", "Zl", "Zp") for c in title)
+    ):
+        raise RunbookError(
+            "a title is one line of text without spaces at its ends or control characters"
+        )
     if len(title) > MAX_TITLE:
         raise RunbookError(f"a title is at most {MAX_TITLE} characters; this is {len(title)}")
     if not slug(title):
@@ -183,18 +191,20 @@ def new(
     if number > 999:
         raise RunbookError(f"RB-{prefix} has used all 999 numbers")
     runbook_id = f"RB-{prefix}-{number:03d}"
-    filled = template
-    for old, value in (
-        ("id: RB-XX-000", f"id: {runbook_id}"),
-        ('title: "The fault, as an instructor would report it"',
-         f"title: {json.dumps(title, ensure_ascii=False)}"),
-        ("# The fault, as an instructor would report it", f"# {title}"),
-        ("equipment: [equipment-id]", f"equipment: [{', '.join(equipment)}]"),
-        ("reviewed: YYYY-MM-DD", f"reviewed: {today.isoformat()}"),
-    ):  # fmt: skip
-        if filled.count(old) != 1:
+    values = {
+        "id: RB-XX-000": f"id: {runbook_id}",
+        'title: "The fault, as an instructor would report it"':
+            f"title: {json.dumps(title, ensure_ascii=False)}",
+        "# The fault, as an instructor would report it": f"# {title}",
+        "equipment: [equipment-id]": f"equipment: [{', '.join(equipment)}]",
+        "reviewed: YYYY-MM-DD": f"reviewed: {today.isoformat()}",
+    }  # fmt: skip
+    for old in values:
+        if template.count(old) != 1:
             raise RunbookError(f"the template no longer has the line {old!r} once")
-        filled = filled.replace(old, value)
+    # In one pass over the template, so a title is never itself replaced.
+    placeholders = re.compile("|".join(map(re.escape, values)))
+    filled = placeholders.sub(lambda m: values[m.group(0)], template)
     path = Path(folder) / f"{runbook_id.lower()}-{slug(title)}.md"
     try:
         with path.open("x", encoding="utf-8", newline="\n") as f:
@@ -202,6 +212,17 @@ def new(
     except FileExistsError:
         raise RunbookError(f"{path} is already there; it is not overwritten") from None
     return path
+
+
+def _template(path: Path) -> str:
+    if path.is_dir():
+        raise RunbookError(f"{path} is a folder; the template is a file, {DEFAULT_TEMPLATE}")
+    try:
+        return path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        raise RunbookError(f"{path} is missing") from None
+    except UnicodeDecodeError:
+        raise RunbookError(f"{path} is not UTF-8 text") from None
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -228,8 +249,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 f"{args.category!r} is not a runbook category ({', '.join(categories)})"
             )
         known = [e.id for e in inventory.load(args.inventory, list(categories)).equipment]
-        template = args.template.read_text(encoding="utf-8")
+        template = _template(args.template)
         folder = args.docs / categories[args.category].path
+        if not folder.is_dir():
+            raise RunbookError(f"{folder} is not a folder; is --docs the site's docs folder?")
         path = new(template, folder, args.category, args.title, args.equipment, known,
                    datetime.date.today())  # fmt: skip
     except (structure.StructureError, RunbookError, OSError) as exc:
