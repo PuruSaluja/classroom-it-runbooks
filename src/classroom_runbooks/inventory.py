@@ -177,7 +177,7 @@ def _unique(path: Path, name: str, values: list[str], problems: list[str]) -> No
         problems.append(f"{path}: the {name} {', '.join(repeated)} is used more than once")
 
 
-def _buildings(path: Path, problems: list[str]) -> list[Building]:
+def _buildings(path: Path, problems: list[str], rejected: set[str]) -> list[Building]:
     buildings = []
     for i, entry in enumerate(_entries(path, "building", {"code", "name"}, problems), 1):
         code, name = entry["code"], entry["name"]
@@ -185,6 +185,7 @@ def _buildings(path: Path, problems: list[str]) -> list[Building]:
             problems.append(f"{path}: building {i}: a code is 2 to 4 capital letters, not {code!r}")
         elif not _text(name):
             problems.append(f"{path}: building {code}: name must be text without end spaces")
+            rejected.add(f"building {code}")
         else:
             buildings.append(Building(code, name))
     _unique(path, "code", [b.code for b in buildings], problems)
@@ -192,7 +193,9 @@ def _buildings(path: Path, problems: list[str]) -> list[Building]:
     return buildings
 
 
-def _equipment(path: Path, categories: Collection[str], problems: list[str]) -> list[Equipment]:
+def _equipment(
+    path: Path, categories: Collection[str], problems: list[str], rejected: set[str]
+) -> list[Equipment]:
     fields = {"id", "name", "category", "kind"}
     items = []
     for i, entry in enumerate(_entries(path, "equipment", fields, problems), 1):
@@ -204,6 +207,7 @@ def _equipment(path: Path, categories: Collection[str], problems: list[str]) -> 
             )
             continue
         where = f"{path}: equipment {item_id}"
+        rejected.add(f"equipment {item_id}")  # until it passes
         if not _text(entry["name"]):
             problems.append(f"{where}: name must be text without end spaces")
         elif not isinstance(entry["category"], str) or entry["category"] not in categories:
@@ -215,12 +219,15 @@ def _equipment(path: Path, categories: Collection[str], problems: list[str]) -> 
             problems.append(f"{where}: kind is lower-case words joined by hyphens")
         else:
             items.append(Equipment(item_id, entry["name"], entry["category"], entry["kind"]))
+            rejected.discard(f"equipment {item_id}")
     _unique(path, "id", [e.id for e in items], problems)
     _unique(path, "name", [e.name for e in items], problems)
     return items
 
 
-def _profiles(path: Path, known: Collection[str], problems: list[str]) -> list[Profile]:
+def _profiles(
+    path: Path, known: Collection[str], problems: list[str], rejected: set[str]
+) -> list[Profile]:
     fields = {"id", "name", "seats", "equipment"}
     profiles = []
     for i, entry in enumerate(_entries(path, "profile", fields, problems), 1):
@@ -232,6 +239,7 @@ def _profiles(path: Path, known: Collection[str], problems: list[str]) -> list[P
             )
             continue
         where = f"{path}: profile {profile_id}"
+        rejected.add(f"profile {profile_id}")  # until it passes
         seats, fitted = entry["seats"], entry["equipment"]
         if not _text(entry["name"]):
             problems.append(f"{where}: name must be text without end spaces")
@@ -247,15 +255,19 @@ def _profiles(path: Path, known: Collection[str], problems: list[str]) -> list[P
         if not isinstance(fitted, dict) or not fitted:
             problems.append(f"{where}: equipment is a table of equipment ids and counts")
             continue
-        bad = [f"{k} = {v!r}" for k, v in fitted.items() if k not in known or not _count(v)]
+        # Equipment already reported in equipment.toml is not reported again here.
+        unknown = [k for k in fitted if k not in known and f"equipment {k}" not in rejected]
+        bad = [f"{k} = {v!r}" for k, v in fitted.items() if k in unknown or not _count(v)]
         if bad:
             problems.append(
                 f"{where}: each equipment entry is a known id and a count from 1 to "
                 f"{MAX_COUNT}, not {', '.join(bad)}"
             )
+        if bad or any(k not in known for k in fitted):
             continue
         profiles.append(Profile(profile_id, entry["name"], (seats[0], seats[1]),
                                 tuple(fitted.items())))  # fmt: skip
+        rejected.discard(f"profile {profile_id}")
     _unique(path, "id", [p.id for p in profiles], problems)
     _unique(path, "name", [p.name for p in profiles], problems)
     return profiles
@@ -267,6 +279,7 @@ def _rooms(
     equipment: Sequence[str],
     profiles: dict[str, Profile],
     problems: list[str],
+    rejected: set[str],
 ) -> list[Room]:
     text = _read(path, problems)
     if text is None:
@@ -295,7 +308,7 @@ def _rooms(
             problems.append(f"{where} has {len(row)} values, not {len(ROOM_COLUMNS)}")
             continue
         room = _room(where, dict(zip(ROOM_COLUMNS, row, strict=True)), buildings, equipment,
-                     profiles, problems)  # fmt: skip
+                     profiles, problems, rejected)  # fmt: skip
         if room is None:
             continue
         if room.id in lines:
@@ -313,21 +326,24 @@ def _room(
     equipment: Sequence[str],
     profiles: dict[str, Profile],
     problems: list[str],
+    rejected: set[str],
 ) -> Room | None:
+    """The room a row describes, or None with its problems added. A building, room type
+    or equipment already reported where it is defined is not reported again."""
     spaced = [k for k, v in values.items() if v != v.strip()]
     if spaced:
         problems.append(f"{where}: {', '.join(spaced)} has spaces at an end")
         return None
     building, number, profile_id = values["building"], values["number"], values["profile"]
     said = len(problems)
-    if building not in buildings:
+    if building not in buildings and f"building {building}" not in rejected:
         problems.append(f"{where}: building {building!r} is not in buildings.toml")
     if not _NUMBER.match(number):
         problems.append(
             f"{where}: a room number is 3 or 4 digits and an optional capital, not {number!r}"
         )
     profile = profiles.get(profile_id)
-    if profile is None:
+    if profile is None and f"profile {profile_id}" not in rejected:
         problems.append(f"{where}: room type {profile_id!r} is not in profiles.toml")
     seats = int(values["seats"]) if re.fullmatch(r"[1-9][0-9]*", values["seats"]) else None
     if seats is None:
@@ -339,7 +355,9 @@ def _room(
     for word in values["extra"].split():
         match = _EXTRA.match(word)
         count = int(match.group(2) or 1) if match else 0
-        if not match or match.group(1) not in equipment or not 1 <= count <= MAX_COUNT:
+        if match and f"equipment {match.group(1)}" in rejected:
+            continue
+        elif not match or match.group(1) not in equipment or not 1 <= count <= MAX_COUNT:
             problems.append(
                 f"{where}: an extra is a known equipment id with an optional *count "
                 f"from 1 to {MAX_COUNT}, not {word!r}"
@@ -376,11 +394,13 @@ def load(folder: Path, categories: Collection[str]) -> Inventory:
     if not folder.is_dir():
         raise InventoryError([f"{folder} is not a folder"])
     problems: list[str] = []
-    buildings = _buildings(folder / "buildings.toml", problems)
-    equipment = _equipment(folder / "equipment.toml", categories, problems)
-    profiles = _profiles(folder / "profiles.toml", {e.id for e in equipment}, problems)
-    rooms = _rooms(folder / "rooms.csv", {b.code for b in buildings},
-                   [e.id for e in equipment], {p.id: p for p in profiles}, problems)  # fmt: skip
+    rejected: set[str] = set()  # entries reported where they are defined: "profile lab"
+    buildings = _buildings(folder / "buildings.toml", problems, rejected)
+    equipment = _equipment(folder / "equipment.toml", categories, problems, rejected)
+    known = {e.id for e in equipment}
+    profiles = _profiles(folder / "profiles.toml", known, problems, rejected)
+    rooms = _rooms(folder / "rooms.csv", {b.code for b in buildings}, [e.id for e in equipment],
+                   {p.id: p for p in profiles}, problems, rejected)  # fmt: skip
     if not problems:
         empty = [b.code for b in buildings if not any(r.building == b.code for r in rooms)]
         if empty:

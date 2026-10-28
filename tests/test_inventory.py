@@ -303,3 +303,29 @@ def test_the_command_prints_the_summary_or_every_problem(
     assert err.count("problem: ") == 2
     assert main(["--inventory", str(folder), "--structure", str(tmp_path / "none.toml")]) == 1
     assert "error: " in capsys.readouterr().err
+
+
+def test_an_entry_reported_where_it_is_defined_is_not_reported_again_where_used(
+    tmp_path: Path,
+) -> None:
+    # 3 rooms of a type whose seats are wrong: one problem, not one more per room.
+    assert problems(tmp_path / "a", profiles_toml=PROFILES.replace("[20, 60]", "[60, 20]")) == [
+        f"{tmp_path / 'a' / 'inventory' / 'profiles.toml'}: profile standard: seats is "
+        "[fewest, most], whole numbers from 1: [60, 20]"
+    ]
+    # Equipment a room type and every room have, or one room's extra.
+    for i, (old, new) in enumerate([('"Projector"', '" Projector"'), ('"camera"', '"Camera"')]):
+        found = problems(tmp_path / str(i), equipment_toml=EQUIPMENT.replace(old, new))
+        assert len(found) == 1 and "equipment.toml: equipment " in found[0], found
+    found = problems(tmp_path / "b", buildings_toml=BUILDINGS.replace('"Alder Hall"', '""'))
+    assert found == [f"{tmp_path / 'b' / 'inventory' / 'buildings.toml'}: building ALD: "
+                     "name must be text without end spaces"]  # fmt: skip
+    # A row's other problems are still reported.
+    rows = ROOMS + "ALD,10,standard,40,,\n"
+    found = problems(tmp_path / "c", buildings_toml=BUILDINGS.replace('"Alder Hall"', '""'),
+                     rooms_csv=rows)  # fmt: skip
+    assert len(found) == 2 and "line 5: a room number is 3 or 4 digits" in found[1], found
+    # Unknown names are still unknown.
+    found = problems(tmp_path / "d", profiles_toml=PROFILES.replace("[20, 60]", "[60, 20]"),
+                     rooms_csv=ROOMS + "ALD,105,lab,40,,\n")  # fmt: skip
+    assert len(found) == 2 and "line 5: room type 'lab' is not in profiles.toml" in found[1]
