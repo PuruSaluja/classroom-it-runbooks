@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+
+# Built site
+site/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
