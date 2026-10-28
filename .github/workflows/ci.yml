@@ -61,3 +61,6 @@ jobs:
 
       - name: Test
         run: pytest -W default
+
+      - name: Check the docs layout
+        run: python -m classroom_runbooks.structure

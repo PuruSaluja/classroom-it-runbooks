@@ -1,0 +1,70 @@
+# The information architecture: every section of docs/, who reads it, and what goes
+# in it. A section's folder holds an index.md titled with the section's title, and the
+# page above it links to it; `python -m classroom_runbooks.structure` checks both.
+# A runbook section's prefix is the category in its runbooks' identifiers (RB-AV-001).
+# Readers: "technicians" on shift, "new technicians" in their first weeks, "leads"
+# who run shifts and take escalations, and "authors" who write and review pages.
+
+[[section]]
+path = "start"
+title = "Start here"
+audience = ["new technicians"]
+purpose = "Orientation for a new student technician: what the team supports, how a shift runs, and the order to read the rest in."
+
+[[section]]
+path = "rooms"
+title = "Rooms"
+audience = ["technicians", "leads"]
+purpose = "The room inventory: each building's rooms and each room's equipment, linked to the runbooks for that equipment."
+
+[[section]]
+path = "runbooks"
+title = "Runbooks"
+audience = ["technicians", "new technicians"]
+purpose = "One fault per runbook: its symptoms, the checks in order, the fix, and when to escalate. Grouped by category."
+
+[[section]]
+path = "runbooks/av"
+title = "Audio-visual"
+audience = ["technicians", "new technicians"]
+purpose = "Projectors, displays, audio, cabling and room control systems."
+prefix = "AV"
+
+[[section]]
+path = "runbooks/network"
+title = "Network"
+audience = ["technicians", "new technicians"]
+purpose = "Wired and wireless connections in classrooms: wall ports, the lectern's network link and Wi-Fi."
+prefix = "NET"
+
+[[section]]
+path = "runbooks/peripherals"
+title = "Peripherals"
+audience = ["technicians", "new technicians"]
+purpose = "Devices at the lectern other than the display chain: document cameras, keyboards and mice, wireless presenters, webcams and USB hubs."
+prefix = "PER"
+
+[[section]]
+path = "runbooks/accounts"
+title = "Account access"
+audience = ["technicians", "new technicians"]
+purpose = "Instructors signing in at the lectern computer and to the room's systems, and what a technician may do about it and what goes to the service desk."
+prefix = "ACC"
+
+[[section]]
+path = "procedures"
+title = "Procedures"
+audience = ["technicians", "leads"]
+purpose = "How the team works around the runbooks: the escalation matrix, shift handoff and ticket handling."
+
+[[section]]
+path = "reference"
+title = "Reference"
+audience = ["leads", "authors"]
+purpose = "The ServiceNow knowledge-base export format and how this site's categories map to the knowledge base's taxonomy."
+
+[[section]]
+path = "contributing"
+title = "Contributing"
+audience = ["authors"]
+purpose = "How the site is organised, the runbook template and authoring conventions, and how pages are checked."
