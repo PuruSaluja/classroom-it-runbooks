@@ -32,10 +32,13 @@ DEFAULT_DOCS = Path("docs")
 ASSETS = "assets"
 """A folder of this name, anywhere, holds images and other files a page links to."""
 AUDIENCES = ("technicians", "new technicians", "leads", "authors")
-_SECTION_PATH = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*$")
-_PREFIX = re.compile(r"^[A-Z]{2,4}$")
+# Matched whole (fullmatch), since "$" would also match before a final newline.
+_SECTION_PATH = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*")
+_PREFIX = re.compile(r"[A-Z]{2,4}")
 # A Markdown link's target: [text](target) or [text](target "title").
 _LINK = re.compile(r"\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
+# A code span: a run of backticks, then text, then a run of the same length.
+_CODE_SPAN = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 _FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 
 
@@ -90,7 +93,7 @@ def parse(text: str) -> tuple[Section, ...]:
             raise StructureError(f"{where}: unknown keys {', '.join(extra)}")
         path = _text(entry, "path", where)
         where = f"section {path!r}"
-        if not _SECTION_PATH.match(path):
+        if not _SECTION_PATH.fullmatch(path):
             raise StructureError(
                 f"{where}: a path is lower-case words joined by hyphens, folders by /"
             )
@@ -107,7 +110,7 @@ def parse(text: str) -> tuple[Section, ...]:
                 f"{where}: audience is a list of {', '.join(map(repr, AUDIENCES))}, each once"
             )
         prefix = entry.get("prefix")
-        if prefix is not None and (not isinstance(prefix, str) or not _PREFIX.match(prefix)):
+        if prefix is not None and (not isinstance(prefix, str) or not _PREFIX.fullmatch(prefix)):
             raise StructureError(f"{where}: a prefix is 2 to 4 capital letters, not {prefix!r}")
         sections.append(
             Section(path, _text(entry, "title", where), tuple(audience),
@@ -174,12 +177,12 @@ def code_lines(lines: Sequence[str]) -> list[bool]:
 def links(markdown: str) -> set[str]:
     """The relative targets a page links to, without any ``#anchor``, as written.
 
-    A link in a fenced code block is shown, not followed, so it is not one.
+    A link in a fenced code block or a code span is shown, not followed, so it is not one.
     """
     lines = markdown.splitlines()
     prose = "\n".join(line for line, code in zip(lines, code_lines(lines), strict=True) if not code)
     targets = set()
-    for target in _LINK.findall(prose):
+    for target in _LINK.findall(_CODE_SPAN.sub("", prose)):
         if re.match(r"^[a-z][a-z0-9+.-]*:", target) or target.startswith("#"):
             continue
         targets.add(target.split("#", 1)[0])

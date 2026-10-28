@@ -169,6 +169,19 @@ def test_a_link_in_a_code_fence_is_shown_not_followed() -> None:
     assert links(text) == {"a.md", "d.md", "g.md", "h.md"}
 
 
+def test_a_link_in_a_code_span_is_shown_not_followed() -> None:
+    text = "See `[x](x.md)` and [y](y.md); ``[z](z.md) ` still code`` [w](w.md); ` [v](v.md)"
+    # A span closes with a run of as many backticks; a lone one opens nothing.
+    assert links(text) == {"y.md", "w.md", "v.md"}
+
+
+def test_a_prefix_or_path_ending_in_a_newline_is_refused() -> None:
+    with pytest.raises(StructureError, match=r"a prefix is 2 to 4 capital letters, not 'AV\\n'"):
+        parse(GOOD.replace('prefix = "AV"', 'prefix = "AV\\n"'))
+    with pytest.raises(StructureError, match="a path is lower-case words"):
+        parse(GOOD.replace('path = "runbooks/av"', 'path = "runbooks/av\\nx"'))
+
+
 def test_code_lines_marks_each_fenced_line_and_its_fences() -> None:
     lines = ["text", "``` text", "code", "``` ", "text", "~~~", "```", "~~~ x", "~~~", "text"]
     assert code_lines(lines) == [False, True, True, True, False, True, True, True, True, False]
