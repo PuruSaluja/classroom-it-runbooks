@@ -6,9 +6,9 @@ peripherals and account access), written in Markdown, with Python tools that
 check them and export them to ServiceNow's knowledge base.
 
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
-> to them, the room inventory with its pages, and the runbook template and
-> conventions are in place; the runbooks and the other tools are built in
-> the order of [Parts](#parts).
+> to them, the room inventory with its pages, the runbook template and
+> conventions, and the audio-visual runbooks are in place; the other
+> runbooks and tools are built in the order of [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -90,8 +90,8 @@ the counts above describe made-up data, not a campus.
 
 ```bash
 python -m classroom_runbooks.inventory            # check the inventory, print the counts
-python -m classroom_runbooks.inventory --write    # write docs/rooms/ from it
-python -m classroom_runbooks.inventory --check    # fail if docs/rooms/ is not what it gives
+python -m classroom_runbooks.inventory --write    # write docs/rooms/ from it and the runbooks
+python -m classroom_runbooks.inventory --check    # fail if docs/rooms/ is not what they give
 ```
 
 Every problem is listed with its file, and its line in `rooms.csv` or its
@@ -100,7 +100,14 @@ outside the type's range, a repeated room, an extra and a removal of the
 same item, a name a page cannot show, a room type or piece of equipment no
 room has, a damaged CSV). The pages are never edited
 by hand: CI runs `--check`, which fails on a page that is missing, edited,
-or no longer given by the inventory.
+or no longer given by the inventory and the runbooks.
+
+Each piece of equipment on a room page links the runbooks whose front
+matter lists it, and the index's equipment table lists them by title;
+`--write` and `--check` read the runbooks' front matter first and list
+any problem in it (a missing or unknown key, an identifier that is not
+the folder's category or the file's name, a heading that is not the
+title, equipment the inventory does not have, an identifier used twice).
 
 ## Writing a runbook
 
@@ -122,6 +129,32 @@ say how to write them: one fault per runbook, titled as it is reported;
 checks that change nothing before fixes; one action per step with what
 to expect; what a technician must not do; and no credentials, ever.
 
+## The runbooks
+
+| Category | Runbooks | Covers |
+| --- | ---: | --- |
+| [Audio-visual](docs/runbooks/av/index.md) | 16 | all 21 kinds of AV equipment in the inventory |
+| Network, peripherals, account access | to come | |
+
+Every one of the 220 rooms has equipment with a runbook, so each room's
+entry on its building's page links at least one.
+
+**The runbooks are drafts.** They are written from how classroom
+equipment of each kind generally works, not from any one model's manual
+or any institution's procedures, and none has yet been followed on real
+equipment by a second author, which is what makes a runbook `current`;
+their `reviewed` date is the day each was written. Button and menu names
+are given as such equipment usually labels them, and the people a fault
+is escalated to (AV engineering, facilities, the service desk, the
+network team, the teaching-technology team) are roles, not named teams.
+
+The tests hold every runbook to the template: its front matter, its six
+sections in order and filled in, a check that says what to expect and
+where to go if not, an action that says what to expect or hands the fault
+on, an escalation step that links Procedures, links within the page that
+name its sections, and a row in its category's index; and they hold every
+piece of AV equipment to a runbook that is not retired.
+
 ## Parts
 
 | Part | State |
@@ -129,7 +162,7 @@ to expect; what a technician must not do; and no credentials, ever.
 | Repository scaffold and information architecture | done |
 | Room inventory: 200+ classrooms with equipment profiles | done (220 rooms) |
 | Runbook template and authoring conventions | done |
-| AV runbooks: projectors, displays, audio, cabling, control systems | to come |
+| AV runbooks: projectors, displays, audio, cabling, control systems | done (16 runbooks) |
 | Network, peripheral and account-access runbooks | to come |
 | Escalation matrix, shift handoff and the onboarding path for new technicians | to come |
 | Validator: required sections, room-to-runbook coverage, dead cross-links | to come |

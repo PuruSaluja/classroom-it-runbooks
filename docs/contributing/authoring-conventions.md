@@ -75,8 +75,10 @@ these are the rules for what goes in them.
 - A new runbook is `draft` until a second author has followed it on the
   equipment it covers; then it is `current`.
 - `reviewed` is the date the steps were last checked against the
-  equipment. Check each current runbook at least once a year, and again
-  whenever the equipment it covers changes.
+  equipment. A draft's is the day it was written, as `runbook new` fills
+  it in; set it when a second author first follows the steps. Check each
+  current runbook at least once a year, and again whenever the equipment
+  it covers changes.
 
 ## Links and images
 

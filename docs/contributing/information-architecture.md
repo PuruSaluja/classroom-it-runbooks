@@ -72,7 +72,19 @@ the section indexes, is reached by following links from the home page.
 in `inventory/` (known buildings, room types and equipment, seats within
 each type's range, no room twice, every building, type and piece of
 equipment in some room) and that the pages in `rooms/` are the
-ones it gives; `--write` writes them. Edit the inventory, never a room page.
+ones it and the runbooks give; `--write` writes them. Edit the inventory or
+a runbook's front matter, never a room page. It reads every runbook's front
+matter first: each key the template has and no others, an identifier of
+the folder's category that the file's name starts with, the title as the
+heading, equipment the inventory has, a status, a date, and no identifier
+used twice.
+
+The tests also hold each runbook to the template's six sections, in order
+and filled in; each check to an **Expected:** and a link to where to go if
+it fails; each action to an **Expected:** or a hand-off; the escalation step
+to a link into Procedures; links within a runbook to its own sections; each
+runbook to a row in its category's index; and every piece of audio-visual
+equipment to a runbook that is not retired.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.
