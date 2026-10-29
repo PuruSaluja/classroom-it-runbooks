@@ -125,3 +125,9 @@ def test_each_category_s_index_lists_its_runbooks_by_identifier_and_title() -> N
     for entry in RUNBOOKS:
         index = (ROOT / "docs" / entry.path.parent / "index.md").read_text(encoding="utf-8")
         assert f"| {entry.id} | [{entry.title}]({entry.path.name}) |" in index, entry.id
+
+
+def test_every_piece_of_audio_visual_equipment_has_a_runbook() -> None:
+    covered = {item for e in RUNBOOKS if e.status != "retired" for item in e.equipment}
+    audio_visual = [e.id for e in EQUIPMENT if e.category == "AV"]
+    assert [item for item in audio_visual if item not in covered] == []

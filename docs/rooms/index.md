@@ -56,14 +56,14 @@ Each room has its type's equipment unless its entry says otherwise.
 | Wireless lapel microphone | [Microphone cannot be heard in the room](../runbooks/av/rb-av-008-microphone-cannot-be-heard-in-the-room.md) (RB-AV-008); [Speakers squeal or howl when a microphone is on](../runbooks/av/rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) (RB-AV-010) | 26 | 26 |
 | Ceiling microphone array | [Remote participants cannot hear the room](../runbooks/av/rb-av-009-remote-participants-cannot-hear-the-room.md) (RB-AV-009) | 50 | 50 |
 | Assistive listening system | [Assistive listening receiver is silent](../runbooks/av/rb-av-011-assistive-listening-receiver-is-silent.md) (RB-AV-011) | 17 | 17 |
-| Lectern HDMI and USB-C inputs | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
-| Table HDMI and USB-C inputs | [Audio-visual](../runbooks/av/index.md) | 53 | 146 |
-| HDBaseT video extender | [Audio-visual](../runbooks/av/index.md) | 13 | 26 |
+| Lectern HDMI and USB-C inputs | [Laptop shows no picture through the HDMI or USB-C cable](../runbooks/av/rb-av-012-laptop-shows-no-picture-through-the-hdmi-or-usb-c.md) (RB-AV-012); [Picture flickers, sparkles or drops out](../runbooks/av/rb-av-013-picture-flickers-sparkles-or-drops-out.md) (RB-AV-013) | 182 | 182 |
+| Table HDMI and USB-C inputs | [Laptop shows no picture through the HDMI or USB-C cable](../runbooks/av/rb-av-012-laptop-shows-no-picture-through-the-hdmi-or-usb-c.md) (RB-AV-012); [Picture flickers, sparkles or drops out](../runbooks/av/rb-av-013-picture-flickers-sparkles-or-drops-out.md) (RB-AV-013) | 53 | 146 |
+| HDBaseT video extender | [Picture flickers, sparkles or drops out](../runbooks/av/rb-av-013-picture-flickers-sparkles-or-drops-out.md) (RB-AV-013) | 13 | 26 |
 | Presentation switcher | [Projector shows no signal](../runbooks/av/rb-av-001-projector-shows-no-signal.md) (RB-AV-001) | 182 | 182 |
-| Control processor and touch panel | [Audio-visual](../runbooks/av/index.md) | 78 | 78 |
-| Wall button panel | [Audio-visual](../runbooks/av/index.md) | 142 | 142 |
-| Wireless presentation receiver | [Audio-visual](../runbooks/av/index.md) | 58 | 58 |
-| Lecture capture appliance and camera | [Audio-visual](../runbooks/av/index.md) | 13 | 13 |
+| Control processor and touch panel | [Touch panel or button panel does not respond](../runbooks/av/rb-av-014-touch-panel-or-button-panel-does-not-respond.md) (RB-AV-014) | 78 | 78 |
+| Wall button panel | [Touch panel or button panel does not respond](../runbooks/av/rb-av-014-touch-panel-or-button-panel-does-not-respond.md) (RB-AV-014) | 142 | 142 |
+| Wireless presentation receiver | [Cannot share a screen wirelessly](../runbooks/av/rb-av-015-cannot-share-a-screen-wirelessly.md) (RB-AV-015) | 58 | 58 |
+| Lecture capture appliance and camera | [A class was not recorded by lecture capture](../runbooks/av/rb-av-016-a-class-was-not-recorded-by-lecture-capture.md) (RB-AV-016) | 13 | 13 |
 | Lectern network connection | [Network](../runbooks/network/index.md) | 182 | 182 |
 | Wall network port | [Network](../runbooks/network/index.md) | 220 | 508 |
 | Room network switch | [Network](../runbooks/network/index.md) | 20 | 20 |

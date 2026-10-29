@@ -30,4 +30,17 @@ instructor reported it; each runbook links the ones next to it.
 | RB-AV-010 | [Speakers squeal or howl when a microphone is on](rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) |
 | RB-AV-011 | [Assistive listening receiver is silent](rb-av-011-assistive-listening-receiver-is-silent.md) |
 
-Cabling and control system runbooks are to come.
+## Cabling
+
+| Runbook | Fault |
+| --- | --- |
+| RB-AV-012 | [Laptop shows no picture through the HDMI or USB-C cable](rb-av-012-laptop-shows-no-picture-through-the-hdmi-or-usb-c.md) |
+| RB-AV-013 | [Picture flickers, sparkles or drops out](rb-av-013-picture-flickers-sparkles-or-drops-out.md) |
+
+## Control systems
+
+| Runbook | Fault |
+| --- | --- |
+| RB-AV-014 | [Touch panel or button panel does not respond](rb-av-014-touch-panel-or-button-panel-does-not-respond.md) |
+| RB-AV-015 | [Cannot share a screen wirelessly](rb-av-015-cannot-share-a-screen-wirelessly.md) |
+| RB-AV-016 | [A class was not recorded by lecture capture](rb-av-016-a-class-was-not-recorded-by-lecture-capture.md) |

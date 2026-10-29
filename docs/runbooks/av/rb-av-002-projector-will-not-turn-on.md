@@ -10,7 +10,9 @@ reviewed: 2026-10-29
 
 The projector stays dark when it is turned on from the touch panel or button
 panel. If it turns on but shows no picture, follow
-[Projector shows no signal](rb-av-001-projector-shows-no-signal.md).
+[Projector shows no signal](rb-av-001-projector-shows-no-signal.md); if the
+panel itself does not respond, follow
+[Touch panel or button panel does not respond](rb-av-014-touch-panel-or-button-panel-does-not-respond.md).
 
 ## Symptoms
 

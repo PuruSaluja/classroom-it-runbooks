@@ -9,8 +9,11 @@ reviewed: 2026-10-29
 # Projector shows no signal
 
 The projector is on but shows "No signal", a blank blue or black screen, or
-its own logo, whatever source is chosen. If the projector will not turn on
-at all, follow [Projector will not turn on](rb-av-002-projector-will-not-turn-on.md).
+its own logo, whatever source is chosen. If the lectern computer's picture
+appears and only a laptop's does not, follow
+[Laptop shows no picture through the HDMI or USB-C cable](rb-av-012-laptop-shows-no-picture-through-the-hdmi-or-usb-c.md);
+if the projector will not turn on at all, follow
+[Projector will not turn on](rb-av-002-projector-will-not-turn-on.md).
 
 ## Symptoms
 
