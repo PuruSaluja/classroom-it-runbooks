@@ -16,7 +16,7 @@ panel. If it turns on but shows no picture, follow
 
 - "I pressed on and nothing happened", "the projector is dead".
 - No image, no fan noise, and no light on the projector after pressing
-  **On**, or a light that blinks in a colour other than its usual one.
+  **On**, or a light that blinks in a color other than its usual one.
 - The panel may show the projector as warming up, or as on.
 
 ## Before you start

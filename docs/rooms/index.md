@@ -49,13 +49,13 @@ Each room has its type's equipment unless its entry says otherwise.
 | Flat-panel display | [Display shows no picture](../runbooks/av/rb-av-005-display-shows-no-picture.md) (RB-AV-005) | 53 | 146 |
 | Interactive touch display | [Touch does not work on the interactive display](../runbooks/av/rb-av-006-touch-does-not-work-on-the-interactive-display.md) (RB-AV-006) | 14 | 14 |
 | Confidence monitor | [Display shows no picture](../runbooks/av/rb-av-005-display-shows-no-picture.md) (RB-AV-005) | 62 | 62 |
-| Ceiling speakers | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
-| Audio processor and amplifier | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
-| Lectern gooseneck microphone | [Audio-visual](../runbooks/av/index.md) | 13 | 13 |
-| Wireless handheld microphone | [Audio-visual](../runbooks/av/index.md) | 28 | 49 |
-| Wireless lapel microphone | [Audio-visual](../runbooks/av/index.md) | 26 | 26 |
-| Ceiling microphone array | [Audio-visual](../runbooks/av/index.md) | 50 | 50 |
-| Assistive listening system | [Audio-visual](../runbooks/av/index.md) | 17 | 17 |
+| Ceiling speakers | [No sound from the room speakers](../runbooks/av/rb-av-007-no-sound-from-the-room-speakers.md) (RB-AV-007); [Speakers squeal or howl when a microphone is on](../runbooks/av/rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) (RB-AV-010) | 182 | 182 |
+| Audio processor and amplifier | [No sound from the room speakers](../runbooks/av/rb-av-007-no-sound-from-the-room-speakers.md) (RB-AV-007); [Microphone cannot be heard in the room](../runbooks/av/rb-av-008-microphone-cannot-be-heard-in-the-room.md) (RB-AV-008); [Remote participants cannot hear the room](../runbooks/av/rb-av-009-remote-participants-cannot-hear-the-room.md) (RB-AV-009); [Speakers squeal or howl when a microphone is on](../runbooks/av/rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) (RB-AV-010) | 182 | 182 |
+| Lectern gooseneck microphone | [Microphone cannot be heard in the room](../runbooks/av/rb-av-008-microphone-cannot-be-heard-in-the-room.md) (RB-AV-008); [Speakers squeal or howl when a microphone is on](../runbooks/av/rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) (RB-AV-010) | 13 | 13 |
+| Wireless handheld microphone | [Microphone cannot be heard in the room](../runbooks/av/rb-av-008-microphone-cannot-be-heard-in-the-room.md) (RB-AV-008); [Speakers squeal or howl when a microphone is on](../runbooks/av/rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) (RB-AV-010) | 28 | 49 |
+| Wireless lapel microphone | [Microphone cannot be heard in the room](../runbooks/av/rb-av-008-microphone-cannot-be-heard-in-the-room.md) (RB-AV-008); [Speakers squeal or howl when a microphone is on](../runbooks/av/rb-av-010-speakers-squeal-or-howl-when-a-microphone-is-on.md) (RB-AV-010) | 26 | 26 |
+| Ceiling microphone array | [Remote participants cannot hear the room](../runbooks/av/rb-av-009-remote-participants-cannot-hear-the-room.md) (RB-AV-009) | 50 | 50 |
+| Assistive listening system | [Assistive listening receiver is silent](../runbooks/av/rb-av-011-assistive-listening-receiver-is-silent.md) (RB-AV-011) | 17 | 17 |
 | Lectern HDMI and USB-C inputs | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
 | Table HDMI and USB-C inputs | [Audio-visual](../runbooks/av/index.md) | 53 | 146 |
 | HDBaseT video extender | [Audio-visual](../runbooks/av/index.md) | 13 | 26 |

@@ -37,7 +37,7 @@ shows a picture but ignores touch, follow
 ## Checks
 
 1. Look at the display's power light. **Expected:** steady, in its "on"
-   colour. If it is off or shows standby, go to step 1 of [Fix](#fix).
+   color. If it is off or shows standby, go to step 1 of [Fix](#fix).
 2. If the display shows a message or menu, read it. **Expected:** no
    message. "No signal" or an input name means it is on the wrong input or
    not receiving: go to step 2 of [Fix](#fix).
