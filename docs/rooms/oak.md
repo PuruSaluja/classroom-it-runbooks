@@ -1,6 +1,6 @@
 # Oak Engineering Building (OAK)
 
-<!-- Written from inventory/ by `python -m classroom_runbooks.inventory --write`: edit the inventory, not this page. -->
+<!-- Written from inventory/ and the runbooks by `python -m classroom_runbooks.inventory --write`: edit those, not this page. -->
 
 24 rooms, 923 seats. [All buildings](index.md)
 

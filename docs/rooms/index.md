@@ -1,6 +1,6 @@
 # Rooms
 
-<!-- Written from inventory/ by `python -m classroom_runbooks.inventory --write`: edit the inventory, not this page. -->
+<!-- Written from inventory/ and the runbooks by `python -m classroom_runbooks.inventory --write`: edit those, not this page. -->
 
 The room inventory: each building's rooms and each room's equipment, linked to the
 runbooks for that equipment. **The rooms are illustrative:** the buildings, rooms and

@@ -5,7 +5,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-from classroom_runbooks import inventory, structure
+from classroom_runbooks import inventory, runbook, structure
 
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORIES = [s.prefix for s in structure.load(ROOT / "structure.toml") if s.prefix]
@@ -50,5 +50,7 @@ def test_the_script_plans_every_building_and_only_those() -> None:
 
 def test_the_room_pages_are_the_ones_the_inventory_gives() -> None:
     sections = structure.load(ROOT / "structure.toml")
-    rendered = inventory.pages(inventory.load(ROOT / "inventory", CATEGORIES), sections)
+    inv = inventory.load(ROOT / "inventory", CATEGORIES)
+    listed = runbook.catalog(ROOT / "docs", sections, [e.id for e in inv.equipment])
+    rendered = inventory.pages(inv, sections, listed)
     assert inventory.check_pages(rendered, ROOT / "docs" / "rooms") == []

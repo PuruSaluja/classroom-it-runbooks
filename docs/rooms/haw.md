@@ -1,6 +1,6 @@
 # Hawthorn Hall (HAW)
 
-<!-- Written from inventory/ by `python -m classroom_runbooks.inventory --write`: edit the inventory, not this page. -->
+<!-- Written from inventory/ and the runbooks by `python -m classroom_runbooks.inventory --write`: edit those, not this page. -->
 
 16 rooms, 912 seats. [All buildings](index.md)
 

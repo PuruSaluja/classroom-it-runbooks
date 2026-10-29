@@ -15,6 +15,7 @@ from classroom_runbooks.inventory import (
     pages,
     summary,
 )
+from classroom_runbooks.runbook import Entry
 from classroom_runbooks.structure import parse
 
 CATEGORIES = ("AV", "NET")
@@ -397,8 +398,9 @@ def test_the_command_writes_and_checks_the_pages(
     structure.write_text(STRUCTURE, encoding="utf-8")
     rooms = tmp_path / "rooms"
     rooms.mkdir()
+    (tmp_path / "docs").mkdir()
     args = ["--inventory", str(write(tmp_path / "inventory")), "--structure", str(structure),
-            "--rooms", str(rooms)]  # fmt: skip
+            "--rooms", str(rooms), "--docs", str(tmp_path / "docs")]  # fmt: skip
     assert main([*args, "--check"]) == 1
     assert capsys.readouterr().out.endswith("3 problems; `--write` writes them\n")
     assert main([*args, "--write"]) == 0
@@ -413,8 +415,10 @@ def test_the_command_writes_and_checks_the_pages(
     out, err = capsys.readouterr()
     assert out.endswith("1 problems; remove the pages it does not give\n")
     assert f"problem: {rooms / 'old.md'} is not a page the inventory gives" in err
-    assert main([*args[:4], "--rooms", str(tmp_path / "none"), "--write"]) == 1
-    assert "is not a folder" in capsys.readouterr().err
+    assert main([*args[:4], "--rooms", str(tmp_path / "none"), *args[6:], "--write"]) == 1
+    assert f"error: {tmp_path / 'none'} is not a folder" in capsys.readouterr().err
+    assert main([*args[:6], "--docs", str(tmp_path / "nodocs"), "--check"]) == 1
+    assert f"error: {tmp_path / 'nodocs'} is not a folder" in capsys.readouterr().err
     with pytest.raises(SystemExit):
         main([*args, "--write", "--check"])
 
@@ -505,6 +509,62 @@ def test_unreadable_pages_are_reported_and_unwritable_ones_stop_the_command(
     structure = tmp_path / "structure.toml"
     structure.write_text(STRUCTURE, encoding="utf-8")
     args = ["--inventory", str(tmp_path / "inventory"), "--structure", str(structure),
-            "--rooms", str(rooms), "--write"]  # fmt: skip
+            "--rooms", str(rooms), "--docs", str(tmp_path), "--write"]  # fmt: skip
     assert main(args) == 1
     assert f"error: {rooms / 'ald.md'} cannot be written: " in capsys.readouterr().err
+
+
+def test_each_piece_of_equipment_links_the_runbooks_that_list_it(tmp_path: Path) -> None:
+    av = Path("runbooks/av")
+    listed = (
+        Entry("RB-AV-001", "No picture", ("projector",), "draft", av / "rb-av-001-a.md"),
+        Entry("RB-AV-002", "Image [cut off] | dim", ("projector", "wall-port"), "current",
+              av / "rb-av-002-b.md"),
+        Entry("RB-AV-003", "Old", ("speakers",), "retired", av / "rb-av-003-c.md"),
+    )  # fmt: skip
+    inventory = load(write(tmp_path), CATEGORIES)
+    rendered = pages(inventory, SECTIONS, listed)
+    index = rendered["index.md"].splitlines()
+    # By title in the index, escaped so that a title stays one link in one cell.
+    second = r"[Image \[cut off\] \| dim](../runbooks/av/rb-av-002-b.md) (RB-AV-002)"
+    assert ("| Projector | [No picture](../runbooks/av/rb-av-001-a.md) (RB-AV-001); "
+            f"{second} | 3 | 3 |") in index  # fmt: skip
+    # A retired runbook is not linked: the category's index is, as for no runbook.
+    assert "| Ceiling speakers | [Audio-visual](../runbooks/av/index.md) | 2 | 2 |" in index
+    # A runbook of one category may cover another's equipment.
+    assert f"| Wall network port | {second} | 3 | 8 |" in index
+    # By identifier on the room pages.
+    ald = rendered["ald.md"].splitlines()
+    assert ("- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Projector "
+            "([RB-AV-001](../runbooks/av/rb-av-001-a.md), "
+            "[RB-AV-002](../runbooks/av/rb-av-002-b.md)), Ceiling speakers") in ald  # fmt: skip
+    assert ("- **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2 "
+            "([RB-AV-002](../runbooks/av/rb-av-002-b.md))") in ald  # fmt: skip
+    assert pages(inventory, SECTIONS, ()) == pages(inventory, SECTIONS)
+
+
+def test_the_command_links_the_runbooks_or_lists_their_problems(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    structure = tmp_path / "structure.toml"
+    structure.write_text(STRUCTURE, encoding="utf-8")
+    av = tmp_path / "docs" / "runbooks" / "av"
+    av.mkdir(parents=True)
+    page = av / "rb-av-001-no-picture.md"
+    lines = ["---", "id: RB-AV-001", "title: No picture", "equipment: [projector]",
+             "status: draft", "reviewed: 2026-10-29", "---", "", "# No picture", ""]  # fmt: skip
+    page.write_text("\n".join(lines), encoding="utf-8")
+    rooms = tmp_path / "rooms"
+    rooms.mkdir()
+    args = ["--inventory", str(write(tmp_path / "inventory")), "--structure", str(structure),
+            "--rooms", str(rooms), "--docs", str(tmp_path / "docs")]  # fmt: skip
+    assert main([*args, "--write"]) == 0
+    written = (rooms / "ald.md").read_text(encoding="utf-8")
+    assert "Projector ([RB-AV-001](../runbooks/av/rb-av-001-no-picture.md))" in written
+    capsys.readouterr()
+    page.write_text("\n".join(lines).replace("[projector]", "[laser]"), encoding="utf-8")
+    assert main([*args, "--check"]) == 1
+    out, err = capsys.readouterr()
+    assert out.startswith("2 buildings, 3 rooms, 124 seats\n")
+    assert out.endswith("1 problems in the runbooks\n")
+    assert f"problem: {page}: not in the inventory's equipment: laser" in err
