@@ -11,9 +11,11 @@ from classroom_runbooks.structure import check, links, load
 ROOT = Path(__file__).resolve().parents[1]
 SECTIONS = load(ROOT / "structure.toml")
 EQUIPMENT = inventory.load(ROOT / "inventory", [s.prefix for s in SECTIONS if s.prefix]).equipment
-# A numbered step: its number and its text, up to the next step or the section's end.
+# A numbered step's text, up to the next step or the section's end.
 _STEP = re.compile(r"^[0-9]+\. (.*?)(?=^[0-9]+\. |\Z)", re.MULTILINE | re.DOTALL)
 _ANCHOR = re.compile(r"\]\(#([^)]*)\)")
+# "go to step 2 of [Fix](#fix)", which a line may break anywhere in.
+_FIX_STEP = re.compile(r"step\s+([0-9]+)\s+of\s+\[Fix\]")
 
 
 @pytest.fixture(scope="module")
@@ -132,6 +134,20 @@ def test_a_runbook_s_links_within_the_page_name_its_sections(
         text = (ROOT / "docs" / entry.path).read_text(encoding="utf-8")
         for anchor in _ANCHOR.findall(text):
             assert anchor in anchors, (entry.id, anchor)
+
+
+def test_a_step_of_fix_that_a_runbook_names_is_there(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    named = 0
+    for entry in runbooks:
+        page = runbook.read(ROOT / "docs" / entry.path)
+        steps = len(_STEP.findall(dict(page.sections)["Fix"]))
+        for _, body in page.sections:
+            for number in _FIX_STEP.findall(body):
+                assert 1 <= int(number) <= steps, (entry.id, number)
+                named += 1
+    assert named >= len(runbooks)
 
 
 def test_each_category_s_index_lists_its_runbooks_by_identifier_and_title(
