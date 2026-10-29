@@ -36,14 +36,14 @@
 
 Seminar room, 16 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-102
 
 Standard classroom, 31 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -52,7 +52,7 @@ Standard classroom, 31 seats.
 
 Standard classroom, 52 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -61,14 +61,14 @@ Standard classroom, 52 seats.
 
 Seminar room, 23 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-105
 
 Standard classroom, 58 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -77,21 +77,21 @@ Standard classroom, 58 seats.
 
 Seminar room, 13 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-202
 
 Seminar room, 21 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-203
 
 Hybrid classroom, 50 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -100,7 +100,7 @@ Hybrid classroom, 50 seats.
 
 Standard classroom, 25 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -109,14 +109,14 @@ Standard classroom, 25 seats.
 
 Seminar room, 17 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-301
 
 Hybrid classroom, 28 seats. Unlike its type: no Document camera.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -125,14 +125,14 @@ Hybrid classroom, 28 seats. Unlike its type: no Document camera.
 
 Seminar room, 12 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-303
 
 Hybrid classroom, 31 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -141,7 +141,7 @@ Hybrid classroom, 31 seats.
 
 Hybrid classroom, 44 seats. Unlike its type: also Wireless lapel microphone.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Wireless lapel microphone, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Wireless lapel microphone, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -150,14 +150,14 @@ Hybrid classroom, 44 seats. Unlike its type: also Wireless lapel microphone.
 
 Seminar room, 24 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-401
 
 Hybrid classroom, 47 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -166,14 +166,14 @@ Hybrid classroom, 47 seats.
 
 Seminar room, 21 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-403
 
 Hybrid classroom, 63 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -182,7 +182,7 @@ Hybrid classroom, 63 seats.
 
 Standard classroom, 37 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -191,7 +191,7 @@ Standard classroom, 37 seats.
 
 Seminar room, 22 seats. Unlike its type: also Room webcam; no Wireless presentation receiver.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Room webcam
 
@@ -199,7 +199,7 @@ Seminar room, 22 seats. Unlike its type: also Room webcam; no Wireless presentat
 
 Standard classroom, 35 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -208,7 +208,7 @@ Standard classroom, 35 seats.
 
 Hybrid classroom, 34 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -217,14 +217,14 @@ Hybrid classroom, 34 seats.
 
 Seminar room, 24 seats. Unlike its type: no Wireless presentation receiver.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display, Table HDMI and USB-C inputs, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Table HDMI and USB-C inputs, Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Wall network port ×2, Wi-Fi access point
 
 ## ELM-504
 
 Standard classroom, 42 seats. Unlike its type: also Wireless lapel microphone.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Wireless lapel microphone, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Wireless lapel microphone, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -233,7 +233,7 @@ Standard classroom, 42 seats. Unlike its type: also Wireless lapel microphone.
 
 Hybrid classroom, 70 seats. Unlike its type: no Document camera.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Confidence monitor, Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher, Control processor and touch panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Confidence monitor ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Ceiling speakers, Audio processor and amplifier, Ceiling microphone array, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Room webcam, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer

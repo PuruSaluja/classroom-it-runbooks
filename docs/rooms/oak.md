@@ -35,7 +35,7 @@
 
 Computer lab, 30 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -44,7 +44,7 @@ Computer lab, 30 seats.
 
 Standard classroom, 32 seats. Unlike its type: also Wireless presenter.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Wireless presenter, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -53,7 +53,7 @@ Standard classroom, 32 seats. Unlike its type: also Wireless presenter.
 
 Computer lab, 26 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -62,7 +62,7 @@ Computer lab, 26 seats.
 
 Standard classroom, 38 seats. Unlike its type: also Wireless presentation receiver.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -71,7 +71,7 @@ Standard classroom, 38 seats. Unlike its type: also Wireless presentation receiv
 
 Standard classroom, 59 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -80,7 +80,7 @@ Standard classroom, 59 seats.
 
 Standard classroom, 54 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -89,7 +89,7 @@ Standard classroom, 54 seats.
 
 Active learning classroom, 77 seats. Unlike its type: also Flat-panel display ×2, Table HDMI and USB-C inputs ×2, Room webcam.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ×8, Interactive touch display, Ceiling speakers, Audio processor and amplifier, Wireless handheld microphone, Lectern HDMI and USB-C inputs, Table HDMI and USB-C inputs ×8, Presentation switcher, Control processor and touch panel, Wireless presentation receiver
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Flat-panel display ×8 ([RB-AV-005](../runbooks/av/rb-av-005-display-shows-no-picture.md)), Interactive touch display ([RB-AV-006](../runbooks/av/rb-av-006-touch-does-not-work-on-the-interactive-display.md)), Ceiling speakers, Audio processor and amplifier, Wireless handheld microphone, Lectern HDMI and USB-C inputs, Table HDMI and USB-C inputs ×8, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Control processor and touch panel, Wireless presentation receiver
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×4, Wi-Fi access point ×2
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Room webcam, Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -98,7 +98,7 @@ Active learning classroom, 77 seats. Unlike its type: also Flat-panel display ×
 
 Standard classroom, 35 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -107,7 +107,7 @@ Standard classroom, 35 seats.
 
 Computer lab, 25 seats. Unlike its type: also Document camera.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -116,7 +116,7 @@ Computer lab, 25 seats. Unlike its type: also Document camera.
 
 Computer lab, 23 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -125,7 +125,7 @@ Computer lab, 23 seats.
 
 Computer lab, 27 seats. Unlike its type: no Wi-Fi access point.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -134,7 +134,7 @@ Computer lab, 27 seats. Unlike its type: no Wi-Fi access point.
 
 Computer lab, 22 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -143,7 +143,7 @@ Computer lab, 22 seats.
 
 Computer lab, 31 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -152,7 +152,7 @@ Computer lab, 31 seats.
 
 Standard classroom, 59 seats. Unlike its type: no Document camera.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -161,7 +161,7 @@ Standard classroom, 59 seats. Unlike its type: no Document camera.
 
 Computer lab, 31 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -170,7 +170,7 @@ Computer lab, 31 seats.
 
 Standard classroom, 49 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -179,7 +179,7 @@ Standard classroom, 49 seats.
 
 Computer lab, 39 seats. Unlike its type: no Wi-Fi access point.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -188,7 +188,7 @@ Computer lab, 39 seats. Unlike its type: no Wi-Fi access point.
 
 Standard classroom, 33 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse, Lectern USB hub
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -197,7 +197,7 @@ Standard classroom, 33 seats.
 
 Computer lab, 33 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -206,7 +206,7 @@ Computer lab, 33 seats.
 
 Standard classroom, 57 seats. Unlike its type: no Lectern USB hub.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector, Motorized projection screen, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Laser projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Motorized projection screen ([RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md), [RB-AV-004](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer
@@ -215,7 +215,7 @@ Standard classroom, 57 seats. Unlike its type: no Lectern USB hub.
 
 Computer lab, 40 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -224,7 +224,7 @@ Computer lab, 40 seats.
 
 Computer lab, 35 seats. Unlike its type: also Document camera.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Document camera, Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -233,7 +233,7 @@ Computer lab, 35 seats. Unlike its type: also Document camera.
 
 Computer lab, 28 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)
@@ -242,7 +242,7 @@ Computer lab, 28 seats.
 
 Computer lab, 40 seats.
 
-- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector, Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher, Wall button panel
+- **Audio-visual** ([runbooks](../runbooks/av/index.md)): Short-throw projector ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md), [RB-AV-002](../runbooks/av/rb-av-002-projector-will-not-turn-on.md), [RB-AV-003](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md)), Ceiling speakers, Audio processor and amplifier, Lectern HDMI and USB-C inputs, Presentation switcher ([RB-AV-001](../runbooks/av/rb-av-001-projector-shows-no-signal.md)), Wall button panel
 - **Network** ([runbooks](../runbooks/network/index.md)): Lectern network connection, Wall network port ×2, Room network switch, Wi-Fi access point
 - **Peripherals** ([runbooks](../runbooks/peripherals/index.md)): Wireless keyboard and mouse
 - **Account access** ([runbooks](../runbooks/accounts/index.md)): Lectern computer, Student workstations (one set)

@@ -43,12 +43,12 @@ Each room has its type's equipment unless its entry says otherwise.
 
 | Equipment | Runbooks | Rooms with it | In all |
 | --- | --- | ---: | ---: |
-| Laser projector | [Audio-visual](../runbooks/av/index.md) | 147 | 160 |
-| Short-throw projector | [Audio-visual](../runbooks/av/index.md) | 20 | 20 |
-| Motorized projection screen | [Audio-visual](../runbooks/av/index.md) | 147 | 160 |
-| Flat-panel display | [Audio-visual](../runbooks/av/index.md) | 53 | 146 |
-| Interactive touch display | [Audio-visual](../runbooks/av/index.md) | 14 | 14 |
-| Confidence monitor | [Audio-visual](../runbooks/av/index.md) | 62 | 62 |
+| Laser projector | [Projector shows no signal](../runbooks/av/rb-av-001-projector-shows-no-signal.md) (RB-AV-001); [Projector will not turn on](../runbooks/av/rb-av-002-projector-will-not-turn-on.md) (RB-AV-002); [Projected image is blurry, cut off or the wrong shape](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md) (RB-AV-003) | 147 | 160 |
+| Short-throw projector | [Projector shows no signal](../runbooks/av/rb-av-001-projector-shows-no-signal.md) (RB-AV-001); [Projector will not turn on](../runbooks/av/rb-av-002-projector-will-not-turn-on.md) (RB-AV-002); [Projected image is blurry, cut off or the wrong shape](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md) (RB-AV-003) | 20 | 20 |
+| Motorized projection screen | [Projected image is blurry, cut off or the wrong shape](../runbooks/av/rb-av-003-projected-image-is-blurry-cut-off-or-the-wrong.md) (RB-AV-003); [Projection screen will not come down or go up](../runbooks/av/rb-av-004-projection-screen-will-not-come-down-or-go-up.md) (RB-AV-004) | 147 | 160 |
+| Flat-panel display | [Display shows no picture](../runbooks/av/rb-av-005-display-shows-no-picture.md) (RB-AV-005) | 53 | 146 |
+| Interactive touch display | [Touch does not work on the interactive display](../runbooks/av/rb-av-006-touch-does-not-work-on-the-interactive-display.md) (RB-AV-006) | 14 | 14 |
+| Confidence monitor | [Display shows no picture](../runbooks/av/rb-av-005-display-shows-no-picture.md) (RB-AV-005) | 62 | 62 |
 | Ceiling speakers | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
 | Audio processor and amplifier | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
 | Lectern gooseneck microphone | [Audio-visual](../runbooks/av/index.md) | 13 | 13 |
@@ -59,7 +59,7 @@ Each room has its type's equipment unless its entry says otherwise.
 | Lectern HDMI and USB-C inputs | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
 | Table HDMI and USB-C inputs | [Audio-visual](../runbooks/av/index.md) | 53 | 146 |
 | HDBaseT video extender | [Audio-visual](../runbooks/av/index.md) | 13 | 26 |
-| Presentation switcher | [Audio-visual](../runbooks/av/index.md) | 182 | 182 |
+| Presentation switcher | [Projector shows no signal](../runbooks/av/rb-av-001-projector-shows-no-signal.md) (RB-AV-001) | 182 | 182 |
 | Control processor and touch panel | [Audio-visual](../runbooks/av/index.md) | 78 | 78 |
 | Wall button panel | [Audio-visual](../runbooks/av/index.md) | 142 | 142 |
 | Wireless presentation receiver | [Audio-visual](../runbooks/av/index.md) | 58 | 58 |
