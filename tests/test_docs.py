@@ -3,16 +3,23 @@
 import re
 from pathlib import Path
 
+import pytest
+
 from classroom_runbooks import inventory, runbook
 from classroom_runbooks.structure import check, links, load
 
 ROOT = Path(__file__).resolve().parents[1]
 SECTIONS = load(ROOT / "structure.toml")
 EQUIPMENT = inventory.load(ROOT / "inventory", [s.prefix for s in SECTIONS if s.prefix]).equipment
-RUNBOOKS = runbook.catalog(ROOT / "docs", SECTIONS, [e.id for e in EQUIPMENT])
 # A numbered step: its number and its text, up to the next step or the section's end.
 _STEP = re.compile(r"^[0-9]+\. (.*?)(?=^[0-9]+\. |\Z)", re.MULTILINE | re.DOTALL)
 _ANCHOR = re.compile(r"\]\(#([^)]*)\)")
+
+
+@pytest.fixture(scope="module")
+def runbooks() -> tuple[runbook.Entry, ...]:
+    """The runbooks, read once; a problem in one fails the tests that read them, not all."""
+    return runbook.catalog(ROOT / "docs", SECTIONS, [e.id for e in EQUIPMENT])
 
 
 def test_the_docs_follow_the_structure() -> None:
@@ -79,11 +86,13 @@ def test_the_template_s_links_reach_a_file_from_a_runbook_s_folder() -> None:
             assert (ROOT / "docs" / s.path / target).is_file(), (s.path, target)
 
 
-def test_every_runbook_fills_the_template_s_sections_in_order() -> None:
+def test_every_runbook_fills_the_template_s_sections_in_order(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
     template = runbook.parse((ROOT / "templates" / "runbook.md").read_text(encoding="utf-8"))
     placeholders = [line.strip() for _, body in template.sections for line in body.splitlines()]
-    assert RUNBOOKS
-    for entry in RUNBOOKS:
+    assert runbooks
+    for entry in runbooks:
         page = runbook.read(ROOT / "docs" / entry.path)
         assert tuple(name for name, _ in page.sections) == runbook.SECTIONS, entry.id
         assert all(body.strip() for _, body in page.sections), entry.id
@@ -96,8 +105,10 @@ def test_every_runbook_fills_the_template_s_sections_in_order() -> None:
                 assert line.strip() in kept or line.strip() not in placeholders, (entry.id, line)
 
 
-def test_every_step_says_what_to_expect_and_a_check_where_to_go_if_not() -> None:
-    for entry in RUNBOOKS:
+def test_every_step_says_what_to_expect_and_a_check_where_to_go_if_not(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    for entry in runbooks:
         sections = dict(runbook.read(ROOT / "docs" / entry.path).sections)
         steps = _STEP.findall(sections["Checks"])
         assert steps, entry.id
@@ -112,8 +123,10 @@ def test_every_step_says_what_to_expect_and_a_check_where_to_go_if_not() -> None
         assert "../../procedures/index.md" in sections["Escalate"], entry.id
 
 
-def test_a_runbook_s_links_within_the_page_name_its_sections() -> None:
-    for entry in RUNBOOKS:
+def test_a_runbook_s_links_within_the_page_name_its_sections(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    for entry in runbooks:
         page = runbook.read(ROOT / "docs" / entry.path)
         anchors = {name.lower().replace(" ", "-") for name, _ in page.sections}
         text = (ROOT / "docs" / entry.path).read_text(encoding="utf-8")
@@ -121,15 +134,19 @@ def test_a_runbook_s_links_within_the_page_name_its_sections() -> None:
             assert anchor in anchors, (entry.id, anchor)
 
 
-def test_each_category_s_index_lists_its_runbooks_by_identifier_and_title() -> None:
-    for entry in RUNBOOKS:
+def test_each_category_s_index_lists_its_runbooks_by_identifier_and_title(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    for entry in runbooks:
         index = (ROOT / "docs" / entry.path.parent / "index.md").read_text(encoding="utf-8")
         assert f"| {entry.id} | [{entry.title}]({entry.path.name}) |" in index, entry.id
 
 
-def test_every_piece_of_equipment_has_a_runbook_in_its_category() -> None:
+def test_every_piece_of_equipment_has_a_runbook_in_its_category(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
     covered: dict[str, set[str]] = {}
-    for entry in (e for e in RUNBOOKS if e.status != "retired"):
+    for entry in (e for e in runbooks if e.status != "retired"):
         for item in entry.equipment:
             covered.setdefault(item, set()).add(entry.id.split("-")[1])
     # A runbook of another category may cover it too, but its own category has one.
