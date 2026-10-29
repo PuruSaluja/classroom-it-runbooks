@@ -19,6 +19,8 @@ sections in ``SECTIONS``' order. ``templates/runbook.md`` is the template, and
 
 ``python -m classroom_runbooks.runbook new AV "Projector shows no signal" --equipment
 laser-projector`` writes a draft from the template with the category's next number.
+``catalog`` lists the runbooks in the categories' folders, with their front matter
+checked, for the pages that link to them.
 """
 
 from __future__ import annotations
@@ -29,6 +31,7 @@ import json
 import re
 import sys
 import unicodedata
+from collections import Counter
 from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -45,6 +48,7 @@ MAX_TITLE = 80
 """The longest title, in characters: a fault in a few words, as it would be reported."""
 MAX_SLUG = 50
 # An ATX heading: up to three spaces, the #s, then its text without any closing #s.
+_ID = re.compile(r"RB-([A-Z]{2,4})-([0-9]{3})")
 _HEADING = re.compile(r" {0,3}(#{1,6})(?:[ \t]+(.*?))??(?:[ \t]+#+)?[ \t]*")
 
 
@@ -60,6 +64,26 @@ class Page:
     """The text of the ``#`` heading before the first section, if there is one."""
     sections: tuple[tuple[str, str], ...]
     """Each ``##`` heading and the text under it, in order."""
+
+
+class CatalogError(RunbookError):
+    """The runbooks cannot be listed; ``problems`` lists each one, with its file."""
+
+    def __init__(self, problems: Sequence[str]) -> None:
+        self.problems = tuple(problems)
+        super().__init__("\n".join(self.problems))
+
+
+@dataclass(frozen=True)
+class Entry:
+    """A runbook, as the pages that link to it list it."""
+
+    id: str
+    title: str
+    equipment: tuple[str, ...]
+    status: str
+    path: Path
+    """Its file, relative to the docs folder: ``runbooks/av/rb-av-001-....md``."""
 
 
 class _Loader(yaml.SafeLoader):
@@ -120,6 +144,9 @@ def parse(text: str) -> Page:
 
 
 def read(path: Path) -> Page:
+    if Path(path).is_dir():
+        # Windows would say only "Permission denied".
+        raise RunbookError(f"{path} is a folder, not a page")
     try:
         text = Path(path).read_text(encoding="utf-8")
     except FileNotFoundError:
@@ -156,6 +183,112 @@ def next_number(folder: Path, prefix: str) -> int:
     return max(numbers, default=0) + 1
 
 
+def _title_problem(title: object) -> str | None:
+    """Why ``title`` cannot be a runbook's title, or None if it can."""
+    # Control characters and line or paragraph separators (U+2028, U+0085) would not
+    # read back as written: YAML and Markdown treat some of them as line breaks.
+    if (
+        not isinstance(title, str)
+        or not title
+        or title != title.strip()
+        or any(unicodedata.category(c) in ("Cc", "Zl", "Zp") for c in title)
+    ):
+        return "a title is one line of text without spaces at its ends or control characters"
+    if len(title) > MAX_TITLE:
+        return f"a title is at most {MAX_TITLE} characters; this is {len(title)}"
+    if not slug(title):
+        return f"a title needs a letter or digit to name the file by: {title!r}"
+    return None
+
+
+def _equipment_problem(equipment: object, known: Collection[str]) -> str | None:
+    """Why ``equipment`` cannot be the list of what a runbook covers, or None if it can."""
+    if not equipment:
+        return "name the equipment the runbook covers, by its inventory id"
+    if not isinstance(equipment, (list, tuple)) or not all(isinstance(e, str) for e in equipment):
+        return f"equipment is a list of inventory ids, not {equipment!r}"
+    unknown = [e for e in equipment if e not in known]
+    if unknown:
+        return f"not in the inventory's equipment: {', '.join(unknown)}"
+    if len(set(equipment)) != len(equipment):
+        return "an equipment id is given twice"
+    return None
+
+
+def _front_matter_problems(page: Page, prefix: str, name: str, known: Collection[str]) -> list[str]:
+    """What is wrong with a runbook's front matter and heading; ``name`` is its file's."""
+    meta, problems = page.meta, []
+    missing = [f for f in FIELDS if f not in meta]
+    if missing:
+        problems.append(f"the front matter has no {', '.join(missing)}")
+    others = [repr(k) for k in meta if k not in FIELDS]
+    if others:
+        problems.append(f"the front matter has keys a runbook does not: {', '.join(others)}")
+    if "id" in meta:
+        runbook_id = meta["id"]
+        found = _ID.fullmatch(runbook_id) if isinstance(runbook_id, str) else None
+        if not found or found.group(2) == "000":
+            problems.append(f"id {runbook_id!r} is not RB-, a category's prefix and 001 to 999")
+        elif found.group(1) != prefix:
+            problems.append(f"id {runbook_id} is not in this folder's category, RB-{prefix}")
+        elif not name.startswith(f"{runbook_id.lower()}-"):
+            problems.append(f"the file's name does not start with its id, {runbook_id.lower()}-")
+    if "title" in meta:
+        problem = _title_problem(meta["title"])
+        if problem:
+            problems.append(problem)
+        elif page.heading != meta["title"]:
+            problems.append(f"the heading is not the title: {page.heading!r}")
+    if "equipment" in meta:
+        problem = _equipment_problem(meta["equipment"], known)
+        if problem:
+            problems.append(problem)
+    if "status" in meta and meta["status"] not in STATUSES:
+        problems.append(f"status {meta['status']!r} is not one of {', '.join(STATUSES)}")
+    # A date with a time reads as a datetime, which is a date too.
+    if "reviewed" in meta and type(meta["reviewed"]) is not datetime.date:
+        problems.append(f"reviewed {meta['reviewed']!r} is not a date, YYYY-MM-DD")
+    return problems
+
+
+def catalog(
+    docs: Path, sections: Sequence[structure.Section], known: Collection[str]
+) -> tuple[Entry, ...]:
+    """Every runbook in the runbook categories' folders under ``docs``, in their order.
+
+    A runbook is any page in a category's folder other than its ``index.md``. Its front
+    matter is checked: every field and no others, an identifier of the folder's category
+    that the file's name starts with, a title that is also the heading, equipment in
+    ``known``, a status and a date. Runbooks are listed by category, in ``sections``'
+    order, then by number; a category whose folder is missing has none.
+    Raises ``CatalogError`` listing every problem, each with its file.
+    """
+    problems: list[str] = []
+    entries: list[Entry] = []
+    for section in (s for s in sections if s.prefix):
+        for path in sorted((Path(docs) / section.path).glob("*.md")):
+            if path.name == "index.md":
+                continue
+            try:
+                page = read(path)
+            except RunbookError as exc:
+                problems.append(str(exc))
+                continue
+            found = _front_matter_problems(page, section.prefix, path.name, known)
+            problems += [f"{path}: {problem}" for problem in found]
+            if not found:
+                meta = page.meta
+                entries.append(Entry(meta["id"], meta["title"], tuple(meta["equipment"]),
+                                     meta["status"], Path(section.path) / path.name))  # fmt: skip
+    ids = Counter(e.id for e in entries)
+    for entry in entries:
+        if ids[entry.id] > 1:
+            problems.append(f"{Path(docs) / entry.path}: id {entry.id} is another runbook's too")
+    if problems:
+        raise CatalogError(problems)
+    return tuple(entries)
+
+
 def new(
     template: str,
     folder: Path,
@@ -166,27 +299,9 @@ def new(
     today: datetime.date,
 ) -> Path:
     """Write a draft runbook from ``template`` into ``folder``; its path."""
-    # Control characters and line or paragraph separators (U+2028, U+0085) would not
-    # read back as written: YAML and Markdown treat some of them as line breaks.
-    if (
-        not title
-        or title != title.strip()
-        or any(unicodedata.category(c) in ("Cc", "Zl", "Zp") for c in title)
-    ):
-        raise RunbookError(
-            "a title is one line of text without spaces at its ends or control characters"
-        )
-    if len(title) > MAX_TITLE:
-        raise RunbookError(f"a title is at most {MAX_TITLE} characters; this is {len(title)}")
-    if not slug(title):
-        raise RunbookError(f"a title needs a letter or digit to name the file by: {title!r}")
-    if not equipment:
-        raise RunbookError("name the equipment the runbook covers, by its inventory id")
-    unknown = [e for e in equipment if e not in known]
-    if unknown:
-        raise RunbookError(f"not in the inventory's equipment: {', '.join(unknown)}")
-    if len(set(equipment)) != len(equipment):
-        raise RunbookError("an equipment id is given twice")
+    problem = _title_problem(title) or _equipment_problem(equipment, known)
+    if problem:
+        raise RunbookError(problem)
     number = next_number(folder, prefix)
     if number > 999:
         raise RunbookError(f"RB-{prefix} has used all 999 numbers")

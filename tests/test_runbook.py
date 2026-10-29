@@ -6,8 +6,11 @@ import pytest
 from classroom_runbooks.runbook import (
     FIELDS,
     SECTIONS,
+    CatalogError,
+    Entry,
     Page,
     RunbookError,
+    catalog,
     main,
     new,
     next_number,
@@ -15,11 +18,13 @@ from classroom_runbooks.runbook import (
     read,
     slug,
 )
+from classroom_runbooks.structure import load
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = (ROOT / "templates" / "runbook.md").read_text(encoding="utf-8")
 DAY = datetime.date(2026, 10, 28)
 KNOWN = ("laser-projector", "projection-screen", "wall-port")
+STRUCTURE = load(ROOT / "structure.toml")
 PAGE = """---
 id: RB-AV-001
 title: Projector shows no signal
@@ -159,6 +164,8 @@ def test_a_file_is_read_or_its_problem_named(tmp_path: Path) -> None:
     assert read(path) == parse(PAGE)
     with pytest.raises(RunbookError, match="is missing"):
         read(tmp_path / "none.md")
+    with pytest.raises(RunbookError, match="is a folder, not a page"):
+        read(tmp_path)
     path.write_bytes(b"---\n\xff\n---\n")
     with pytest.raises(RunbookError, match="is not UTF-8 text"):
         read(path)
@@ -308,3 +315,105 @@ def test_the_command_writes_a_draft_into_the_category_s_folder(
     assert main(["new", "AV", "No signal", "--equipment", "wall-port", *args[:4],
                  "--inventory", str(broken), *args[6:]]) == 1  # fmt: skip
     assert "the inventory has 4 problems" in capsys.readouterr().err
+
+
+def _runbooks(docs: Path) -> Path:
+    """Two AV runbooks, a network and an accounts runbook, from the template, under ``docs``."""
+    av, network = docs / "runbooks" / "av", docs / "runbooks" / "network"
+    av.mkdir(parents=True)
+    network.mkdir()
+    (docs / "runbooks" / "accounts").mkdir()
+    new(TEMPLATE, docs / "runbooks" / "accounts", "ACC", "Cannot sign in", ["wall-port"], KNOWN,
+        DAY)  # fmt: skip
+    (av / "index.md").write_text("# Audio-visual\n", encoding="utf-8")
+    (av / "assets").mkdir()
+    (av / "assets" / "rb-av-009-not-a-runbook.md").write_text("x", encoding="utf-8")
+    new(TEMPLATE, av, "AV", "Projector shows no signal", ["laser-projector"], KNOWN, DAY)
+    new(TEMPLATE, av, "AV", "Screen stuck", ["projection-screen", "laser-projector"], KNOWN, DAY)
+    new(TEMPLATE, network, "NET", "No network at the wall port", ["wall-port"], KNOWN, DAY)
+    return av
+
+
+def test_the_catalog_lists_every_runbook_in_the_categories_folders(tmp_path: Path) -> None:
+    _runbooks(tmp_path)
+    # In structure.toml's order, accounts last; the peripherals folder is missing.
+    assert catalog(tmp_path, STRUCTURE, KNOWN) == (
+        Entry("RB-AV-001", "Projector shows no signal", ("laser-projector",), "draft",
+              Path("runbooks/av/rb-av-001-projector-shows-no-signal.md")),
+        Entry("RB-AV-002", "Screen stuck", ("projection-screen", "laser-projector"), "draft",
+              Path("runbooks/av/rb-av-002-screen-stuck.md")),
+        Entry("RB-NET-001", "No network at the wall port", ("wall-port",), "draft",
+              Path("runbooks/network/rb-net-001-no-network-at-the-wall-port.md")),
+        Entry("RB-ACC-001", "Cannot sign in", ("wall-port",), "draft",
+              Path("runbooks/accounts/rb-acc-001-cannot-sign-in.md")),
+    )  # fmt: skip
+    assert catalog(tmp_path / "none", STRUCTURE, KNOWN) == ()
+
+
+@pytest.mark.parametrize(
+    ("old", "new_text", "expected"),
+    [
+        ("status: draft\n", "", "the front matter has no status"),
+        ("status: draft\n", "state: draft\n",
+         "the front matter has no status | the front matter has keys a runbook does not: 'state'"),
+        ("id: RB-AV-001", "id: RB-AV-1",
+         "id 'RB-AV-1' is not RB-, a category's prefix and 001 to 999"),
+        ("id: RB-AV-001", "id: RB-AV-000",
+         "id 'RB-AV-000' is not RB-, a category's prefix and 001 to 999"),
+        ("id: RB-AV-001", "id: 7", "id 7 is not RB-, a category's prefix and 001 to 999"),
+        ("id: RB-AV-001", "id: RB-NET-001",
+         "id RB-NET-001 is not in this folder's category, RB-AV"),
+        ("id: RB-AV-001", "id: RB-AV-005",
+         "the file's name does not start with its id, rb-av-005-"),
+        ('title: "Projector shows no signal"', 'title: "Projector shows nothing"',
+         "the heading is not the title: 'Projector shows no signal'"),
+        ('title: "Projector shows no signal"', "title: 42",
+         "a title is one line of text without spaces at its ends or control characters"),
+        ('title: "Projector shows no signal"', 'title: "' + "x" * 81 + '"',
+         "a title is at most 80 characters; this is 81"),
+        ("equipment: [laser-projector]", "equipment: laser-projector",
+         "equipment is a list of inventory ids, not 'laser-projector'"),
+        ("equipment: [laser-projector]", "equipment: []",
+         "name the equipment the runbook covers, by its inventory id"),
+        ("equipment: [laser-projector]", "equipment: [laser]",
+         "not in the inventory's equipment: laser"),
+        ("equipment: [laser-projector]", "equipment: [{a: b}]",
+         "equipment is a list of inventory ids, not [{'a': 'b'}]"),
+        ("status: draft", "status: done", "status 'done' is not one of draft, current, retired"),
+        ("reviewed: 2026-10-28", "reviewed: soon", "reviewed 'soon' is not a date, YYYY-MM-DD"),
+        ("reviewed: 2026-10-28", "reviewed: 2026-10-28 10:00:00",
+         "reviewed datetime.datetime(2026, 10, 28, 10, 0) is not a date, YYYY-MM-DD"),
+    ],
+)  # fmt: skip
+def test_a_runbook_s_front_matter_is_checked(
+    tmp_path: Path, old: str, new_text: str, expected: str
+) -> None:
+    path = _runbooks(tmp_path) / "rb-av-001-projector-shows-no-signal.md"
+    text = path.read_text(encoding="utf-8")
+    assert text.count(old) == 1
+    path.write_text(text.replace(old, new_text), encoding="utf-8")
+    with pytest.raises(CatalogError) as caught:
+        catalog(tmp_path, STRUCTURE, KNOWN)
+    assert caught.value.problems == tuple(f"{path}: {p}" for p in expected.split(" | "))
+
+
+def test_every_problem_is_listed_and_a_repeated_id_is_named(tmp_path: Path) -> None:
+    av = _runbooks(tmp_path)
+    copy = av / "rb-av-002-screen-stuck-again.md"
+    copy.write_bytes((av / "rb-av-002-screen-stuck.md").read_bytes())
+    unreadable = av / "rb-av-003-x.md"
+    unreadable.write_bytes(b"---\n\xff\n---\n")
+    no_front_matter = tmp_path / "runbooks" / "network" / "rb-net-002-y.md"
+    no_front_matter.write_text("# Y\n", encoding="utf-8")
+    folder = av / "rb-av-004-folder.md"
+    folder.mkdir()
+    with pytest.raises(CatalogError) as caught:
+        catalog(tmp_path, STRUCTURE, KNOWN)
+    assert caught.value.problems == (
+        f"{unreadable} is not UTF-8 text",
+        f"{folder} is a folder, not a page",
+        f"{no_front_matter}: a runbook starts with front matter: its first line is '---'",
+        # In file name order: "-" sorts before ".".
+        f"{copy}: id RB-AV-002 is another runbook's too",
+        f"{av / 'rb-av-002-screen-stuck.md'}: id RB-AV-002 is another runbook's too",
+    )
