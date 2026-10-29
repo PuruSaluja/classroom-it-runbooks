@@ -349,6 +349,10 @@ def test_the_catalog_lists_every_runbook_in_the_categories_folders(tmp_path: Pat
               Path("runbooks/accounts/rb-acc-001-cannot-sign-in.md")),
     )  # fmt: skip
     assert catalog(tmp_path / "none", STRUCTURE, KNOWN) == ()
+    tomorrow = tmp_path / "runbooks" / "network" / "rb-net-001-no-network-at-the-wall-port.md"
+    tomorrow.write_text(tomorrow.read_text(encoding="utf-8").replace(
+        "reviewed: 2026-10-28", "reviewed: 2026-10-29"), encoding="utf-8")  # fmt: skip
+    assert len(catalog(tmp_path, STRUCTURE, KNOWN, DAY)) == 4
 
 
 @pytest.mark.parametrize(
@@ -394,6 +398,8 @@ def test_the_catalog_lists_every_runbook_in_the_categories_folders(tmp_path: Pat
          "reviewed '2026-10-28' is in quotes; write the date without them"),
         ("reviewed: 2026-10-28", "reviewed: '2026-02-30'",
          "reviewed '2026-02-30' is in quotes; write the date without them"),
+        # DAY is 2026-10-28: the next day is allowed, as it may already be there.
+        ("reviewed: 2026-10-28", "reviewed: 2026-10-30", "reviewed 2026-10-30 is in the future"),
         ("reviewed: 2026-10-28", "reviewed: 2026-10-28 10:00:00",
          "reviewed datetime.datetime(2026, 10, 28, 10, 0) is not a date, YYYY-MM-DD"),
     ],
@@ -406,7 +412,7 @@ def test_a_runbook_s_front_matter_is_checked(
     assert text.count(old) == 1
     path.write_text(text.replace(old, new_text), encoding="utf-8")
     with pytest.raises(CatalogError) as caught:
-        catalog(tmp_path, STRUCTURE, KNOWN)
+        catalog(tmp_path, STRUCTURE, KNOWN, DAY)
     assert caught.value.problems == tuple(f"{path}: {p}" for p in expected.split(" | "))
 
 

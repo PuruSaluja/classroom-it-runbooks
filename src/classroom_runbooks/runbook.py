@@ -218,7 +218,9 @@ def _equipment_problem(equipment: object, known: Collection[str]) -> str | None:
     return None
 
 
-def _front_matter_problems(page: Page, prefix: str, name: str, known: Collection[str]) -> list[str]:
+def _front_matter_problems(
+    page: Page, prefix: str, name: str, known: Collection[str], today: datetime.date
+) -> list[str]:
     """What is wrong with a runbook's front matter and heading; ``name`` is its file's."""
     meta, problems = page.meta, []
     missing = [f for f in FIELDS if f not in meta]
@@ -263,21 +265,29 @@ def _front_matter_problems(page: Page, prefix: str, name: str, known: Collection
         # A date with a time reads as a datetime, which is a date too.
         elif type(reviewed) is not datetime.date:
             problems.append(f"reviewed {reviewed!r} is not a date, YYYY-MM-DD")
+        # A day's grace, for a date written where it is already tomorrow.
+        elif reviewed > today + datetime.timedelta(days=1):
+            problems.append(f"reviewed {reviewed} is in the future")
     return problems
 
 
 def catalog(
-    docs: Path, sections: Sequence[structure.Section], known: Collection[str]
+    docs: Path,
+    sections: Sequence[structure.Section],
+    known: Collection[str],
+    today: datetime.date | None = None,
 ) -> tuple[Entry, ...]:
     """Every runbook in the runbook categories' folders under ``docs``, in their order.
 
     A runbook is any page in a category's folder other than its ``index.md``. Its front
     matter is checked: every field and no others, an identifier of the folder's category
     that the file's name starts with, a title that is also the heading, equipment in
-    ``known``, a status and a date. Runbooks are listed by category, in ``sections``'
-    order, then by number; a category whose folder is missing has none.
+    ``known``, a status and a date no later than ``today`` (by default, the computer's).
+    Runbooks are listed by category, in ``sections``' order, then by number; a category
+    whose folder is missing has none.
     Raises ``CatalogError`` listing every problem, each with its file.
     """
+    today = today or datetime.date.today()
     problems: list[str] = []
     entries: list[Entry] = []
     for section in (s for s in sections if s.prefix):
@@ -289,7 +299,7 @@ def catalog(
             except RunbookError as exc:
                 problems.append(str(exc))
                 continue
-            found = _front_matter_problems(page, section.prefix, path.name, known)
+            found = _front_matter_problems(page, section.prefix, path.name, known, today)
             problems += [f"{path}: {problem}" for problem in found]
             if not found:
                 meta = page.meta
