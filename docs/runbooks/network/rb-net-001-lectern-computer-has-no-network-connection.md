@@ -9,8 +9,10 @@ reviewed: 2026-10-29
 # Lectern computer has no network connection
 
 The lectern computer cannot reach the internet or the campus network:
-web pages, the learning platform and video meetings do not load. If a
-laptop in the room has no connection either, the fault may be wider:
+web pages, the learning platform and video meetings do not load. If the
+computer cannot be signed in to at all, follow
+[Instructor cannot sign in at the lectern computer](../accounts/rb-acc-001-instructor-cannot-sign-in-at-the-lectern-computer.md);
+if a laptop in the room has no connection either, the fault may be wider:
 follow [Wi-Fi is slow or keeps dropping in the classroom](rb-net-003-wi-fi-is-slow-or-keeps-dropping-in-the-classroom.md)
 for wireless, or [Wall port gives no network connection](rb-net-002-wall-port-gives-no-network-connection.md)
 for a wired one.

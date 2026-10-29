@@ -127,7 +127,10 @@ def test_each_category_s_index_lists_its_runbooks_by_identifier_and_title() -> N
         assert f"| {entry.id} | [{entry.title}]({entry.path.name}) |" in index, entry.id
 
 
-def test_every_piece_of_audio_visual_equipment_has_a_runbook() -> None:
-    covered = {item for e in RUNBOOKS if e.status != "retired" for item in e.equipment}
-    audio_visual = [e.id for e in EQUIPMENT if e.category == "AV"]
-    assert [item for item in audio_visual if item not in covered] == []
+def test_every_piece_of_equipment_has_a_runbook_in_its_category() -> None:
+    covered: dict[str, set[str]] = {}
+    for entry in (e for e in RUNBOOKS if e.status != "retired"):
+        for item in entry.equipment:
+            covered.setdefault(item, set()).add(entry.id.split("-")[1])
+    # A runbook of another category may cover it too, but its own category has one.
+    assert [e.id for e in EQUIPMENT if e.category not in covered.get(e.id, set())] == []

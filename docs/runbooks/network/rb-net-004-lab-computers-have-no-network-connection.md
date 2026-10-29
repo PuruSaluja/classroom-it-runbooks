@@ -9,8 +9,10 @@ reviewed: 2026-10-29
 # Lab computers have no network connection
 
 Several or all student workstations in a computer lab cannot reach the
-network, so students cannot sign in or nothing loads. For the lectern
-computer alone, follow
+network, so students cannot sign in or nothing loads. If only one
+workstation refuses a student's sign-in, follow
+[Student cannot sign in at a lab workstation](../accounts/rb-acc-002-student-cannot-sign-in-at-a-lab-workstation.md);
+for the lectern computer alone, follow
 [Lectern computer has no network connection](rb-net-001-lectern-computer-has-no-network-connection.md).
 
 ## Symptoms
