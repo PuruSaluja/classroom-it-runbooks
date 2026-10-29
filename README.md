@@ -7,8 +7,8 @@ check them and export them to ServiceNow's knowledge base.
 
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
 > to them, the room inventory with its pages, the runbook template and
-> conventions, and the audio-visual runbooks are in place; the other
-> runbooks and tools are built in the order of [Parts](#parts).
+> conventions, and the runbooks in all four categories are in place; the
+> procedures and the other tools are built in the order of [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -134,10 +134,15 @@ to expect; what a technician must not do; and no credentials, ever.
 | Category | Runbooks | Covers |
 | --- | ---: | --- |
 | [Audio-visual](docs/runbooks/av/index.md) | 16 | all 21 kinds of AV equipment in the inventory |
-| Network, peripherals, account access | to come | |
+| [Network](docs/runbooks/network/index.md) | 4 | all 4 kinds of network equipment |
+| [Peripherals](docs/runbooks/peripherals/index.md) | 5 | all 5 kinds of peripheral |
+| [Account access](docs/runbooks/accounts/index.md) | 4 | both kinds of computer people sign in to |
 
-Every one of the 220 rooms has equipment with a runbook, so each room's
-entry on its building's page links at least one.
+All 32 kinds of equipment have a runbook in their own category, so every
+piece of equipment in each of the 220 rooms links at least one. The
+account-access runbooks tell a fault in the room from a problem with the
+account, which the person takes to the service desk themselves; none asks
+a technician to request, type or reset a password.
 
 **The runbooks are drafts.** They are written from how classroom
 equipment of each kind generally works, not from any one model's manual
@@ -153,7 +158,7 @@ sections in order and filled in, a check that says what to expect and
 where to go if not, an action that says what to expect or hands the fault
 on, an escalation step that links Procedures, links within the page that
 name its sections, and a row in its category's index; and they hold every
-piece of AV equipment to a runbook that is not retired.
+kind of equipment to a runbook of its own category that is not retired.
 
 ## Parts
 
@@ -163,7 +168,7 @@ piece of AV equipment to a runbook that is not retired.
 | Room inventory: 200+ classrooms with equipment profiles | done (220 rooms) |
 | Runbook template and authoring conventions | done |
 | AV runbooks: projectors, displays, audio, cabling, control systems | done (16 runbooks) |
-| Network, peripheral and account-access runbooks | to come |
+| Network, peripheral and account-access runbooks | done (13 runbooks) |
 | Escalation matrix, shift handoff and the onboarding path for new technicians | to come |
 | Validator: required sections, room-to-runbook coverage, dead cross-links | to come |
 | ServiceNow knowledge-base export and taxonomy mapping | to come |

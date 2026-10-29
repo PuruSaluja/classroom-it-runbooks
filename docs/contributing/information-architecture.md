@@ -83,8 +83,8 @@ The tests also hold each runbook to the template's six sections, in order
 and filled in; each check to an **Expected:** and a link to where to go if
 it fails; each action to an **Expected:** or a hand-off; the escalation step
 to a link into Procedures; links within a runbook to its own sections; each
-runbook to a row in its category's index; and every piece of audio-visual
-equipment to a runbook that is not retired.
+runbook to a row in its category's index; and every kind of equipment in
+the inventory to a runbook of its own category that is not retired.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.
