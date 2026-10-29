@@ -39,15 +39,20 @@ password. If the computer has no network, follow
 1. Read the sign-in screen's message, without the instructor's password on
    screen. **Expected:** none, or "incorrect password". If it says the
    account is locked or disabled, or the password has expired, go to
-   [Escalate](#escalate): only the service desk can change that.
-2. Look at the keyboard's caps lock light, and the input language shown on
+   [Escalate](#escalate): only the service desk can change that. If it is
+   waiting for the instructor to approve the sign-in on their phone, go to
+   the next check; otherwise skip it.
+2. Ask the instructor whether the approval request has reached their
+   phone. **Expected:** it arrives within a minute. If it has not, go to
+   step 3 of [Fix](#fix).
+3. Look at the keyboard's caps lock light, and the input language shown on
    the sign-in screen. **Expected:** caps lock off, and the language the
    instructor types in. If not, go to step 1 of
    [Fix](#fix).
-3. Look at the sign-in screen's network icon. **Expected:** connected. If it
+4. Look at the sign-in screen's network icon. **Expected:** connected. If it
    shows no network, follow
    [Lectern computer has no network connection](../network/rb-net-001-lectern-computer-has-no-network-connection.md).
-4. Ask the instructor whether they can sign in to campus services on their
+5. Ask the instructor whether they can sign in to campus services on their
    own phone or laptop. **Expected:** they can. If they cannot sign in
    anywhere, the fault is the account: go to [Escalate](#escalate). If they
    can, go to step 2 of [Fix](#fix).
