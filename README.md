@@ -107,7 +107,8 @@ matter lists it, and the index's equipment table lists them by title;
 `--write` and `--check` read the runbooks' front matter first and list
 any problem in it (a missing or unknown key, an identifier that is not
 the folder's category or the file's name, a heading that is not the
-title, equipment the inventory does not have, an identifier used twice).
+title, equipment the inventory does not have, a reviewed date in the
+future or in quotes, an identifier used twice).
 
 ## Writing a runbook
 
@@ -156,8 +157,9 @@ network team, the teaching-technology team) are roles, not named teams.
 The tests hold every runbook to the template: its front matter, its six
 sections in order and filled in, a check that says what to expect and
 where to go if not, an action that says what to expect or hands the fault
-on, an escalation step that links Procedures, links within the page that
-name its sections, and a row in its category's index; and they hold every
+on, a "step N of Fix" that is there, an escalation step that links
+Procedures, links within the page that name its sections, and a row in
+its category's index; and they hold every
 kind of equipment to a runbook of its own category that is not retired.
 
 ## Parts

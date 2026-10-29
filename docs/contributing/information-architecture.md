@@ -76,12 +76,13 @@ ones it and the runbooks give; `--write` writes them. Edit the inventory or
 a runbook's front matter, never a room page. It reads every runbook's front
 matter first: each key the template has and no others, an identifier of
 the folder's category that the file's name starts with, the title as the
-heading, equipment the inventory has, a status, a date, and no identifier
-used twice.
+heading, equipment the inventory has, a status, a date (unquoted, and no
+more than a day after today), and no identifier used twice.
 
 The tests also hold each runbook to the template's six sections, in order
 and filled in; each check to an **Expected:** and a link to where to go if
-it fails; each action to an **Expected:** or a hand-off; the escalation step
+it fails; each action to an **Expected:** or a hand-off; each "step N of
+Fix" to a step that is there; the escalation step
 to a link into Procedures; links within a runbook to its own sections; each
 runbook to a row in its category's index; and every kind of equipment in
 the inventory to a runbook of its own category that is not retired.

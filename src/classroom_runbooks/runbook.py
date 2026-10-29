@@ -282,7 +282,8 @@ def catalog(
     A runbook is any page in a category's folder other than its ``index.md``. Its front
     matter is checked: every field and no others, an identifier of the folder's category
     that the file's name starts with, a title that is also the heading, equipment in
-    ``known``, a status and a date no later than ``today`` (by default, the computer's).
+    ``known``, a status, and a date no more than a day after ``today`` (by default, the
+    computer's).
     Runbooks are listed by category, in ``sections``' order, then by number; a category
     whose folder is missing has none.
     Raises ``CatalogError`` listing every problem, each with its file.
