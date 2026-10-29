@@ -64,14 +64,14 @@ Each room has its type's equipment unless its entry says otherwise.
 | Wall button panel | [Touch panel or button panel does not respond](../runbooks/av/rb-av-014-touch-panel-or-button-panel-does-not-respond.md) (RB-AV-014) | 142 | 142 |
 | Wireless presentation receiver | [Cannot share a screen wirelessly](../runbooks/av/rb-av-015-cannot-share-a-screen-wirelessly.md) (RB-AV-015) | 58 | 58 |
 | Lecture capture appliance and camera | [A class was not recorded by lecture capture](../runbooks/av/rb-av-016-a-class-was-not-recorded-by-lecture-capture.md) (RB-AV-016) | 13 | 13 |
-| Lectern network connection | [Network](../runbooks/network/index.md) | 182 | 182 |
-| Wall network port | [Network](../runbooks/network/index.md) | 220 | 508 |
-| Room network switch | [Network](../runbooks/network/index.md) | 20 | 20 |
-| Wi-Fi access point | [Network](../runbooks/network/index.md) | 218 | 259 |
+| Lectern network connection | [Lectern computer has no network connection](../runbooks/network/rb-net-001-lectern-computer-has-no-network-connection.md) (RB-NET-001) | 182 | 182 |
+| Wall network port | [Wall port gives no network connection](../runbooks/network/rb-net-002-wall-port-gives-no-network-connection.md) (RB-NET-002) | 220 | 508 |
+| Room network switch | [Lab computers have no network connection](../runbooks/network/rb-net-004-lab-computers-have-no-network-connection.md) (RB-NET-004) | 20 | 20 |
+| Wi-Fi access point | [Wi-Fi is slow or keeps dropping in the classroom](../runbooks/network/rb-net-003-wi-fi-is-slow-or-keeps-dropping-in-the-classroom.md) (RB-NET-003) | 218 | 259 |
 | Document camera | [Peripherals](../runbooks/peripherals/index.md) | 138 | 138 |
 | Room webcam | [Peripherals](../runbooks/peripherals/index.md) | 56 | 56 |
 | Wireless keyboard and mouse | [Peripherals](../runbooks/peripherals/index.md) | 182 | 182 |
 | Wireless presenter | [Peripherals](../runbooks/peripherals/index.md) | 16 | 16 |
 | Lectern USB hub | [Peripherals](../runbooks/peripherals/index.md) | 141 | 141 |
 | Lectern computer | [Account access](../runbooks/accounts/index.md) | 182 | 182 |
-| Student workstations (one set) | [Account access](../runbooks/accounts/index.md) | 20 | 20 |
+| Student workstations (one set) | [Lab computers have no network connection](../runbooks/network/rb-net-004-lab-computers-have-no-network-connection.md) (RB-NET-004) | 20 | 20 |
