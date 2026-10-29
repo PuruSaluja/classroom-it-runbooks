@@ -35,9 +35,10 @@ computer itself does not respond to its keyboard or mouse, follow
 2. Look for the presenter's USB receiver in the lectern computer or its USB
    hub (it may be stored in the presenter itself). **Expected:** plugged in.
    If not, go to step 2 of [Fix](#fix).
-3. Click once on the slide show window on the computer, then press the
-   presenter's forward button. **Expected:** the slide advances. If it does,
-   the slides were not the active window: go to step 3 of [Fix](#fix).
+3. Look at the lectern computer's screen. **Expected:** the slide show is
+   the window in front, running full screen. If another window is in front,
+   the presenter's buttons go to that window: go to step 3 of [Fix](#fix).
+   If the slide show is in front, go to [Escalate](#escalate).
 
 ## Fix
 
@@ -45,9 +46,9 @@ computer itself does not respond to its keyboard or mouse, follow
    a button is pressed.
 2. Plug the receiver into the computer or the hub. **Expected:** within a
    few seconds, the presenter changes slides.
-3. Show the instructor that the slide show must be the active window: click
-   on it once after switching from another program. **Expected:** the
-   presenter changes slides. If none of this works, escalate.
+3. Click once on the slide show, and show the instructor that it must be
+   the window in front after they switch from another program.
+   **Expected:** the presenter changes slides. If it does not, escalate.
 
 ## Escalate
 

@@ -39,7 +39,10 @@ these are the rules for what goes in them.
 - Order checks by how quick they are and how likely they are to find the
   fault: the cable and the selected input before the firmware.
 - A check changes nothing. Anything that changes a setting, a cable or
-  power belongs in Fix.
+  power belongs in Fix, and so does unplugging the room's equipment to
+  try your own in its place. A check may plug your own laptop or cable
+  into a free input or port, and choose a source to compare, as long as
+  it leaves the room as it found it.
 - Each check says where to go if it fails: a step of Fix, another
   runbook, or Escalate.
 

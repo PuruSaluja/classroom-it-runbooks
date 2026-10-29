@@ -33,23 +33,25 @@ panel itself does not respond, follow
 
 ## Checks
 
-1. Press **On** (or the projector's power button on the panel) once and
-   wait a full minute. **Expected:** the projector's fan starts and the
-   image appears within about 30 seconds. A projector that was just turned
-   off will not start again until it has cooled; if it was, go to step 1 of
-   [Fix](#fix).
+1. Look at what the touch panel or button panel shows for the projector.
+   **Expected:** off, ready to turn on. If it shows the projector as cooling
+   down or warming up, it was turned off or on moments ago: wait until it
+   says ready or on. If the image then appears, nothing was wrong: go to
+   [Close the ticket](#close-the-ticket); if not, go on to the next check.
 2. Look at the lights on the projector, from the floor. **Expected:** a
-   steady light that shows the projector is on or in standby. Photograph
-   any blinking or red light and go to step 3 of [Fix](#fix). If no light is
-   lit at all, go to step 2 of [Fix](#fix).
+   steady light that shows the projector is in standby. Photograph any
+   blinking or red light and go to step 3 of [Fix](#fix). If no light is lit
+   at all, go to step 2 of [Fix](#fix).
 3. Look at the other equipment in the room: the switcher's lights and the
-   lectern computer. **Expected:** they are on. If nothing in the room has
-   power, go to step 2 of [Fix](#fix).
+   lectern computer. **Expected:** they are on: go to step 1 of
+   [Fix](#fix). If nothing in the room has power, go to step 2 of
+   [Fix](#fix).
 
 ## Fix
 
-1. Wait for the cool-down: about two minutes after the projector was turned
-   off. Then press **On** once. **Expected:** the fan starts and the image
+1. Press **On** (or the projector's power button on the panel) once, and
+   wait a full minute; a projector turned off moments ago may not start
+   again for a minute or two. **Expected:** the fan starts and the image
    appears.
 2. If the projector shows no light, or nothing in the room has power, do
    not go further: the fault is power. Escalate to facilities for the room's

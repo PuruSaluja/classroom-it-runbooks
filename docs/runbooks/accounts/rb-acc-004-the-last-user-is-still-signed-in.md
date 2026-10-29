@@ -46,8 +46,9 @@ person then cannot sign in, follow
    out anyway. **Expected:** the sign-in screen appears.
 2. On the lock screen, choose **Other user** if it is offered, so the next
    person can sign in. If it is not offered, restart the computer from the
-   lock screen's power menu, which signs the previous user out.
-   **Expected:** the sign-in screen appears.
+   lock screen's power menu, which signs the previous user out; if the
+   computer will not let you restart it while they are signed in,
+   escalate. **Expected:** the sign-in screen appears.
 3. Note the previous user's name as it appeared, so the ticket can tell
    them that their session was signed out. **Expected:** the next person
    signs in.

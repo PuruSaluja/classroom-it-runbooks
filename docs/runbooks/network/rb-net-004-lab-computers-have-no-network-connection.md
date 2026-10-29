@@ -41,11 +41,8 @@ for the lectern computer alone, follow
 2. Look at the room switch's lights, through its cabinet's door if it is
    locked. **Expected:** its power light is on and its port lights blink. If
    its power light is off, go to step 2 of [Fix](#fix); if all port lights
-   are dark, go to [Escalate](#escalate).
-3. Plug your laptop into a workstation's network cable in place of the
-   workstation. **Expected:** your laptop connects. If it does, the fault
-   is with the workstations: go to step 3 of [Fix](#fix). If it does not,
-   go to [Escalate](#escalate).
+   are dark, go to [Escalate](#escalate). If its lights are as expected, go
+   to step 3 of [Fix](#fix).
 
 ## Fix
 
@@ -56,8 +53,12 @@ for the lectern computer alone, follow
    that the strip is switched on; do not switch anything off. **Expected:**
    the switch's lights come on and, after a few minutes, the workstations
    connect. If not, escalate.
-3. If your laptop connects but the workstations do not, escalate to the
-   service desk: it is likely their configuration, not the network.
+3. Plug one affected workstation's network cable into your laptop in its
+   place. **Expected:** your laptop connects, so the network reaches the
+   desk and the fault is likely the workstations' configuration. Plug the
+   cable back into the workstation and escalate to the service desk. If
+   your laptop does not connect either, plug the cable back in and
+   escalate to the network team.
 
 ## Escalate
 

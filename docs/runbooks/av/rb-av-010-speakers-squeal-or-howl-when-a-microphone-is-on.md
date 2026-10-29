@@ -24,16 +24,17 @@ microphone is not heard at all, follow
 
 - **Time:** about 5 minutes.
 - **Bring:** nothing.
-- **Safety:** feedback can be loud enough to hurt: mute the microphone or
-  turn its level down first, then find the cause.
+- **Safety:** feedback can be loud enough to hurt: mute the microphone
+  first (its own switch, or its mute on the touch panel), then find the
+  cause. Leave its level where it is, so the checks can read it.
 - **Do not:** change the audio processor's settings, or move speakers or
   the ceiling microphone.
 
 ## Checks
 
-1. Mute the microphone, or turn its level down on the touch panel.
-   **Expected:** the squeal stops at once. If it does not stop, the sound is
-   not feedback from that microphone: go to [Escalate](#escalate).
+1. With the microphone muted, listen. **Expected:** the squeal has stopped.
+   If it has not, the sound is not feedback from that microphone: go to
+   [Escalate](#escalate).
 2. Look at the microphone level on the touch panel. **Expected:** at or
    below the room's usual level (marked on the panel, or the middle of the
    scale). If it is higher, go to step 1 of [Fix](#fix).
@@ -45,13 +46,14 @@ microphone is not heard at all, follow
 
 ## Fix
 
-1. Set the microphone level back to the room's usual level. **Expected:**
-   the voice is heard without a squeal.
+1. Set the microphone level back to the room's usual level, then unmute
+   the microphone. **Expected:** the voice is heard without a squeal.
 2. Clip the lapel microphone about a hand's width below the chin, or hold
    the handheld close to the mouth, and stay out from under the front
-   speakers. **Expected:** no squeal at a normal speaking level.
-3. Turn off or mute the microphones that are not in use. **Expected:** no
-   squeal.
+   speakers; then unmute it. **Expected:** no squeal at a normal speaking
+   level.
+3. Turn off or mute the microphones that are not in use, then unmute the
+   one that is. **Expected:** no squeal.
 4. If the room squeals at its usual level with one microphone used
    properly, the processor's settings are wrong: escalate, and leave the
    level low for the class.

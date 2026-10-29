@@ -44,11 +44,8 @@ for a wired one.
    [Fix](#fix).
 2. Look at the network socket at the back of the computer. **Expected:** a
    cable clipped in, with a lit or blinking light beside the socket. If no
-   light is lit, go to step 1 of [Fix](#fix).
-3. Plug your laptop into the lectern's network cable in place of the
-   computer. **Expected:** your laptop connects. If it does, the fault is
-   the lectern computer: go to step 3 of [Fix](#fix). If it does not, the
-   fault is the lectern's network link: go to [Escalate](#escalate).
+   light is lit, go to step 1 of [Fix](#fix); if one is, go to step 2 of
+   [Fix](#fix).
 
 ## Fix
 
@@ -58,8 +55,12 @@ for a wired one.
    network icon shows a connection.
 2. Restart the lectern computer from its Start menu, once the instructor
    has saved their work. **Expected:** after signing in, pages load.
-3. If the computer still has no connection while your laptop has one on
-   the same cable, escalate to the service desk for the computer.
+3. If there is still no connection, plug the lectern's network cable into
+   your laptop in place of the computer. **Expected:** your laptop
+   connects, so the fault is the lectern computer. Plug the cable back
+   into the computer and escalate to the service desk. If your laptop does
+   not connect either, plug the cable back in and escalate to the network
+   team: the fault is the lectern's network link.
 
 ## Escalate
 

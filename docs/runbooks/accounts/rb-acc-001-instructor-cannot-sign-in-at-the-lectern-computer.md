@@ -40,9 +40,9 @@ password. If the computer has no network, follow
    screen. **Expected:** none, or "incorrect password". If it says the
    account is locked or disabled, or the password has expired, go to
    [Escalate](#escalate): only the service desk can change that.
-2. Look at the keyboard's caps lock and number lock lights, and the input
-   language shown on the sign-in screen. **Expected:** caps lock off, and
-   the language the instructor types in. If not, go to step 1 of
+2. Look at the keyboard's caps lock light, and the input language shown on
+   the sign-in screen. **Expected:** caps lock off, and the language the
+   instructor types in. If not, go to step 1 of
    [Fix](#fix).
 3. Look at the sign-in screen's network icon. **Expected:** connected. If it
    shows no network, follow

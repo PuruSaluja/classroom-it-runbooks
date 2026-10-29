@@ -32,20 +32,23 @@ only the projector does not turn on, follow
 
 ## Checks
 
-1. Touch the panel's screen, or press a button on the button panel, once.
-   **Expected:** it wakes and shows its home page, or the button lights. If
-   the touch panel stays black, go to step 1 of [Fix](#fix).
+1. Touch a blank part of the touch panel's screen once, which only wakes
+   it, or look at the button panel's lights. **Expected:** the touch panel
+   shows its home page, or the button panel's buttons are lit. If the
+   touch panel stays black, or no button is lit, go to step 1 of
+   [Fix](#fix).
 2. Look for a message on the touch panel. **Expected:** none. "Offline",
    "connecting" or "no control" means the panel cannot reach the control
    processor: go to step 2 of [Fix](#fix).
-3. Press **On** or a source button and watch the projector or display.
-   **Expected:** it responds within about 10 seconds. If the panel changes
-   but the equipment does not, go to step 3 of [Fix](#fix).
+3. Compare what the panel shows with the room. **Expected:** the projector
+   or display it shows as on is on, showing the source it shows as
+   selected. If they differ, the panel's commands are not reaching the
+   equipment: go to step 3 of [Fix](#fix).
 
 ## Fix
 
-1. Check the touch panel's cable underneath or behind it is seated, without
-   pulling it: press the plug in. **Expected:** the panel lights within a
+1. Press the plug of the panel's cable (underneath or behind the panel) in
+   firmly, without pulling it. **Expected:** the panel lights within a
    minute.
 2. Wait two minutes, as a panel reconnects on its own after a short network
    drop. **Expected:** the message clears and the buttons work.
