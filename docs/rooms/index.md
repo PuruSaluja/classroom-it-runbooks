@@ -68,10 +68,10 @@ Each room has its type's equipment unless its entry says otherwise.
 | Wall network port | [Wall port gives no network connection](../runbooks/network/rb-net-002-wall-port-gives-no-network-connection.md) (RB-NET-002) | 220 | 508 |
 | Room network switch | [Lab computers have no network connection](../runbooks/network/rb-net-004-lab-computers-have-no-network-connection.md) (RB-NET-004) | 20 | 20 |
 | Wi-Fi access point | [Wi-Fi is slow or keeps dropping in the classroom](../runbooks/network/rb-net-003-wi-fi-is-slow-or-keeps-dropping-in-the-classroom.md) (RB-NET-003) | 218 | 259 |
-| Document camera | [Peripherals](../runbooks/peripherals/index.md) | 138 | 138 |
-| Room webcam | [Peripherals](../runbooks/peripherals/index.md) | 56 | 56 |
-| Wireless keyboard and mouse | [Peripherals](../runbooks/peripherals/index.md) | 182 | 182 |
-| Wireless presenter | [Peripherals](../runbooks/peripherals/index.md) | 16 | 16 |
-| Lectern USB hub | [Peripherals](../runbooks/peripherals/index.md) | 141 | 141 |
+| Document camera | [Document camera shows no picture](../runbooks/peripherals/rb-per-001-document-camera-shows-no-picture.md) (RB-PER-001) | 138 | 138 |
+| Room webcam | [Webcam is not seen in the video meeting](../runbooks/peripherals/rb-per-002-webcam-is-not-seen-in-the-video-meeting.md) (RB-PER-002) | 56 | 56 |
+| Wireless keyboard and mouse | [Wireless keyboard or mouse does not work](../runbooks/peripherals/rb-per-003-wireless-keyboard-or-mouse-does-not-work.md) (RB-PER-003) | 182 | 182 |
+| Wireless presenter | [Wireless presenter does not change slides](../runbooks/peripherals/rb-per-004-wireless-presenter-does-not-change-slides.md) (RB-PER-004) | 16 | 16 |
+| Lectern USB hub | [USB device at the lectern is not recognized](../runbooks/peripherals/rb-per-005-usb-device-at-the-lectern-is-not-recognized.md) (RB-PER-005) | 141 | 141 |
 | Lectern computer | [Account access](../runbooks/accounts/index.md) | 182 | 182 |
 | Student workstations (one set) | [Lab computers have no network connection](../runbooks/network/rb-net-004-lab-computers-have-no-network-connection.md) (RB-NET-004) | 20 | 20 |
