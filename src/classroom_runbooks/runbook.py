@@ -47,8 +47,9 @@ DEFAULT_TEMPLATE = Path("templates/runbook.md")
 MAX_TITLE = 80
 """The longest title, in characters: a fault in a few words, as it would be reported."""
 MAX_SLUG = 50
-# An ATX heading: up to three spaces, the #s, then its text without any closing #s.
 _ID = re.compile(r"RB-([A-Z]{2,4})-([0-9]{3})")
+_ISO_DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+# An ATX heading: up to three spaces, the #s, then its text without any closing #s.
 _HEADING = re.compile(r" {0,3}(#{1,6})(?:[ \t]+(.*?))??(?:[ \t]+#+)?[ \t]*")
 
 
@@ -108,6 +109,8 @@ _Loader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _mapping
 
 def parse(text: str) -> Page:
     """A runbook's text, read into its front matter, heading and sections."""
+    if text.startswith("\N{BYTE ORDER MARK}"):
+        raise RunbookError("the file starts with a byte-order mark; save it as UTF-8 without one")
     lines = structure.split_lines(text)
     if not lines or lines[0] != "---":
         raise RunbookError("a runbook starts with front matter: its first line is '---'")
@@ -234,9 +237,16 @@ def _front_matter_problems(page: Page, prefix: str, name: str, known: Collection
         elif not name.startswith(f"{runbook_id.lower()}-"):
             problems.append(f"the file's name does not start with its id, {runbook_id.lower()}-")
     if "title" in meta:
-        problem = _title_problem(meta["title"])
+        # YAML reads an unquoted yes, 42 or 2026-10-29 as something other than text.
+        problem = (
+            _title_problem(meta["title"])
+            if isinstance(meta["title"], str)
+            else f"title {meta['title']!r} is not text; put the title in double quotes"
+        )
         if problem:
             problems.append(problem)
+        elif page.heading is None:
+            problems.append("the page has no # heading; it is the title")
         elif page.heading != meta["title"]:
             problems.append(f"the heading is not the title: {page.heading!r}")
     if "equipment" in meta:
@@ -245,9 +255,14 @@ def _front_matter_problems(page: Page, prefix: str, name: str, known: Collection
             problems.append(problem)
     if "status" in meta and meta["status"] not in STATUSES:
         problems.append(f"status {meta['status']!r} is not one of {', '.join(STATUSES)}")
-    # A date with a time reads as a datetime, which is a date too.
-    if "reviewed" in meta and type(meta["reviewed"]) is not datetime.date:
-        problems.append(f"reviewed {meta['reviewed']!r} is not a date, YYYY-MM-DD")
+    if "reviewed" in meta:
+        reviewed = meta["reviewed"]
+        if isinstance(reviewed, str) and _ISO_DATE.fullmatch(reviewed):
+            # YAML reads a quoted date as text.
+            problems.append(f"reviewed {reviewed!r} is in quotes; write the date without them")
+        # A date with a time reads as a datetime, which is a date too.
+        elif type(reviewed) is not datetime.date:
+            problems.append(f"reviewed {reviewed!r} is not a date, YYYY-MM-DD")
     return problems
 
 
