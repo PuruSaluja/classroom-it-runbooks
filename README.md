@@ -7,9 +7,9 @@ check them and export them to ServiceNow's knowledge base.
 
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
 > to them, the room inventory with its pages, the runbook template and
-> conventions, the runbooks in all four categories, the procedures and
-> the onboarding path are in place; the other tools are built in the order
-> of [Parts](#parts).
+> conventions, the runbooks in all four categories, the procedures, the
+> onboarding path and the validator are in place; the knowledge-base export
+> and the published site are built in the order of [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -56,9 +56,9 @@ python -m classroom_runbooks.structure    # check docs/ against structure.toml
 
 The check prints the outline and fails if a section's folder or titled
 index page is missing, a folder under `docs/` is not a section, or a page
-does not link the sections below it. CI runs it with the tests, which also
-check that every inline relative link in `docs/` reaches a file and that
-every page can be reached by following links from the home page.
+does not link the sections below it. CI runs it with the tests and
+[the validator](#the-validator), which also checks every link and anchor
+in `docs/` and that every page can be reached from the home page.
 
 ## The room inventory
 
@@ -157,14 +157,8 @@ network team, the teaching-technology team and the shift lead) are roles,
 not named teams, defined in the
 [escalation matrix](docs/procedures/escalation-matrix.md).
 
-The tests hold every runbook to the template: its front matter, its six
-sections in order and filled in, a check that says what to expect and
-where to go if not, an action that says what to expect or hands the fault
-on, a "step N of Fix" that is there, an escalation step that links the
-escalation matrix and names a role it defines, links within the page that
-name its sections, and a row in its category's index; and they hold every
-kind of equipment to a runbook of its own category that is not retired,
-and every role the matrix defines to a runbook that names it.
+Every runbook is held to the template, and every room's equipment to a
+runbook, by [the validator](#the-validator).
 
 ## Procedures and onboarding
 
@@ -181,6 +175,44 @@ runbooks, these pages are written for a team to adopt; how long each
 stage takes, and whether the path shortens onboarding, only a team using
 it could measure.
 
+## The validator
+
+```bash
+python -m classroom_runbooks.validate
+```
+
+checks three things, names each problem with its file (and line, for a
+link), and fails if there is any:
+
+- **Sections.** Each runbook has the template's six sections in order,
+  filled in, with none of the template's example lines left; each check
+  says what to expect and links where to go if it fails; each action of
+  Fix says what to expect or hands the fault on; each "step N of Fix" is
+  there; Escalate links the escalation matrix and names a role it defines,
+  and every role the matrix defines is named by some runbook; and each
+  runbook has a row in its category's index.
+- **Coverage.** Every piece of equipment in every room has a runbook of
+  its own category that is not retired. It counts the rooms, pieces and
+  kinds of equipment covered, and names each kind that is not, with the
+  rooms that have it.
+- **Links.** Every link on every page reaches a file inside `docs/`, every
+  `#anchor` names a heading on its page (made into an anchor as GitHub
+  makes them), and every page is reached by following links from the home
+  page.
+
+On this repository it prints:
+
+```text
+sections: 29 runbooks checked against the template and the matrix
+coverage: 220 of 220 rooms have a runbook for every piece of equipment; 3,612 of 3,612 pieces and 32 of 32 kinds of equipment are covered
+links: 6,346 links (347 to a heading) on 56 pages followed; 56 of 56 pages reached from the home page
+0 problems
+```
+
+The coverage figures are for the illustrative inventory. CI runs the
+validator, and a test runs its three checks on `docs/`; its own tests
+give it damaged runbooks, gaps and broken links to find.
+
 ## Parts
 
 | Part | State |
@@ -191,7 +223,7 @@ it could measure.
 | AV runbooks: projectors, displays, audio, cabling, control systems | done (16 runbooks) |
 | Network, peripheral and account-access runbooks | done (13 runbooks) |
 | Escalation matrix, shift handoff and the onboarding path for new technicians | done |
-| Validator: required sections, room-to-runbook coverage, dead cross-links | to come |
+| Validator: required sections, room-to-runbook coverage, dead cross-links | done |
 | ServiceNow knowledge-base export and taxonomy mapping | to come |
 | MkDocs Material site, with the validator in CI | to come |
 | Published site | to come |

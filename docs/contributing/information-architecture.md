@@ -66,9 +66,7 @@ How this site is organised, and why. The layout is defined in one file,
 `docs/` against it: every section's folder exists with an `index.md` titled
 as the section is; no folder is outside the structure (an `assets` folder,
 anywhere, holds images); and the home page and each parent index link the
-sections below them. It runs in CI with the tests, which also check that
-every inline relative link reaches a file and that every page, not only
-the section indexes, is reached by following links from the home page.
+sections below them. It runs in CI with the tests and the validator.
 
 `python -m classroom_runbooks.inventory --check` checks the room inventory
 in `inventory/` (known buildings, room types and equipment, seats within
@@ -81,16 +79,27 @@ the folder's category that the file's name starts with, the title as the
 heading, equipment the inventory has, a status, a date (unquoted, and no
 more than a day after today), and no identifier used twice.
 
-The tests also hold each runbook to the template's six sections, in order
-and filled in; each check to an **Expected:** and a link to where to go if
-it fails; each action to an **Expected:** or a hand-off; each "step N of
-Fix" to a step that is there; the escalation step to a link to the
-escalation matrix and a role the matrix defines; links within a runbook
-to its own sections; each runbook to a row in its category's index; every
-kind of equipment in the inventory to a runbook of its own category that
-is not retired; every role the matrix defines to a runbook that names
-it; and the onboarding path's first runbooks to every kind of equipment
-that at least four rooms in five have, in every category.
+`python -m classroom_runbooks.validate` then checks three things, naming
+each problem with its file (and line, for a link):
+
+- **Sections:** each runbook has the template's six sections, in order and
+  filled in, with none of the template's example lines left; each check
+  has an **Expected:** and a link to where to go if it fails; each action
+  has an **Expected:** or hands the fault on; each "step N of Fix" is a
+  step that is there; the escalation step links the escalation matrix and
+  names a role it defines, and every role the matrix defines is named by
+  some runbook; and each runbook has a row in its category's index.
+- **Coverage:** every piece of equipment in every room has a runbook of its
+  own category that is not retired; it counts the rooms, pieces and kinds
+  covered and names each gap with the rooms it reaches.
+- **Links:** every relative link on every page reaches a file inside
+  `docs/`, every `#anchor` names a heading on its page (GitHub's anchor:
+  `## Shift lead` is `#shift-lead`), and every page, not only the section
+  indexes, is reached by following links from the home page.
+
+The tests also hold the onboarding path's first runbooks to every kind of
+equipment that at least four rooms in five have, in every category, and
+the escalation matrix's table to linking every role it defines.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.
