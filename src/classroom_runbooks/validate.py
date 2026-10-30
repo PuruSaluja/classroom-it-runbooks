@@ -1,5 +1,5 @@
-"""The validator: every runbook against the template and the escalation matrix, and
-every room's equipment against the runbooks.
+"""The validator: every runbook against the template and the escalation matrix, every
+room's equipment against the runbooks, and every link in the docs.
 
 ``python -m classroom_runbooks.validate`` reads the room inventory and the runbooks in
 the categories' folders (their front matter checked as ``runbook.catalog`` checks it)
@@ -17,6 +17,13 @@ and checks, for each runbook, its **sections**:
 Then **coverage**: every piece of equipment in every room has a runbook of its own
 category that is not retired. It counts the rooms, pieces and kinds of equipment
 covered, and names each kind that is not, with the rooms that have it.
+
+Then **links**, on every page under the docs folder: each relative link reaches a file
+inside the docs folder (the site publishes nothing else), and each ``#anchor``, on
+another page or the same one, names a heading there, made into an anchor as GitHub
+does (``## Shift lead`` is ``#shift-lead``; a repeated heading gets ``-1``, ``-2``).
+Every page is reached by following links from the home page. A link in a code block
+or a code span is shown, not followed, so it is not checked.
 
 It prints each problem with its file, then what it checked, and exits 1 if there is
 any problem.
@@ -41,6 +48,9 @@ _STEP = re.compile(r"^[0-9]+\. (.*?)(?=^[0-9]+\. |\Z)", re.MULTILINE | re.DOTALL
 _FIX_STEP = re.compile(r"step\s+([0-9]+)\s+of\s+\[Fix\]")
 _KEPT = "Close the ticket"
 """The template section whose wording a runbook keeps as it is."""
+# An ATX heading's text, without any closing #s.
+_HEADING = re.compile(r" {0,3}#{1,6}[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*")
+_INLINE_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
 
 
 def roles(matrix: str) -> list[str]:
@@ -211,6 +221,86 @@ def coverage(
     return Coverage((whole, len(rooms.rooms)), (pieces[0], pieces[1]), kinds), problems
 
 
+def anchor(heading: str) -> str:
+    """A heading's anchor as GitHub makes it: its text in lower case, punctuation
+    dropped, spaces as hyphens (``Stage 1: learn the ground`` is
+    ``stage-1-learn-the-ground``)."""
+    text = _INLINE_LINK.sub(r"\1", heading).strip().lower()
+    return re.sub(r"[^\w\- ]", "", text).replace(" ", "-")
+
+
+def anchors(markdown: str) -> set[str]:
+    """Every anchor a page's headings give, a repeated one numbered from ``-1``."""
+    found: set[str] = set()
+    seen: dict[str, int] = {}
+    lines = structure.split_lines(markdown)
+    for line, code in zip(lines, structure.code_lines(lines), strict=True):
+        heading = None if code else _HEADING.fullmatch(line)
+        if heading:
+            base = anchor(heading.group(1))
+            count = seen.get(base, 0)
+            seen[base] = count + 1
+            found.add(base if count == 0 else f"{base}-{count}")
+    return found
+
+
+@dataclass(frozen=True)
+class Links:
+    """What the link check followed."""
+
+    pages: int
+    links: int
+    anchored: int
+    """Links that name an ``#anchor``."""
+    reached: int
+    """Pages reached by following links from the home page."""
+
+
+def links(docs: Path) -> tuple[Links, list[str]]:
+    """Every link on every page under ``docs`` that reaches nothing, and every page
+    that following links from ``docs/index.md`` never reaches."""
+    docs = Path(docs).resolve()
+    texts: dict[Path, str] = {}
+    problems: list[str] = []
+    for page in sorted(docs.rglob("*.md")):
+        try:
+            texts[page] = page.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            problems.append(f"{page} is not UTF-8 text")
+        except OSError as exc:
+            problems.append(f"{page} cannot be read: {exc.strerror or exc}")
+    headings = {page: anchors(text) for page, text in texts.items()}
+    followed: dict[Path, set[Path]] = {page: set() for page in texts}
+    total = anchored = 0
+    for page, text in texts.items():
+        for line, target in structure.targets(text):
+            if structure.external(target):
+                continue
+            total += 1
+            path, _, name = target.partition("#")
+            anchored += bool(name)
+            where = f"{page}:{line}: {target}"
+            dest = (page.parent / path).resolve() if path else page
+            if docs not in dest.parents:
+                problems.append(f"{where} leads out of {docs}, which the site does not publish")
+            elif not dest.is_file():
+                problems.append(f"{where} reaches no file")
+            elif dest.suffix == ".md":
+                followed[page].add(dest)
+                if name and dest in headings and name not in headings[dest]:
+                    problems.append(f"{where}: {dest.name} has no heading #{name}")
+    home = docs / "index.md"
+    reached, todo = set(), [home] if home in texts else []
+    while todo:
+        page = todo.pop()
+        if page not in reached:
+            reached.add(page)
+            todo += [dest for dest in followed.get(page, ()) if dest in texts]
+    problems += [f"{page} is not reached by following links from {home}"
+                 for page in sorted(set(texts) - reached)]  # fmt: skip
+    return Links(len(texts), total, anchored, len(reached)), problems
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m classroom_runbooks.validate",
@@ -246,6 +336,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     problems = sections(args.docs, entries, template)
     covers, gaps = coverage(rooms, entries)
     problems += gaps
+    followed, broken = links(args.docs)
+    problems += broken
     for problem in problems:
         print(f"problem: {problem}", file=sys.stderr)
     print(f"sections: {len(entries)} runbooks checked against the template and the matrix")
@@ -253,6 +345,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"coverage: {covers.rooms[0]:,} of {covers.rooms[1]:,} rooms have a runbook for every "
         f"piece of equipment; {covers.pieces[0]:,} of {covers.pieces[1]:,} pieces and "
         f"{covers.kinds[0]} of {covers.kinds[1]} kinds of equipment are covered"
+    )
+    print(
+        f"links: {followed.links:,} links ({followed.anchored:,} to a heading) on "
+        f"{followed.pages} pages followed; {followed.reached} of {followed.pages} pages "
+        "reached from the home page"
     )
     print(f"{len(problems)} problems")
     return 1 if problems else 0

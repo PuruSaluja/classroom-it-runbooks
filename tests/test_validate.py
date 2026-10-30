@@ -217,6 +217,9 @@ def test_the_command_lists_problems_and_exits_1(tmp_path: Path, capsys, monkeypa
     # One runbook, for one kind of AV equipment, leaves the other 31 kinds uncovered.
     assert "coverage: Wall network port (wall-port), in 220 rooms (ALD-101" in err
     assert "pieces and 1 of 32 kinds of equipment are covered" in out
+    # The tree has no home page, so none of its pages is reached.
+    assert f"{(docs / 'runbooks' / 'av' / NAME).resolve()} is not reached by following" in err
+    assert "links: 4 links (2 to a heading) on 3 pages followed; 0 of 3 pages reached" in out
     assert out.endswith(f"\n{len(err.splitlines())} problems\n")
 
 
@@ -276,3 +279,93 @@ def test_a_gap_in_three_rooms_or_fewer_lists_them_all() -> None:
     assert covers == validate.Coverage((1, 3), (4, 7), (1, 2))
     assert gaps == [WEBCAM_GAP.replace("4 rooms (ALD-101, ALD-103, ALD-104 and 1 more)",
                                        "2 rooms (ALD-101, ALD-103)")]  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    ("heading", "expected"),
+    [
+        ("Shift lead", "shift-lead"),
+        (" Shift lead ", "shift-lead"),
+        ("Stage 1: learn the ground", "stage-1-learn-the-ground"),
+        ("Teaching-technology team", "teaching-technology-team"),
+        ("The `runbook new` command, **in short**", "the-runbook-new-command-in-short"),
+        ("See [Rooms](rooms/index.md) first", "see-rooms-first"),
+        ("ALD-104", "ald-104"),
+        ("What's checked?", "whats-checked"),
+    ],
+)
+def test_a_heading_s_anchor_is_github_s(heading: str, expected: str) -> None:
+    assert validate.anchor(heading) == expected
+
+
+def test_a_page_s_anchors_number_a_repeated_heading_and_skip_code() -> None:
+    page = "# Title\n\n## Part\n\n```\n## Not a heading\n```\n\n## Part\n\n### Part ###\n"
+    assert validate.anchors(page) == {"title", "part", "part-1", "part-2"}
+
+
+HOME = "# Home\n\n[A](a.md) and [B's part](sub/b.md#part-1) and [web](https://example.org/x.md)\n"
+A = "# A\n\n## Part one\n\nBack to [the part](#part-one) or [home](index.md#home).\n"
+B = "# B\n\n## Part\n\n## Part\n\n`[shown](missing.md)`\n\n    [indented](missing.md)\n"
+
+
+def _site(tmp_path: Path, **pages: str) -> Path:
+    docs = tmp_path / "docs"
+    (docs / "sub").mkdir(parents=True)
+    for name, text in {"index.md": HOME, "a.md": A, "sub/b.md": B, **pages}.items():
+        if text is not None:
+            (docs / name).write_text(text, encoding="utf-8")
+    return docs
+
+
+def test_links_that_reach_their_files_and_headings_have_no_problems(tmp_path: Path) -> None:
+    # The web link is not followed; links shown as code are not links.
+    assert validate.links(_site(tmp_path)) == (validate.Links(3, 4, 3, 3), [])
+
+
+@pytest.mark.parametrize(
+    ("page", "old", "new", "message"),
+    [
+        ("a.md", "](#part-one)", "](#part-two)",
+         "a.md:5: #part-two: a.md has no heading #part-two"),
+        ("index.md", "(sub/b.md#part-1)", "(sub/b.md#part-2)",
+         "index.md:3: sub/b.md#part-2: b.md has no heading #part-2"),
+        ("index.md", "(a.md)", "(c.md)", "index.md:3: c.md reaches no file"),
+        ("index.md", "(a.md)", "(sub)", "index.md:3: sub reaches no file"),
+        ("a.md", "(index.md#home)", "(../outside.md)", "a.md:5: ../outside.md leads out of "),
+    ],
+)  # fmt: skip
+def test_each_link_that_reaches_nothing_is_named_with_its_line(
+    tmp_path: Path, page: str, old: str, new: str, message: str
+) -> None:
+    (tmp_path / "outside.md").write_text("# Outside\n", encoding="utf-8")
+    text = {"index.md": HOME, "a.md": A}[page]
+    assert text.count(old) == 1
+    docs = _site(tmp_path, **{page: text.replace(old, new)})
+    _, problems = validate.links(docs)
+    # The message starts with the page's name, which the problem gives as its full path.
+    assert problems[0].startswith(f"{(docs / page).resolve()}{message[len(page) :]}")
+
+
+def test_a_page_no_link_leads_to_is_named(tmp_path: Path) -> None:
+    docs = _site(tmp_path, **{"index.md": HOME.replace("[A](a.md) and ", "")})
+    count, problems = validate.links(docs)
+    assert count.reached == 2
+    assert problems == [
+        f"{(docs / 'a.md').resolve()} is not reached by following links from "
+        f"{(docs / 'index.md').resolve()}"
+    ]
+
+
+def test_without_a_home_page_no_page_is_reached(tmp_path: Path) -> None:
+    docs = _site(tmp_path, **{"index.md": None})
+    count, problems = validate.links(docs)
+    assert count == validate.Links(2, 2, 2, 0)
+    assert len(problems) == 3  # index.md#home reaches no file, and neither page is reached
+    assert problems[0].endswith("index.md#home reaches no file")
+
+
+def test_a_page_that_is_not_utf_8_is_a_problem_not_a_crash(tmp_path: Path) -> None:
+    docs = _site(tmp_path)
+    (docs / "sub" / "b.md").write_bytes(b"# B\xff\n")
+    _, problems = validate.links(docs)
+    assert problems == [f"{(docs / 'sub' / 'b.md').resolve()} is not UTF-8 text"]
