@@ -63,7 +63,8 @@ person themselves.
 The technician running the shift. Takes decisions the runbooks cannot:
 moving a class to another room, calling in AV engineering urgently, and
 anything waiting longer than its urgency allows, and makes sure open
-tickets are handed to the next shift.
+tickets are handed to the next shift, as [Shift handoff](shift-handoff.md)
+sets out.
 
 ### AV engineering
 
