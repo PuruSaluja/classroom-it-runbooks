@@ -1,6 +1,7 @@
 """The repository's own docs/ against its own structure.toml, and its runbooks."""
 
 import re
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -10,7 +11,8 @@ from classroom_runbooks.structure import check, links, load
 
 ROOT = Path(__file__).resolve().parents[1]
 SECTIONS = load(ROOT / "structure.toml")
-EQUIPMENT = inventory.load(ROOT / "inventory", [s.prefix for s in SECTIONS if s.prefix]).equipment
+INVENTORY = inventory.load(ROOT / "inventory", [s.prefix for s in SECTIONS if s.prefix])
+EQUIPMENT = INVENTORY.equipment
 # A numbered step's text, up to the next step or the section's end.
 _STEP = re.compile(r"^[0-9]+\. (.*?)(?=^[0-9]+\. |\Z)", re.MULTILINE | re.DOTALL)
 _ANCHOR = re.compile(r"\]\(#([^)]*)\)")
@@ -208,3 +210,25 @@ def test_every_piece_of_equipment_has_a_runbook_in_its_category(
             covered.setdefault(item, set()).add(entry.id.split("-")[1])
     # A runbook of another category may cover it too, but its own category has one.
     assert [e.id for e in EQUIPMENT if e.category not in covered.get(e.id, set())] == []
+
+
+def test_the_first_runbooks_cover_what_four_rooms_in_five_have(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    page = ROOT / "docs" / "start" / "onboarding.md"
+    first = page.read_text(encoding="utf-8").split("\n## The first runbooks\n", 1)[1]
+    first = first.split("\n## ", 1)[0]
+    by_path = {(ROOT / "docs" / e.path).resolve(): e for e in runbooks}
+    # The section's links that are runbooks (it also links the room inventory).
+    targets = [(page.parent / target).resolve() for target in links(first)]
+    chosen = [by_path[target] for target in targets if target in by_path]
+    assert len(chosen) == len(set(targets)) - 1
+    for entry in chosen:
+        assert f"[{entry.title}](" in first, entry.id
+    rooms = Counter(item for room in INVENTORY.rooms for item, _ in room.equipment)
+    common = {item for item, n in rooms.items() if 5 * n >= 4 * len(INVENTORY.rooms)}
+    covered = {item for entry in chosen for item in entry.equipment}
+    assert common and sorted(common - covered) == []
+    # Each one covers something most rooms have, and every category has one.
+    assert all(common & set(entry.equipment) for entry in chosen)
+    assert {e.id.split("-")[1] for e in chosen} == {s.prefix for s in SECTIONS if s.prefix}
