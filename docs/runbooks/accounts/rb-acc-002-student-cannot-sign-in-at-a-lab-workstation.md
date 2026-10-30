@@ -57,7 +57,7 @@ for the instructor's lectern computer, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the service desk, through the [escalation matrix](../../procedures/index.md).
+the service desk, through the [escalation matrix](../../procedures/escalation-matrix.md).
 A student with an account problem contacts the service desk themselves;
 a workstation fault is reported with the workstation's number and the
 message on its screen.

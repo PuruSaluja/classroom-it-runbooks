@@ -60,7 +60,7 @@ or [Student cannot sign in at a lab workstation](rb-acc-002-student-cannot-sign-
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the service desk, through the [escalation matrix](../../procedures/index.md),
+the service desk, through the [escalation matrix](../../procedures/escalation-matrix.md),
 with the computer's name or the lab workstation's number, the message
 shown, and for software, the app and the course that needs it.
 

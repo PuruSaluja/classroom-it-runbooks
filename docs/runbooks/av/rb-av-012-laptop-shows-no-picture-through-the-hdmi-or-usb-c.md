@@ -70,7 +70,7 @@ laptop's picture appears but flickers or drops out, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md),
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md),
 when the room's cable fails with a known-good laptop. Say which input
 (lectern or table number) and which connector failed.
 

@@ -60,7 +60,7 @@ program sound works, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say which sources you tried, and whether the panel showed the volume
 changing.
 

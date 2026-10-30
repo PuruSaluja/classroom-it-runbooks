@@ -58,7 +58,7 @@ first.
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md),
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md),
 as urgent, since a student cannot follow the class without it. Tell the
 instructor what has been done.
 

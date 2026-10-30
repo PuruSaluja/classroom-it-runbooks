@@ -37,7 +37,7 @@ link to the runbook that does).
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: who
-takes it and how, from the [escalation matrix](../../procedures/index.md).
+takes it and how, from the [escalation matrix](../../procedures/escalation-matrix.md).
 
 ## Close the ticket
 

@@ -42,7 +42,7 @@ come in this order, each under a `##` heading of exactly this name.
 | Before you start | Time it takes, what to bring, what can hurt you or the equipment, and what is not yours to do |
 | Checks | Numbered checks that change nothing, quickest and likeliest first, each with what you see if that part works and where to go if it does not |
 | Fix | Numbered actions, one per step, each with what you see when it has worked |
-| Escalate | When the runbook has not fixed it, and who takes it next, from the escalation matrix in [Procedures](../procedures/index.md) |
+| Escalate | When the runbook has not fixed it, and who takes it next, from the [escalation matrix](../procedures/escalation-matrix.md) in Procedures |
 | Close the ticket | What to record, including the runbook's identifier, so a repeat fault can be traced |
 
 ## The template
@@ -91,7 +91,7 @@ link to the runbook that does).
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: who
-takes it and how, from the [escalation matrix](../../procedures/index.md).
+takes it and how, from the [escalation matrix](../../procedures/escalation-matrix.md).
 
 ## Close the ticket
 

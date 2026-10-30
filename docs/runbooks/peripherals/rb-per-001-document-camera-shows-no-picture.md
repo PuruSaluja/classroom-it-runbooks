@@ -58,7 +58,7 @@ press its **Auto focus** button.
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say what the camera's lights showed and whether other sources worked.
 
 ## Close the ticket

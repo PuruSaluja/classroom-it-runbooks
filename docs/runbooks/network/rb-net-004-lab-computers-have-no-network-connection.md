@@ -65,7 +65,7 @@ for the lectern computer alone, follow
 Escalate if the checks do not find the fault or the fix does not hold: to
 the network team when the room switch or the cabling has failed, or to the
 service desk for the workstations, through the
-[escalation matrix](../../procedures/index.md). Say how many workstations
+[escalation matrix](../../procedures/escalation-matrix.md). Say how many workstations
 failed, which ones, and what the switch's lights showed. If a class is in
 the room, ask the shift lead about moving it.
 

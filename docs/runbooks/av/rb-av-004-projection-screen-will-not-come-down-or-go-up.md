@@ -60,7 +60,7 @@ wrong, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say whether the motor could be heard, and whether the wall switch worked.
 
 ## Close the ticket

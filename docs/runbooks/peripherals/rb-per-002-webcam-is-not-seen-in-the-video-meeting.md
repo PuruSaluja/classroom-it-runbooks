@@ -60,7 +60,7 @@ initials, or the wrong camera. For the room's sound in the meeting, follow
 Escalate if the checks do not find the fault or the fix does not hold: to
 the service desk if the computer does not list the webcam, or to AV
 engineering if it is listed but shows nothing, through the
-[escalation matrix](../../procedures/index.md).
+[escalation matrix](../../procedures/escalation-matrix.md).
 
 ## Close the ticket
 

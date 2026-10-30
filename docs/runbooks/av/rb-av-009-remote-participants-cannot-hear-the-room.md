@@ -66,7 +66,7 @@ if the instructor's microphone is not heard in the room either, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say which meeting app was used, which microphone it showed, and what the
 ceiling microphone's light showed.
 

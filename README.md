@@ -157,10 +157,11 @@ network team, the teaching-technology team) are roles, not named teams.
 The tests hold every runbook to the template: its front matter, its six
 sections in order and filled in, a check that says what to expect and
 where to go if not, an action that says what to expect or hands the fault
-on, a "step N of Fix" that is there, an escalation step that links
-Procedures, links within the page that name its sections, and a row in
-its category's index; and they hold every
-kind of equipment to a runbook of its own category that is not retired.
+on, a "step N of Fix" that is there, an escalation step that links the
+escalation matrix and names a role it defines, links within the page that
+name its sections, and a row in its category's index; and they hold every
+kind of equipment to a runbook of its own category that is not retired,
+and every role the matrix defines to a runbook that names it.
 
 ## Parts
 

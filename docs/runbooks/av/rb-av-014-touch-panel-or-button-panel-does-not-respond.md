@@ -59,7 +59,7 @@ only the projector does not turn on, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say what the panel showed, and whether the equipment worked from its own
 remote.
 

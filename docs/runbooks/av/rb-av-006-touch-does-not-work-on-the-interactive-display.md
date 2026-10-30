@@ -62,7 +62,7 @@ all, follow [Display shows no picture](rb-av-005-display-shows-no-picture.md).
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md),
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md),
 or to the service desk if touch works on the display's whiteboard but the
 computer reports a problem with the touch device.
 

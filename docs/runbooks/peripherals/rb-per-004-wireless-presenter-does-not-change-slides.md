@@ -53,7 +53,7 @@ computer itself does not respond to its keyboard or mouse, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the service desk, through the [escalation matrix](../../procedures/index.md),
+the service desk, through the [escalation matrix](../../procedures/escalation-matrix.md),
 for a replacement presenter paired to the room.
 
 ## Close the ticket

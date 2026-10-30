@@ -55,7 +55,7 @@ no connection. For the lectern computer's own link, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the network team, through the [escalation matrix](../../procedures/index.md),
+the network team, through the [escalation matrix](../../procedures/escalation-matrix.md),
 with each faulty port's number and whether any port in the room worked.
 
 ## Close the ticket

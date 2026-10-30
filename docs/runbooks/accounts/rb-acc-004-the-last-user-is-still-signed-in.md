@@ -56,7 +56,7 @@ person then cannot sign in, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the service desk, through the [escalation matrix](../../procedures/index.md),
+the service desk, through the [escalation matrix](../../procedures/escalation-matrix.md),
 if the computer cannot be signed out or restarted, or if it signs the same
 person in again by itself.
 

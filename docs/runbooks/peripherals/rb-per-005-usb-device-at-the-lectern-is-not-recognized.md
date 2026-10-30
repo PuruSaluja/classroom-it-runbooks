@@ -57,7 +57,7 @@ for the wireless keyboard and mouse, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the service desk, through the [escalation matrix](../../procedures/index.md),
+the service desk, through the [escalation matrix](../../procedures/escalation-matrix.md),
 for a failed hub or a computer that recognizes no USB device.
 
 ## Close the ticket

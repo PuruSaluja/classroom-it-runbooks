@@ -66,7 +66,7 @@ plugged in by cable shows nothing either, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md),
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md),
 or to the network team if no device can reach a receiver that shows its
 welcome page. Say which devices were tried and what each one showed.
 

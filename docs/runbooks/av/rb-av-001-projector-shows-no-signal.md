@@ -69,7 +69,7 @@ if the projector will not turn on at all, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say which source was selected, which lights were lit on the switcher, and
 whether your own laptop worked through the lectern input.
 

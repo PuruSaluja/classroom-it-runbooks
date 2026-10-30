@@ -62,7 +62,7 @@ for a wired connection, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the network team, through the [escalation matrix](../../procedures/index.md),
+the network team, through the [escalation matrix](../../procedures/escalation-matrix.md),
 with the speed test results, when in the class it happens, and how many
 people were in the room.
 

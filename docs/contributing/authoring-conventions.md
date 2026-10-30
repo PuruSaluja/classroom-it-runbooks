@@ -62,8 +62,11 @@ these are the rules for what goes in them.
 
 ## Escalate and close
 
-- Every runbook ends with Escalate, linking the escalation matrix in
-  Procedures, so a fault its runbook cannot fix always has a next owner.
+- Every runbook ends with Escalate, linking the
+  [escalation matrix](../procedures/escalation-matrix.md) and naming the
+  role that takes the fault as the matrix names it (AV engineering, the
+  service desk), so a fault its runbook cannot fix always has a next
+  owner. A new kind of owner is added to the matrix first.
 - Close the ticket says what to record, including the runbook's
   identifier, so repeat faults in a room or on a device can be found.
 

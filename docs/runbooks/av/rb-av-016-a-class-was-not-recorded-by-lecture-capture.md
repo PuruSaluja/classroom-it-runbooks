@@ -62,7 +62,7 @@ for that fault as well.
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md),
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md),
 the same day, with the course, the date and the class's start and end.
 
 ## Close the ticket

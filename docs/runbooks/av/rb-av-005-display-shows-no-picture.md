@@ -60,7 +60,7 @@ shows a picture but ignores touch, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say which display (wall, table number or confidence monitor), what its
 power light shows and what message it gives.
 

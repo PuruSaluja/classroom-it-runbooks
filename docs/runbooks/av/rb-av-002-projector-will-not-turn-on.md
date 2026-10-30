@@ -65,7 +65,7 @@ panel itself does not respond, follow
 
 Escalate if the checks do not find the fault or the fix does not hold: to
 AV engineering, or to facilities when the room has no power, through the
-[escalation matrix](../../procedures/index.md). Attach the photograph of the
+[escalation matrix](../../procedures/escalation-matrix.md). Attach the photograph of the
 projector's lights.
 
 ## Close the ticket

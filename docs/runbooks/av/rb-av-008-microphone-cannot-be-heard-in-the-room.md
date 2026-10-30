@@ -66,7 +66,7 @@ if the microphone is heard but squeals, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say which microphone, what its light showed, and whether fresh batteries
 or the spare made a difference. Take a faulty wireless microphone out of
 the room with a label saying so.

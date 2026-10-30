@@ -67,7 +67,7 @@ for a wired one.
 Escalate if the checks do not find the fault or the fix does not hold:
 to the network team when no device connects on the lectern's cable, or
 to the service desk when only the lectern computer fails, through the
-[escalation matrix](../../procedures/index.md). Say what the network icon
+[escalation matrix](../../procedures/escalation-matrix.md). Say what the network icon
 and the socket's light showed.
 
 ## Close the ticket

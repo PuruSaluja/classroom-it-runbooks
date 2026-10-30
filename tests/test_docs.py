@@ -122,7 +122,48 @@ def test_every_step_says_what_to_expect_and_a_check_where_to_go_if_not(
         # An action says what it should do; the step that hands the fault on need not.
         for number, step in enumerate(actions, 1):
             assert "**Expected:**" in step or "escalate" in step.lower(), (entry.id, number)
-        assert "../../procedures/index.md" in sections["Escalate"], entry.id
+        assert "../../procedures/escalation-matrix.md" in sections["Escalate"], entry.id
+
+
+def _matrix() -> str:
+    return (ROOT / "docs" / "procedures" / "escalation-matrix.md").read_text(encoding="utf-8")
+
+
+def _roles() -> list[str]:
+    """The roles the escalation matrix defines: the headings under "The roles"."""
+    roles = _matrix().split("\n## The roles\n", 1)[1]
+    return [line[4:].strip() for line in roles.splitlines() if line.startswith("### ")]
+
+
+def _names(text: str, role: str) -> bool:
+    """Whether text names the role, in any case and across a line break."""
+    words = r"\s+".join(map(re.escape, role.lower().split()))
+    return re.search(rf"\b{words}\b", text.lower()) is not None
+
+
+def test_the_matrix_assigns_each_of_its_roles_and_links_its_definition() -> None:
+    roles = _roles()
+    assert len(roles) >= 6
+    table = _matrix().split("\n## Who takes what\n", 1)[1].split("\n## ", 1)[0]
+    linked = re.findall(r"\| \[([^]]+)\]\(#([^)]+)\) \|$", table, re.MULTILINE)
+    assert sorted(linked) == sorted((role, role.lower().replace(" ", "-")) for role in roles)
+
+
+def test_every_escalation_names_a_role_the_matrix_defines(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    roles = _roles()
+    for entry in runbooks:
+        escalate = dict(runbook.read(ROOT / "docs" / entry.path).sections)["Escalate"]
+        assert any(_names(escalate, role) for role in roles), entry.id
+
+
+def test_every_role_the_matrix_defines_is_one_a_runbook_hands_faults_to(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    texts = [(ROOT / "docs" / entry.path).read_text(encoding="utf-8") for entry in runbooks]
+    for role in _roles():
+        assert any(_names(text, role) for text in texts), role
 
 
 def test_a_runbook_s_links_within_the_page_name_its_sections(

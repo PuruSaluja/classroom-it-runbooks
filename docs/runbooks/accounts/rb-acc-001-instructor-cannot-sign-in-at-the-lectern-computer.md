@@ -72,7 +72,7 @@ password. If the computer has no network, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-the service desk, through the [escalation matrix](../../procedures/index.md).
+the service desk, through the [escalation matrix](../../procedures/escalation-matrix.md).
 The instructor contacts the service desk themselves to prove who they are;
 the ticket gives the room, the time and the exact message on the screen,
 never a password or code. Offer a cable for their laptop in the meantime,

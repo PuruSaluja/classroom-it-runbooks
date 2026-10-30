@@ -1,8 +1,8 @@
 # Escalation matrix
 
 Who takes a fault that its runbook has not fixed, how urgent it is, and
-what to hand on with it. Each runbook's Escalate section names the role
-that takes its fault.
+what to hand on with it. Every runbook's Escalate section links this page
+and names the role that takes its fault, as this page names it.
 
 The owners below are roles, not named teams: a campus fills each one with
 its own team and ticket queue. Phone numbers and queue names belong in the

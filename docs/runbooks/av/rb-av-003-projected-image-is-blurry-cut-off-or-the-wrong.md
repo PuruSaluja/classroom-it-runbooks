@@ -67,7 +67,7 @@ screen itself is stuck, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md),
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md),
 with a photograph of the screen showing the problem.
 
 ## Close the ticket

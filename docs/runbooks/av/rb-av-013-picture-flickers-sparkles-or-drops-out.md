@@ -64,7 +64,7 @@ is no picture at all, follow
 ## Escalate
 
 Escalate if the checks do not find the fault or the fix does not hold: to
-AV engineering, through the [escalation matrix](../../procedures/index.md).
+AV engineering, through the [escalation matrix](../../procedures/escalation-matrix.md).
 Say which sources drop out, how often, and what the extender's lights did.
 
 ## Close the ticket

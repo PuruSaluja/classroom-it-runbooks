@@ -41,8 +41,9 @@ How this site is organised, and why. The layout is defined in one file,
   following links down from the home page.
 - A room's page links, for each piece of equipment in the room, the
   runbooks that cover it.
-- A runbook ends with an escalation step that links into Procedures, so a
-  fault its runbook cannot fix always has a next owner.
+- A runbook ends with an escalation step that links the escalation matrix
+  in Procedures and names the role that takes the fault, so a fault its
+  runbook cannot fix always has a next owner.
 - Start here links into the other sections in the order a new technician
   should read them.
 
@@ -82,10 +83,12 @@ more than a day after today), and no identifier used twice.
 The tests also hold each runbook to the template's six sections, in order
 and filled in; each check to an **Expected:** and a link to where to go if
 it fails; each action to an **Expected:** or a hand-off; each "step N of
-Fix" to a step that is there; the escalation step
-to a link into Procedures; links within a runbook to its own sections; each
-runbook to a row in its category's index; and every kind of equipment in
-the inventory to a runbook of its own category that is not retired.
+Fix" to a step that is there; the escalation step to a link to the
+escalation matrix and a role the matrix defines; links within a runbook
+to its own sections; each runbook to a row in its category's index; every
+kind of equipment in the inventory to a runbook of its own category that
+is not retired; and every role the matrix defines to a runbook that names
+it.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.
