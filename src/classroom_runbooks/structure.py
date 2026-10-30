@@ -204,19 +204,30 @@ def code_lines(lines: Sequence[str]) -> list[bool]:
     return flags
 
 
-def links(markdown: str) -> set[str]:
-    """The relative targets a page links to, without any ``#anchor``, as written.
+def targets(markdown: str) -> list[tuple[int, str]]:
+    """Every link's line number (from 1) and target, as written, ``#anchor`` included.
 
-    A link in a fenced code block or a code span is shown, not followed, so it is not one.
+    A link in a code block or a code span is shown, not followed, so it is not one.
     """
     lines = split_lines(markdown)
-    prose = "\n".join(line for line, code in zip(lines, code_lines(lines), strict=True) if not code)
-    targets = set()
-    for target in _LINK.findall(_CODE_SPAN.sub("", prose)):
-        if re.match(r"^[a-z][a-z0-9+.-]*:", target) or target.startswith("#"):
-            continue
-        targets.add(target.split("#", 1)[0])
-    return targets
+    # Code lines blanked and code spans cut down to their line breaks, so offsets
+    # still count the page's lines.
+    prose = "\n".join("" if code else line for line, code in zip(lines, code_lines(lines),
+                                                                  strict=True))  # fmt: skip
+    prose = _CODE_SPAN.sub(lambda span: "\n" * span.group(0).count("\n"), prose)
+    return [(prose.count("\n", 0, found.start()) + 1, found.group(1))
+            for found in _LINK.finditer(prose)]  # fmt: skip
+
+
+def external(target: str) -> bool:
+    """Whether a link's target is a URL with a scheme (``https:``, ``mailto:``)."""
+    return re.match(r"^[a-z][a-z0-9+.-]*:", target) is not None
+
+
+def links(markdown: str) -> set[str]:
+    """The relative targets a page links to, without any ``#anchor``, as written."""
+    return {target.split("#", 1)[0] for _, target in targets(markdown)
+            if not external(target) and not target.startswith("#")}  # fmt: skip
 
 
 def _page(path: Path, problems: list[str]) -> str | None:

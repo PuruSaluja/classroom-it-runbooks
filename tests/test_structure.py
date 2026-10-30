@@ -7,11 +7,13 @@ from classroom_runbooks.structure import (
     StructureError,
     check,
     code_lines,
+    external,
     links,
     load,
     main,
     parse,
     split_lines,
+    targets,
     tree,
 )
 
@@ -158,6 +160,27 @@ def test_links_are_relative_targets_without_anchors() -> None:
         '[d](#top) [e](<av/index.md>) [f](av/index.md "Audio") [g](mailto:a@b.c)'
     )
     assert links(text) == {"start/index.md", "./runbooks/index.md", "av/index.md"}
+
+
+def test_targets_keep_each_link_s_line_and_anchor() -> None:
+    lines = [
+        "[a](a.md#top) and `[b](b.md)`",
+        "```",
+        "[c](c.md)",
+        "```",
+        "a `code span over",
+        "two lines` then [d](#fix)",
+        "[e is",
+        "two lines](https://example.org)",
+    ]
+    # Code blocks and spans keep their lines, so later links keep their numbers.
+    expected = [(1, "a.md#top"), (6, "#fix"), (8, "https://example.org")]
+    assert targets("\n".join(lines)) == expected
+
+
+def test_a_target_with_a_scheme_is_external() -> None:
+    assert external("https://example.org") and external("mailto:a@b.c")
+    assert not external("a.md") and not external("#fix") and not external("../a.md:1")
 
 
 def test_a_link_in_a_code_fence_is_shown_not_followed() -> None:
