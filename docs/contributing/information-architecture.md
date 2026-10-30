@@ -44,8 +44,9 @@ How this site is organised, and why. The layout is defined in one file,
 - A runbook ends with an escalation step that links the escalation matrix
   in Procedures and names the role that takes the fault, so a fault its
   runbook cannot fix always has a next owner.
-- Start here links into the other sections in the order a new technician
-  should read them.
+- Start here links the onboarding path, which links the first runbooks
+  and the procedures in the order a new technician meets them, and the
+  other sections in reading order.
 
 ## Identifiers
 
@@ -87,8 +88,9 @@ Fix" to a step that is there; the escalation step to a link to the
 escalation matrix and a role the matrix defines; links within a runbook
 to its own sections; each runbook to a row in its category's index; every
 kind of equipment in the inventory to a runbook of its own category that
-is not retired; and every role the matrix defines to a runbook that names
-it.
+is not retired; every role the matrix defines to a runbook that names
+it; and the onboarding path's first runbooks to every kind of equipment
+that at least four rooms in five have, in every category.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.

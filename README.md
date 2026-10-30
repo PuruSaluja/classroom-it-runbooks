@@ -7,8 +7,9 @@ check them and export them to ServiceNow's knowledge base.
 
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
 > to them, the room inventory with its pages, the runbook template and
-> conventions, and the runbooks in all four categories are in place; the
-> procedures and the other tools are built in the order of [Parts](#parts).
+> conventions, the runbooks in all four categories, the procedures and
+> the onboarding path are in place; the other tools are built in the order
+> of [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -152,7 +153,9 @@ equipment by a second author, which is what makes a runbook `current`;
 their `reviewed` date is the day each was written. Button and menu names
 are given as such equipment usually labels them, and the people a fault
 is escalated to (AV engineering, facilities, the service desk, the
-network team, the teaching-technology team) are roles, not named teams.
+network team, the teaching-technology team and the shift lead) are roles,
+not named teams, defined in the
+[escalation matrix](docs/procedures/escalation-matrix.md).
 
 The tests hold every runbook to the template: its front matter, its six
 sections in order and filled in, a check that says what to expect and
@@ -163,6 +166,21 @@ name its sections, and a row in its category's index; and they hold every
 kind of equipment to a runbook of its own category that is not retired,
 and every role the matrix defines to a runbook that names it.
 
+## Procedures and onboarding
+
+| Page | What it sets out |
+| --- | --- |
+| [Escalation matrix](docs/procedures/escalation-matrix.md) | Six roles and what each takes, three urgencies set by the effect on a class, and what every escalation hands on |
+| [Shift handoff](docs/procedures/shift-handoff.md) | The start of a shift, a kit bag holding what the runbooks ask a technician to bring, and a handoff note template |
+| [Onboarding path](docs/start/onboarding.md) | Four stages to taking calls alone, a sign-off list, and eight first runbooks |
+
+The first runbooks cover every kind of equipment that at least four rooms
+in five have in the illustrative inventory (nine kinds, in all four
+categories), which a test recomputes from the inventory. Like the
+runbooks, these pages are written for a team to adopt; how long each
+stage takes, and whether the path shortens onboarding, only a team using
+it could measure.
+
 ## Parts
 
 | Part | State |
@@ -172,7 +190,7 @@ and every role the matrix defines to a runbook that names it.
 | Runbook template and authoring conventions | done |
 | AV runbooks: projectors, displays, audio, cabling, control systems | done (16 runbooks) |
 | Network, peripheral and account-access runbooks | done (13 runbooks) |
-| Escalation matrix, shift handoff and the onboarding path for new technicians | to come |
+| Escalation matrix, shift handoff and the onboarding path for new technicians | done |
 | Validator: required sections, room-to-runbook coverage, dead cross-links | to come |
 | ServiceNow knowledge-base export and taxonomy mapping | to come |
 | MkDocs Material site, with the validator in CI | to come |
