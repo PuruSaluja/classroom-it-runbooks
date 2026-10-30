@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from classroom_runbooks import runbook, validate
+from classroom_runbooks.inventory import Building, Equipment, Inventory, Room
 from classroom_runbooks.structure import Section
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -213,4 +214,65 @@ def test_the_command_lists_problems_and_exits_1(tmp_path: Path, capsys, monkeypa
     out, err = capsys.readouterr()
     assert code == 1
     assert "Fix step 1 neither says what to expect nor escalates" in err
-    assert out.endswith("1 problems\n")
+    # One runbook, for one kind of AV equipment, leaves the other 31 kinds uncovered.
+    assert "coverage: Wall network port (wall-port), in 220 rooms (ALD-101" in err
+    assert "pieces and 1 of 32 kinds of equipment are covered" in out
+    assert out.endswith(f"\n{len(err.splitlines())} problems\n")
+
+
+ROOMS = Inventory(
+    buildings=(Building("ALD", "Alder Hall"),),
+    equipment=(
+        Equipment("laser-projector", "Laser projector", "AV", "projector"),
+        Equipment("webcam", "Webcam", "PER", "camera"),
+        Equipment("wall-port", "Wall port", "NET", "network"),
+    ),
+    profiles=(),
+    rooms=(
+        Room("ALD", "101", "standard", 30, (("laser-projector", 1), ("webcam", 2))),
+        Room("ALD", "102", "standard", 30, (("laser-projector", 1),)),
+        Room("ALD", "103", "standard", 30, (("laser-projector", 2), ("webcam", 1))),
+        Room("ALD", "104", "standard", 30, (("webcam", 1),)),
+        Room("ALD", "105", "standard", 30, (("webcam", 1),)),
+    ),
+)
+WEBCAM_GAP = (
+    "coverage: Webcam (webcam), in 4 rooms (ALD-101, ALD-103, ALD-104 and 1 more), "
+    "has no PER runbook that is not retired"
+)
+
+
+def _entry(identifier: str, equipment: list[str], status: str = "draft") -> runbook.Entry:
+    return runbook.Entry(identifier, "A fault", tuple(equipment), status, Path("runbooks/x.md"))
+
+
+def test_equipment_that_every_room_has_covered_counts_every_room_and_piece() -> None:
+    entries = [_entry("RB-AV-001", ["laser-projector"]), _entry("RB-PER-001", ["webcam"]),
+               _entry("RB-NET-001", ["wall-port"])]  # fmt: skip
+    # The wall port is in no room, so it is not one of the kinds counted, covered or not.
+    assert validate.coverage(ROOMS, entries) == (validate.Coverage((5, 5), (9, 9), (2, 2)), [])
+
+
+@pytest.mark.parametrize(
+    "webcam",
+    [
+        [],
+        [_entry("RB-PER-001", ["webcam"], status="retired")],
+        [_entry("RB-AV-002", ["webcam"])],
+    ],
+    ids=["no runbook", "retired", "another category"],
+)
+def test_a_kind_with_no_runbook_of_its_own_category_in_use_is_a_gap(webcam) -> None:
+    entries = [_entry("RB-AV-001", ["laser-projector"]), *webcam]
+    assert validate.coverage(ROOMS, entries) == (
+        validate.Coverage((1, 5), (4, 9), (1, 2)),
+        [WEBCAM_GAP],
+    )
+
+
+def test_a_gap_in_three_rooms_or_fewer_lists_them_all() -> None:
+    rooms = Inventory(ROOMS.buildings, ROOMS.equipment, (), ROOMS.rooms[:3])
+    covers, gaps = validate.coverage(rooms, [_entry("RB-AV-001", ["laser-projector"])])
+    assert covers == validate.Coverage((1, 3), (4, 7), (1, 2))
+    assert gaps == [WEBCAM_GAP.replace("4 rooms (ALD-101, ALD-103, ALD-104 and 1 more)",
+                                       "2 rooms (ALD-101, ALD-103)")]  # fmt: skip

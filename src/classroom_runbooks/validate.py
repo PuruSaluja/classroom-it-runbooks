@@ -1,8 +1,9 @@
-"""The validator: every runbook against the template and the escalation matrix.
+"""The validator: every runbook against the template and the escalation matrix, and
+every room's equipment against the runbooks.
 
-``python -m classroom_runbooks.validate`` reads the runbooks in the categories'
-folders (their front matter checked as ``runbook.catalog`` checks it) and checks, for
-each one, its **sections**:
+``python -m classroom_runbooks.validate`` reads the room inventory and the runbooks in
+the categories' folders (their front matter checked as ``runbook.catalog`` checks it)
+and checks, for each runbook, its **sections**:
 
 - the template's sections, in order, each filled in, and none still holding a line of
   the template's example text;
@@ -12,6 +13,10 @@ each one, its **sections**:
 - Escalate links the escalation matrix and names a role the matrix defines, and each
   role the matrix defines is named by some runbook;
 - the category's index lists it by identifier and title.
+
+Then **coverage**: every piece of equipment in every room has a runbook of its own
+category that is not retired. It counts the rooms, pieces and kinds of equipment
+covered, and names each kind that is not, with the rooms that have it.
 
 It prints each problem with its file, then what it checked, and exits 1 if there is
 any problem.
@@ -23,6 +28,7 @@ import argparse
 import re
 import sys
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 from classroom_runbooks import inventory, runbook, structure
@@ -160,6 +166,51 @@ def sections(docs: Path, entries: Sequence[runbook.Entry], template: runbook.Pag
     return problems
 
 
+@dataclass(frozen=True)
+class Coverage:
+    """How much of the inventory's equipment has a runbook: (covered, of all) for each."""
+
+    rooms: tuple[int, int]
+    """Rooms whose every piece of equipment is covered."""
+    pieces: tuple[int, int]
+    kinds: tuple[int, int]
+    """Kinds of equipment that some room has."""
+
+
+def coverage(
+    rooms: inventory.Inventory, entries: Sequence[runbook.Entry]
+) -> tuple[Coverage, list[str]]:
+    """What the runbooks in ``entries`` cover of the equipment in ``rooms``, and the gaps.
+
+    A kind of equipment is covered by a runbook of its own category that lists it and is
+    not retired; a runbook of another category may list it too, but does not count.
+    """
+    categories: dict[str, set[str]] = {}
+    for entry in (e for e in entries if e.status != "retired"):
+        for item in entry.equipment:
+            categories.setdefault(item, set()).add(entry.id.split("-")[1])
+    covered = {e.id for e in rooms.equipment if e.category in categories.get(e.id, set())}
+    having: dict[str, list[str]] = {}
+    pieces = [0, 0]
+    whole = 0
+    for room in rooms.rooms:
+        for item, count in room.equipment:
+            having.setdefault(item, []).append(room.id)
+            pieces[1] += count
+            pieces[0] += count if item in covered else 0
+        whole += all(item in covered for item, _ in room.equipment)
+    problems = []
+    for e in (e for e in rooms.equipment if e.id in having and e.id not in covered):
+        found = having[e.id]
+        shown = ", ".join(found[:3]) + (f" and {len(found) - 3} more" if len(found) > 3 else "")
+        problems.append(
+            f"coverage: {e.name} ({e.id}), in {len(found)} rooms ({shown}), "
+            f"has no {e.category} runbook that is not retired"
+        )
+    kinds = (len(covered & set(having)), len(having))
+    return Coverage((whole, len(rooms.rooms)), (pieces[0], pieces[1]), kinds), problems
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m classroom_runbooks.validate",
@@ -193,9 +244,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"{len(exc.problems)} problems in the runbooks' front matter")
         return 1
     problems = sections(args.docs, entries, template)
+    covers, gaps = coverage(rooms, entries)
+    problems += gaps
     for problem in problems:
         print(f"problem: {problem}", file=sys.stderr)
     print(f"sections: {len(entries)} runbooks checked against the template and the matrix")
+    print(
+        f"coverage: {covers.rooms[0]:,} of {covers.rooms[1]:,} rooms have a runbook for every "
+        f"piece of equipment; {covers.pieces[0]:,} of {covers.pieces[1]:,} pieces and "
+        f"{covers.kinds[0]} of {covers.kinds[1]} kinds of equipment are covered"
+    )
     print(f"{len(problems)} problems")
     return 1 if problems else 0
 
