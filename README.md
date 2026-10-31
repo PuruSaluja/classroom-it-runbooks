@@ -8,8 +8,8 @@ check them and export them to ServiceNow's knowledge base.
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
 > to them, the room inventory with its pages, the runbook template and
 > conventions, the runbooks in all four categories, the procedures, the
-> onboarding path, the validator and the knowledge-base export are in
-> place; the published site is built in the order of [Parts](#parts).
+> onboarding path, the validator, the knowledge-base export and the site
+> build are in place; publishing the site comes next in [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -249,6 +249,29 @@ format ServiceNow exports records in, and its tests read it back and
 check every record, link and anchor; how an instance takes it is for a
 first load into a sub-production instance to show.
 
+## The site
+
+```bash
+mkdocs build --strict    # writes the site to site/
+mkdocs serve             # serves it at http://127.0.0.1:8000, rebuilt on each change
+```
+
+[`mkdocs.yml`](mkdocs.yml) builds `docs/` with the Material theme: a
+navigation made from [`structure.toml`](structure.toml) (each section in
+order, its pages in the order its index links them), search, a light and
+a dark scheme, and no fonts or scripts from other sites. A build hook,
+[`site.py`](src/classroom_runbooks/site.py), sets that navigation and
+gives every heading the anchor GitHub gives it, the one the validator
+checks links against, so a link that works on GitHub works on the site.
+The build is strict: a link or `#anchor` that reaches nothing, or a page
+missing from the navigation, fails it. CI builds it after the validator,
+and the tests build it to check that every page's heading ids are the
+anchors the validator expects.
+
+Material for MkDocs says, when it builds, that it reaches end of life on
+2027-05-05 (critical fixes until then) and names Zensical as its
+successor; the site will need to move before that date.
+
 ## Parts
 
 | Part | State |
@@ -261,7 +284,7 @@ first load into a sub-production instance to show.
 | Escalation matrix, shift handoff and the onboarding path for new technicians | done |
 | Validator: required sections, room-to-runbook coverage, dead cross-links | done |
 | ServiceNow knowledge-base export and taxonomy mapping | done (30 articles in 6 categories) |
-| MkDocs Material site, with the validator in CI | to come |
+| MkDocs Material site, with the validator in CI | done (`mkdocs build --strict` in CI) |
 | Published site | to come |
 
 ## Development

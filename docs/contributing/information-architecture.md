@@ -114,5 +114,12 @@ runs it, and the tests hold the
 [taxonomy mapping](../reference/taxonomy-mapping.md) pages to what it
 writes.
 
+`mkdocs build --strict` builds the site from `docs/`, its navigation made
+from `structure.toml`: each section in order, its index first and its
+pages in the order the index links them. It fails on a link or `#anchor`
+that reaches nothing on the site, or a page missing from the navigation.
+Headings get the same anchors as on GitHub, so the validator and the site
+agree on every link.
+
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.

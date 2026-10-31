@@ -3,7 +3,7 @@
 ``structure.toml`` at the repository's root lists every section: its folder under
 ``docs/``, its title, who reads it and what goes in it. A runbook section also has a
 category prefix, which its runbooks' identifiers carry (``RB-AV-001``). The file is the
-one place the layout is set: the site's navigation and, later, the validator read it.
+one place the layout is set: the site's navigation and the validator read it.
 
 ``python -m classroom_runbooks.structure`` checks ``docs/`` against it:
 
