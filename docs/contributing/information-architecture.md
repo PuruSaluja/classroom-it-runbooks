@@ -92,14 +92,19 @@ each problem with its file (and line, for a link):
 - **Coverage:** every piece of equipment in every room has a runbook of its
   own category that is not retired; it counts the rooms, pieces and kinds
   covered and names each gap with the rooms it reaches.
-- **Links:** every relative link on every page reaches a file inside
-  `docs/`, every `#anchor` names a heading on its page (GitHub's anchor:
-  `## Shift lead` is `#shift-lead`), and every page, not only the section
-  indexes, is reached by following links from the home page.
+- **Links:** every relative link on every page (its `%20`s decoded)
+  reaches a file inside `docs/`, written in the file's own case; every
+  `#anchor` names a heading on its page (GitHub's anchor: `## Shift lead`
+  is `#shift-lead`, and an underlined heading counts) or an HTML element's
+  id; and every page, not only the section indexes, is reached by
+  following links from the home page.
 
 The tests also hold the onboarding path's first runbooks to every kind of
-equipment that at least four rooms in five have, in every category, and
-the escalation matrix's table to linking every role it defines.
+equipment that at least four rooms in five have, in every category; the
+escalation matrix's first table to linking every role it defines, and its
+table by equipment to listing each of the inventory's kinds with every
+role its runbooks escalate to and none they do not hand it to; and the
+README's quoted validator output to what the validator prints.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.

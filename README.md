@@ -195,10 +195,11 @@ link), and fails if there is any:
   its own category that is not retired. It counts the rooms, pieces and
   kinds of equipment covered, and names each kind that is not, with the
   rooms that have it.
-- **Links.** Every link on every page reaches a file inside `docs/`, every
+- **Links.** Every link on every page reaches a file inside `docs/`, with
+  its case as the file's (Windows ignores case, GitHub does not), every
   `#anchor` names a heading on its page (made into an anchor as GitHub
-  makes them), and every page is reached by following links from the home
-  page.
+  makes them, `#` or underlined) or an HTML element's id, and every page is
+  reached by following links from the home page.
 
 On this repository it prints:
 
@@ -210,8 +211,10 @@ links: 6,388 links (388 to a heading) on 56 pages followed; 56 of 56 pages reach
 ```
 
 The coverage figures are for the illustrative inventory. CI runs the
-validator, and a test runs its three checks on `docs/`; its own tests
-give it damaged runbooks, gaps and broken links to find.
+validator, a test runs its three checks on `docs/`, and another reruns it
+to check the output above; its own tests give it damaged runbooks, gaps
+and broken links to find, and valid links written in unusual ways to
+accept.
 
 ## Parts
 
