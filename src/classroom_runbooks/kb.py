@@ -14,8 +14,9 @@ Each runbook becomes a ``kb_knowledge`` record and each section it is filed unde
 - ``meta``, the article's search keywords, holds the runbook's identifier, so a ticket
   that quotes ``RB-AV-001`` finds it, and the names of the equipment it covers.
 
-Every record's ``sys_id`` is made from the knowledge base's and the page's (``uuid5``),
-so exporting again gives the same ones and an import updates the articles it made
+Every record's ``sys_id`` is made (``uuid5``) from the knowledge base's and a key: a
+runbook's identifier, which a new title leaves as it is, or another page's path. So
+exporting again gives the same ones and an import updates the articles it made
 before rather than adding copies. A link to another exported page becomes a link to
 its article, ``#anchor`` kept; a link to a page that is not exported keeps its text
 and loses its target, and the export lists it. Every ``#anchor`` must name an id in
@@ -244,7 +245,9 @@ def export(
         for s in sections if s.path in filed
     ]  # fmt: skip
     by_section = {c.label: c for c in categories[1:]}
-    ids = {path: sys_id(knowledge_base, f"kb_knowledge/{path.as_posix()}") for path in pages}
+    # A runbook by its identifier, which a new title and file name leave as it is.
+    keys = {path: entry.id if entry else path.as_posix() for path, entry in pages.items()}
+    ids = {path: sys_id(knowledge_base, f"kb_knowledge/{keys[path]}") for path in pages}
     unlinked: list[tuple[Path, str]] = []
     articles = []
     for path, entry in pages.items():

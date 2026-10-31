@@ -110,7 +110,7 @@ def test_an_anchor_on_another_page_is_kept_and_must_name_an_id(docs: Path) -> No
         kb.export(docs, SECTIONS, ROOMS, BASE)
     assert error.value.problems == (
         f"{NO_SIGNAL.as_posix()}: the link /kb_view.do?sys_kb_id="
-        f"{kb.sys_id(BASE, 'kb_knowledge/runbooks/av/rb-av-002-projector-will-not-turn-on.md')}"
+        f"{kb.sys_id(BASE, 'kb_knowledge/RB-AV-002')}"
         "#no-such-heading names no id in its article",
     )
 
@@ -206,3 +206,20 @@ def test_the_command_writes_nothing_when_there_are_problems(
     assert kb.main(["--knowledge-base", "KB0001", "--out", str(out)]) == 1
     assert "'KB0001' is not a sys_id" in capsys.readouterr().err
     assert not out.exists()
+
+
+def test_a_runbook_s_article_is_keyed_on_its_identifier_not_its_file(docs: Path) -> None:
+    before = {a.runbook: a.sys_id for a in kb.export(docs, SECTIONS, ROOMS, BASE).articles}
+    old = docs / "runbooks/av/rb-av-002-projector-will-not-turn-on.md"
+    edit(old, "Projector will not turn on", "Projector does not power up")
+    edit(old, "# Projector will not turn on", "# Projector does not power up")
+    old.rename(docs / "runbooks/av/rb-av-002-projector-does-not-power-up.md")
+    for page in (docs / "runbooks/av").glob("rb-*.md"):
+        text = page.read_text(encoding="utf-8")
+        text = text.replace(old.name, "rb-av-002-projector-does-not-power-up.md")
+        page.write_text(text, encoding="utf-8", newline="\n")
+    after = kb.export(docs, SECTIONS, ROOMS, BASE)
+    assert {a.runbook: a.sys_id for a in after.articles} == before
+    assert before["RB-AV-002"] == kb.sys_id(BASE, "kb_knowledge/RB-AV-002")
+    matrix = article(after, Path("procedures/escalation-matrix.md"))
+    assert matrix.sys_id == kb.sys_id(BASE, "kb_knowledge/procedures/escalation-matrix.md")
