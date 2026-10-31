@@ -1,0 +1,56 @@
+# The site: `mkdocs build --strict` writes it to site/ and fails on any warning (a
+# link or #anchor that reaches nothing, a page left out of the navigation).
+# The navigation is not written here: src/classroom_runbooks/site.py makes it from
+# structure.toml, and gives headings the anchors the validator checks links against.
+
+site_name: Classroom IT Runbooks
+site_description: Runbooks, a room inventory and support procedures for classroom technology
+repo_url: https://github.com/PuruSaluja/classroom-it-runbooks
+repo_name: classroom-it-runbooks
+edit_uri: edit/main/docs/
+docs_dir: docs
+site_dir: site
+strict: true
+
+hooks:
+  - src/classroom_runbooks/site.py
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+theme:
+  name: material
+  # System fonts: the pages load nothing from another site.
+  font: false
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - search.suggest
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+
+plugins:
+  - search
+
+markdown_extensions:
+  - tables
+  - sane_lists
+  - admonition
+  - toc:
+      permalink: true

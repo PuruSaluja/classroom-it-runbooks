@@ -268,7 +268,7 @@ first load into a sub-production instance to show.
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -c constraints.txt -e ".[dev]"   # bin/ on Linux and macOS
+.venv/Scripts/python -m pip install -c constraints.txt -e ".[dev,site]"   # bin/ on Linux and macOS
 pytest
 ruff check . && ruff format --check .
 ```

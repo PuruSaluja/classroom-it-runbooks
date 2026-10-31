@@ -48,9 +48,9 @@ jobs:
       - name: Install
         run: |
           if [ "${{ matrix.versions }}" = pinned ]; then
-            python -m pip install -c constraints.txt -e ".[dev]"
+            python -m pip install -c constraints.txt -e ".[dev,site]"
           else
-            python -m pip install -e ".[dev]"
+            python -m pip install -e ".[dev,site]"
           fi
           python -m pip freeze --exclude-editable
 
