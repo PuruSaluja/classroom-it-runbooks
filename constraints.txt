@@ -4,6 +4,7 @@
 #   pip install -c constraints.txt -e ".[dev]"
 colorama==0.4.6
 iniconfig==2.3.1
+Markdown==3.11.2
 packaging==26.3
 pluggy==1.7.0
 Pygments==2.21.0
