@@ -1,8 +1,8 @@
 # Onboarding path
 
 What a new student technician reads, shadows and does before taking calls
-alone, in four stages. Each stage usually takes a week of shifts; move on
-when the shift lead agrees, not by the calendar.
+alone, in four stages. Each stage is planned as about a week of shifts;
+move on when the shift lead agrees, not by the calendar.
 
 ## Stage 1: learn the ground
 
@@ -75,8 +75,8 @@ can:
 - find any room's equipment from its page in Rooms;
 - follow each first runbook's Checks on the equipment, and say where each
   check leads if it fails;
-- name the role in the escalation matrix that takes a fault of each
-  category, and the urgency of a fault that stops a class;
+- find in the escalation matrix who takes a fault in each kind of
+  equipment, and say the urgency of a fault that stops a class;
 - pack the kit bag, and write a handoff note the next shift can act on;
 - state the safety rules and what is not a technician's to do;
 - say why a technician never asks for, types or resets a password.

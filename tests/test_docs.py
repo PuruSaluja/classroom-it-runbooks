@@ -125,3 +125,11 @@ def test_the_first_runbooks_cover_what_four_rooms_in_five_have(
     # Each one covers something most rooms have, and every category has one.
     assert all(common & set(entry.equipment) for entry in chosen)
     assert {e.id.split("-")[1] for e in chosen} == {s.prefix for s in SECTIONS if s.prefix}
+
+
+def test_the_readme_quotes_what_the_validator_prints(capsys, monkeypatch) -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    quoted = readme.split("\n## The validator\n", 1)[1].split("```text\n", 1)[1]
+    monkeypatch.chdir(ROOT)
+    assert validate.main([]) == 0
+    assert quoted.split("```", 1)[0] == capsys.readouterr().out
