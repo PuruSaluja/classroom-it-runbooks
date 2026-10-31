@@ -55,8 +55,11 @@ _HEADING = re.compile(r" {0,3}#{1,6}[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*")
 _INLINE_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
 # A setext heading's underline: = for level 1, - for level 2.
 _UNDERLINE = re.compile(r" {0,3}(?:=+|-+)[ \t]*")
-# An HTML element's id (or an <a>'s name), which a link's #anchor may also name.
-_HTML_ID = re.compile(r"""<[A-Za-z][^>]*?\s(?:id|name)\s*=\s*["']([^"']+)["']""")
+# An HTML element's id (or an <a>'s name), which a link's #anchor may also name; HTML
+# allows the value in double quotes, single quotes or none.
+_HTML_ID = re.compile(
+    r"""<[A-Za-z][^>]*?\s(?:id|name)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s"'=<>`]+))"""
+)
 _LIST_OR_QUOTE = re.compile(r" {0,3}(?:[-*+>]|[0-9]{1,9}[.)])(?:[ \t]|$)")
 
 
@@ -282,7 +285,8 @@ def anchors(markdown: str) -> set[str]:
         count = seen.get(base, 0)
         seen[base] = count + 1
         found.add(base if count == 0 else f"{base}-{count}")
-    found.update(_HTML_ID.findall(structure.prose("\n".join(lines))))
+    for quoted in _HTML_ID.findall(structure.prose("\n".join(lines))):
+        found.add("".join(quoted))  # one of the three forms matched
     return found
 
 

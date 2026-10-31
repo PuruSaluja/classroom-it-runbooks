@@ -334,6 +334,11 @@ def test_an_html_element_s_id_is_an_anchor_but_not_in_code() -> None:
     assert validate.anchors(page) == {"a", "here", "there"}
 
 
+def test_an_unquoted_html_id_is_an_anchor() -> None:
+    page = "# A\n\n<a id=here></a> <div class=x id=there>y</div> <p data-id=not>z</p>\n"
+    assert validate.anchors(page) == {"a", "here", "there"}
+
+
 def test_front_matter_gives_no_anchors() -> None:
     page = "---\n# a comment\nid: RB-AV-001\n---\n\n# Title\n"
     assert validate.anchors(page) == {"title"}
