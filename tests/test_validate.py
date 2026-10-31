@@ -317,6 +317,30 @@ def test_a_page_s_anchors_number_a_repeated_heading_and_skip_code() -> None:
     assert validate.anchors(page) == {"title", "part", "part-1", "part-2"}
 
 
+def test_an_underlined_heading_gives_an_anchor_and_a_break_does_not() -> None:
+    page = (
+        "Title\n=====\n\nPart one\n--------\n\nA heading\nover two lines\n---\n\n"
+        "---\n\nText\n\n- a list item\n---\n\n> a quote\n---\n\n```\ncode\n---\n```\n"
+        "\n## Part one\n\nNot a heading\n## Part two\n---\n\n```\nx\n```\n---\n"
+    )
+    # Numbered with the # headings, as GitHub numbers them.
+    assert validate.anchors(page) == {
+        "title", "part-one", "a-heading-over-two-lines", "part-one-1", "part-two"
+    }  # fmt: skip
+
+
+def test_an_html_element_s_id_is_an_anchor_but_not_in_code() -> None:
+    page = '# A\n\n<a id="here"></a> <span name=\'there\'>x</span>\n\n`<a id="no">`\n'
+    assert validate.anchors(page) == {"a", "here", "there"}
+
+
+def test_front_matter_gives_no_anchors() -> None:
+    page = "---\n# a comment\nid: RB-AV-001\n---\n\n# Title\n"
+    assert validate.anchors(page) == {"title"}
+    # A page with no closing --- has no front matter to skip.
+    assert validate.anchors("---\n\n# Title\n") == {"title"}
+
+
 HOME = "# Home\n\n[A](a.md) and [B's part](sub/b.md#part-1) and [web](https://example.org/x.md)\n"
 A = "# A\n\n## Part one\n\nBack to [the part](#part-one) or [home](index.md#home).\n"
 B = "# B\n\n## Part\n\n## Part\n\n`[shown](missing.md)`\n\n    [indented](missing.md)\n"

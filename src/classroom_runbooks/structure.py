@@ -204,19 +204,23 @@ def code_lines(lines: Sequence[str]) -> list[bool]:
     return flags
 
 
+def prose(markdown: str) -> str:
+    """A page's text with its code taken out: code lines blanked and code spans cut down
+    to their line breaks, so the text keeps the page's line numbers."""
+    lines = split_lines(markdown)
+    text = "\n".join("" if code else line for line, code in zip(lines, code_lines(lines),
+                                                                 strict=True))  # fmt: skip
+    return _CODE_SPAN.sub(lambda span: "\n" * span.group(0).count("\n"), text)
+
+
 def targets(markdown: str) -> list[tuple[int, str]]:
     """Every link's line number (from 1) and target, as written, ``#anchor`` included.
 
     A link in a code block or a code span is shown, not followed, so it is not one.
     """
-    lines = split_lines(markdown)
-    # Code lines blanked and code spans cut down to their line breaks, so offsets
-    # still count the page's lines.
-    prose = "\n".join("" if code else line for line, code in zip(lines, code_lines(lines),
-                                                                  strict=True))  # fmt: skip
-    prose = _CODE_SPAN.sub(lambda span: "\n" * span.group(0).count("\n"), prose)
-    return [(prose.count("\n", 0, found.start()) + 1, found.group(1))
-            for found in _LINK.finditer(prose)]  # fmt: skip
+    text = prose(markdown)
+    return [(text.count("\n", 0, found.start()) + 1, found.group(1))
+            for found in _LINK.finditer(text)]  # fmt: skip
 
 
 def external(target: str) -> bool:

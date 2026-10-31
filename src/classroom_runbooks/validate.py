@@ -53,6 +53,11 @@ _KEPT = "Close the ticket"
 # An ATX heading's text, without any closing #s.
 _HEADING = re.compile(r" {0,3}#{1,6}[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*")
 _INLINE_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
+# A setext heading's underline: = for level 1, - for level 2.
+_UNDERLINE = re.compile(r" {0,3}(?:=+|-+)[ \t]*")
+# An HTML element's id (or an <a>'s name), which a link's #anchor may also name.
+_HTML_ID = re.compile(r"""<[A-Za-z][^>]*?\s(?:id|name)\s*=\s*["']([^"']+)["']""")
+_LIST_OR_QUOTE = re.compile(r" {0,3}(?:[-*+>]|[0-9]{1,9}[.)])(?:[ \t]|$)")
 
 
 def roles(matrix: str) -> list[str]:
@@ -240,18 +245,44 @@ def anchor(heading: str) -> str:
     return re.sub(r"[^\w\- ]", "", text).replace(" ", "-")
 
 
+def _headings(lines: Sequence[str]) -> list[str]:
+    """The text of each heading, in order: ``#`` headings and underlined (setext) ones."""
+    found: list[str] = []
+    paragraph: list[str] = []
+    for line, code in zip(lines, structure.code_lines(lines), strict=True):
+        atx = None if code else _HEADING.fullmatch(line)
+        if atx:
+            found.append(atx.group(1))
+            paragraph = []
+        elif not code and _UNDERLINE.fullmatch(line):
+            # The paragraph above an underline is its heading, all its lines; with none
+            # above, a line of dashes is a break.
+            if paragraph:
+                found.append(" ".join(text.strip() for text in paragraph))
+            paragraph = []
+        elif code or not line.strip() or (not paragraph and _LIST_OR_QUOTE.match(line)):
+            # A list item or quote is not a paragraph an underline can make a heading.
+            paragraph = []
+        else:
+            paragraph.append(line)
+    return found
+
+
 def anchors(markdown: str) -> set[str]:
-    """Every anchor a page's headings give, a repeated one numbered from ``-1``."""
+    """Every anchor a page gives: its headings', a repeated one numbered from ``-1``,
+    and the ids of its HTML elements. Front matter, as a runbook starts with, gives none.
+    """
+    lines = structure.split_lines(markdown)
+    if lines and lines[0] == "---" and "---" in lines[1:]:
+        lines = lines[lines.index("---", 1) + 1 :]
     found: set[str] = set()
     seen: dict[str, int] = {}
-    lines = structure.split_lines(markdown)
-    for line, code in zip(lines, structure.code_lines(lines), strict=True):
-        heading = None if code else _HEADING.fullmatch(line)
-        if heading:
-            base = anchor(heading.group(1))
-            count = seen.get(base, 0)
-            seen[base] = count + 1
-            found.add(base if count == 0 else f"{base}-{count}")
+    for heading in _headings(lines):
+        base = anchor(heading)
+        count = seen.get(base, 0)
+        seen[base] = count + 1
+        found.add(base if count == 0 else f"{base}-{count}")
+    found.update(_HTML_ID.findall(structure.prose("\n".join(lines))))
     return found
 
 
