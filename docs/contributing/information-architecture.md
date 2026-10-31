@@ -106,5 +106,13 @@ table by equipment to listing each of the inventory's kinds with every
 role its runbooks escalate to and none they do not hand it to; and the
 README's quoted validator output to what the validator prints.
 
+`python -m classroom_runbooks.kb` exports the runbooks, and the pages they
+link to, as ServiceNow knowledge articles; it fails if an `#anchor` names
+nothing in the article it reaches or a linked page has no `#` title. CI
+runs it, and the tests hold the
+[export format](../reference/kb-export-format.md) and
+[taxonomy mapping](../reference/taxonomy-mapping.md) pages to what it
+writes.
+
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.

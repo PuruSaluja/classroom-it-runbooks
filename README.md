@@ -8,8 +8,8 @@ check them and export them to ServiceNow's knowledge base.
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
 > to them, the room inventory with its pages, the runbook template and
 > conventions, the runbooks in all four categories, the procedures, the
-> onboarding path and the validator are in place; the knowledge-base export
-> and the published site are built in the order of [Parts](#parts).
+> onboarding path, the validator and the knowledge-base export are in
+> place; the published site is built in the order of [Parts](#parts).
 
 ## What this repository is, and is not
 
@@ -206,7 +206,7 @@ On this repository it prints:
 ```text
 sections: 29 runbooks checked against the template and the matrix
 coverage: 220 of 220 rooms have a runbook for every piece of equipment; 3,612 of 3,612 pieces and 32 of 32 kinds of equipment are covered
-links: 6,395 links (389 to an anchor) on 58 pages followed; 58 of 58 pages reached from the home page
+links: 6,397 links (389 to an anchor) on 58 pages followed; 58 of 58 pages reached from the home page
 0 problems
 ```
 
@@ -215,6 +215,39 @@ validator, a test runs its three checks on `docs/`, and another reruns it
 to check the output above; its own tests give it damaged runbooks, gaps
 and broken links to find, and valid links written in unusual ways to
 accept.
+
+## The knowledge-base export
+
+```bash
+python -m classroom_runbooks.kb --knowledge-base 0123456789abcdef0123456789abcdef --out kb.xml
+```
+
+writes the runbooks, and the pages they link to, as ServiceNow knowledge
+articles in its XML record format, for the knowledge base whose `sys_id`
+is given. On this repository it prints:
+
+```text
+30 articles in 6 categories: 29 runbooks and 1 page they link to
+kept as text: procedures/escalation-matrix.md links ../rooms/index.md, which is not exported
+kept as text: procedures/escalation-matrix.md links shift-handoff.md, which is not exported
+wrote kb.xml
+```
+
+Each runbook is a `kb_knowledge` record filed under its category
+(Classroom technology > Audio-visual), with its status as the workflow
+state (`current` is `published`), and its identifier and equipment names
+as search keywords. Links between runbooks become links between articles,
+and every `sys_id` is made from the knowledge base and the runbook's
+identifier, so importing a new export updates the articles rather than
+copying them. [The export format](docs/reference/kb-export-format.md)
+gives every field, and [the taxonomy mapping](docs/reference/taxonomy-mapping.md)
+how sections, statuses and equipment map. CI runs the export.
+
+**The file has not been imported into a ServiceNow instance.** It uses
+the field names of the `kb_knowledge` and `kb_category` tables and the
+format ServiceNow exports records in, and its tests read it back and
+check every record, link and anchor; how an instance takes it is for a
+first load into a sub-production instance to show.
 
 ## Parts
 
@@ -227,7 +260,7 @@ accept.
 | Network, peripheral and account-access runbooks | done (13 runbooks) |
 | Escalation matrix, shift handoff and the onboarding path for new technicians | done |
 | Validator: required sections, room-to-runbook coverage, dead cross-links | done |
-| ServiceNow knowledge-base export and taxonomy mapping | to come |
+| ServiceNow knowledge-base export and taxonomy mapping | done (30 articles in 6 categories) |
 | MkDocs Material site, with the validator in CI | to come |
 | Published site | to come |
 

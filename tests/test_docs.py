@@ -179,3 +179,17 @@ def test_the_export_format_page_names_every_field_the_export_writes() -> None:
     unlinked = {t for _, t in exported.unlinked}
     assert unlinked == {"../rooms/index.md", "shift-handoff.md"}
     assert "Today there are two, both on the\n  escalation matrix" in page
+
+
+def test_the_readme_quotes_what_the_export_prints(tmp_path: Path, capsys, monkeypatch) -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    section = readme.split("\n## The knowledge-base export\n", 1)[1]
+    command = section.split("```bash\n", 1)[1].split("\n", 1)[0].split()
+    quoted = section.split("```text\n", 1)[1].split("```", 1)[0]
+    assert command[:3] == ["python", "-m", "classroom_runbooks.kb"]
+    monkeypatch.chdir(tmp_path)  # so kb.xml, as the README writes it, lands here
+    args = command[3:] + ["--docs", str(ROOT / "docs"), "--inventory", str(ROOT / "inventory"),
+                          "--structure", str(ROOT / "structure.toml")]  # fmt: skip
+    assert kb.main(args) == 0
+    assert capsys.readouterr().out == quoted
+    assert (tmp_path / "kb.xml").is_file()
