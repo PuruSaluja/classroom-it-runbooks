@@ -325,9 +325,18 @@ def links(docs: Path) -> tuple[Links, list[str]]:
             dest = _reaches(page, path) if path else page
             if docs not in dest.parents:
                 problems.append(f"{where} leads out of {docs}, which the site does not publish")
-            elif not dest.is_file():
+                continue
+            if not dest.is_file():
                 problems.append(f"{where} reaches no file")
-            elif dest.suffix == ".md":
+                continue
+            # Windows finds a.md for A.md, and resolve() gives the file's own case; GitHub
+            # and CI's Linux find nothing, so the link's case must be the file's.
+            if path and os.path.normpath(page.parent / unquote(path)) != str(dest):
+                problems.append(
+                    f"{where} reaches {dest.relative_to(docs).as_posix()} only where file "
+                    "names ignore case, as Windows does and GitHub does not"
+                )
+            if dest.suffix == ".md":
                 followed[page].add(dest)
                 if name and dest in headings and name not in headings[dest]:
                     problems.append(f"{where}: {dest.name} has no heading #{name}")

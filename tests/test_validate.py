@@ -412,6 +412,23 @@ def test_a_link_s_percent_escapes_are_decoded(tmp_path: Path) -> None:
     ]
 
 
+@pytest.mark.parametrize(("link", "file"), [("A.md", "a.md"), ("SUB/b.md#part", "sub/b.md")])
+def test_a_link_whose_case_is_not_the_file_s_is_refused_on_any_system(
+    tmp_path: Path, link: str, file: str
+) -> None:
+    docs = _site(tmp_path, **{"index.md": HOME.replace("[A](a.md)", f"[A](a.md) [X]({link})")})
+    _, problems = validate.links(docs)
+    where = f"{(docs / 'index.md').resolve()}:3: {link}"
+    # Windows finds the file whatever the case; Linux, like GitHub, does not.
+    if (docs / link.split("#")[0]).is_file():
+        assert problems == [
+            f"{where} reaches {file} only where file names ignore case, "
+            "as Windows does and GitHub does not"
+        ]
+    else:
+        assert problems == [f"{where} reaches no file"]
+
+
 def test_a_page_that_is_not_utf_8_is_a_problem_not_a_crash(tmp_path: Path) -> None:
     docs = _site(tmp_path)
     (docs / "sub" / "b.md").write_bytes(b"# B\xff\n")
