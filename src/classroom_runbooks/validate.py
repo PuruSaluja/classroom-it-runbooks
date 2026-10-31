@@ -10,20 +10,20 @@ and checks, for each runbook, its **sections**:
 - each numbered check says what to expect (``**Expected:**``) and links where to go
   if it fails; each numbered action of Fix says what to expect or hands the fault on;
 - each "step N of [Fix]" names a step that Fix has;
-- Escalate links the escalation matrix and names a role the matrix defines, and each
-  role the matrix defines is named by some runbook;
+- Escalate links the escalation matrix (however the path is written) and names a role
+  the matrix defines, and each role the matrix defines is named by some runbook;
 - the category's index lists it by identifier and title.
 
 Then **coverage**: every piece of equipment in every room has a runbook of its own
 category that is not retired. It counts the rooms, pieces and kinds of equipment
 covered, and names each kind that is not, with the rooms that have it.
 
-Then **links**, on every page under the docs folder: each relative link reaches a file
-inside the docs folder (the site publishes nothing else), and each ``#anchor``, on
-another page or the same one, names a heading there, made into an anchor as GitHub
-does (``## Shift lead`` is ``#shift-lead``; a repeated heading gets ``-1``, ``-2``).
-Every page is reached by following links from the home page. A link in a code block
-or a code span is shown, not followed, so it is not checked.
+Then **links**, on every page under the docs folder: each relative link (its ``%20``s
+decoded) reaches a file inside the docs folder (the site publishes nothing else), and
+each ``#anchor``, on another page or the same one, names a heading there, made into an
+anchor as GitHub does (``## Shift lead`` is ``#shift-lead``; a repeated heading gets
+``-1``, ``-2``). Every page is reached by following links from the home page. A link
+in a code block or a code span is shown, not followed, so it is not checked.
 
 It prints each problem with its file, then what it checked, and exits 1 if there is
 any problem.
@@ -32,11 +32,13 @@ any problem.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import unquote
 
 from classroom_runbooks import inventory, runbook, structure
 
@@ -114,8 +116,17 @@ def _steps(name: str, body: str, expect: bool) -> list[str]:
     return problems
 
 
+def _reaches(page: Path, target: str) -> Path:
+    """The file a relative link's target reaches from ``page``, its ``%20``s decoded."""
+    return (page.parent / unquote(target.split("#", 1)[0])).resolve()
+
+
 def _runbook_problems(
-    page: runbook.Page, placeholders: set[str], matrix: str, defined: Sequence[str] | None
+    path: Path,
+    page: runbook.Page,
+    placeholders: set[str],
+    matrix: Path,
+    defined: Sequence[str] | None,
 ) -> list[str]:
     headings = tuple(name for name, _ in page.sections)
     if headings != runbook.SECTIONS:
@@ -136,8 +147,10 @@ def _runbook_problems(
             if not 1 <= int(number) <= actions:
                 problems.append(f"{name} names step {number} of Fix, which has {actions}")
     escalate = sections["Escalate"]
-    if not any(target.split("#", 1)[0] == matrix for target in structure.links(escalate)):
-        problems.append(f"Escalate does not link the escalation matrix ({matrix})")
+    # However the link is written (./, an anchor, %20), it must reach the matrix.
+    if not any(_reaches(path, target) == matrix.resolve() for target in structure.links(escalate)):
+        shown = Path(os.path.relpath(matrix, path.parent)).as_posix()
+        problems.append(f"Escalate does not link the escalation matrix ({shown})")
     if defined and not any(names(escalate, role) for role in defined):
         problems.append(f"Escalate names none of the matrix's roles: {', '.join(defined)}")
     return problems
@@ -158,9 +171,7 @@ def sections(docs: Path, entries: Sequence[runbook.Entry], template: runbook.Pag
         except (runbook.RunbookError, OSError, UnicodeDecodeError) as exc:
             problems.append(str(exc))
             continue
-        # The matrix as a link from the runbook's folder, written with "/".
-        matrix = Path(*[".."] * len(entry.path.parent.parts), MATRIX).as_posix()
-        found = _runbook_problems(page, placeholders, matrix, defined)
+        found = _runbook_problems(path, page, placeholders, docs / MATRIX, defined)
         problems += [f"{path}: {problem}" for problem in found]
         index = path.parent / "index.md"
         row = f"| {entry.id} | [{entry.title}]({path.name}) |"
@@ -280,7 +291,7 @@ def links(docs: Path) -> tuple[Links, list[str]]:
             path, _, name = target.partition("#")
             anchored += bool(name)
             where = f"{page}:{line}: {target}"
-            dest = (page.parent / path).resolve() if path else page
+            dest = _reaches(page, path) if path else page
             if docs not in dest.parents:
                 problems.append(f"{where} leads out of {docs}, which the site does not publish")
             elif not dest.is_file():

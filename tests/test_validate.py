@@ -146,6 +146,20 @@ def test_a_check_with_no_steps_is_named(tmp_path: Path) -> None:
     assert any(p.endswith(": Checks has no numbered steps") for p in _sections(docs))
 
 
+@pytest.mark.parametrize(
+    "link",
+    [
+        "../../procedures/./escalation-matrix.md",
+        "../av/../../procedures/escalation-matrix.md",
+        "../../procedures/escalation-matrix.md#av-engineering",
+        "../../procedures/escalation%2Dmatrix.md",
+    ],
+)
+def test_a_link_to_the_matrix_counts_however_it_is_written(tmp_path: Path, link: str) -> None:
+    page = RUNBOOK.replace("(../../procedures/escalation-matrix.md)", f"({link})")
+    assert _sections(_docs(tmp_path, page)) == []
+
+
 def test_a_step_reference_may_break_across_lines(tmp_path: Path) -> None:
     docs = _docs(tmp_path, RUNBOOK.replace("go to\n   step 1 of", "go to step\n   9 of"))
     assert [p.split(": ", 1)[1] for p in _sections(docs)] == [
@@ -362,6 +376,16 @@ def test_without_a_home_page_no_page_is_reached(tmp_path: Path) -> None:
     assert count == validate.Links(2, 2, 2, 0)
     assert len(problems) == 3  # index.md#home reaches no file, and neither page is reached
     assert problems[0].endswith("index.md#home reaches no file")
+
+
+def test_a_link_s_percent_escapes_are_decoded(tmp_path: Path) -> None:
+    home = HOME.replace("[A](a.md)", "[A](a.md) [C](my%20page.md#part)")
+    docs = _site(tmp_path, **{"index.md": home, "my page.md": "# C\n\n## Part\n"})
+    assert validate.links(docs) == (validate.Links(4, 5, 4, 4), [])
+    (docs / "my page.md").unlink()
+    assert validate.links(docs)[1] == [
+        f"{(docs / 'index.md').resolve()}:3: my%20page.md#part reaches no file"
+    ]
 
 
 def test_a_page_that_is_not_utf_8_is_a_problem_not_a_crash(tmp_path: Path) -> None:
