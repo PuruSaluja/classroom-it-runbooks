@@ -74,3 +74,7 @@ jobs:
       - name: Export the knowledge base
         # Any sys_id will do: the export fails on what is wrong with the pages, not the base.
         run: python -m classroom_runbooks.kb --knowledge-base 00000000000000000000000000000000 --out "$RUNNER_TEMP/kb.xml"
+
+      - name: Build the site
+        # Strict: a link or #anchor that reaches nothing, or a page out of the navigation, fails.
+        run: mkdocs build --strict
