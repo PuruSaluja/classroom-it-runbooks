@@ -19,9 +19,9 @@ The ticket comes after.
 
 | What has failed | Takes it |
 | --- | --- |
-| Projectors, displays, speakers, microphones, assistive listening, switchers, extenders, control panels, document cameras, lecture capture appliances and cameras, and the room's AV cabling in walls and racks | [AV engineering](#av-engineering) |
-| Power to the room or the lectern, lights, the screen's wall switch wiring, furniture | [Facilities](#facilities) |
-| The lectern computer and lab workstations, their software, signing in, accounts, and replacement keyboards, mice and presenters | [Service desk](#service-desk) |
+| Projectors and projection screens, displays, speakers, microphones, assistive listening, switchers, inputs and extenders, control panels, wireless presentation receivers, document cameras, a webcam the computer lists, lecture capture appliances and cameras, and the room's AV cabling in walls and racks | [AV engineering](#av-engineering) |
+| Power to the room or the lectern, lights, furniture | [Facilities](#facilities) |
+| The lectern computer and lab workstations, their software, signing in, accounts, a webcam or USB device the computer does not recognize, the lectern's USB hub, and replacement keyboards, mice and presenters | [Service desk](#service-desk) |
 | Wall ports, the room's network switch, Wi-Fi, and a wireless presentation receiver that no device can reach | [Network team](#network-team) |
 | Lecture capture schedules: a class that was never set to record | [Teaching-technology team](#teaching-technology-team) |
 | Anything needing a decision: moving a class, the same fault in several rooms, an owner who has not answered | [Shift lead](#shift-lead) |
@@ -29,6 +29,48 @@ The ticket comes after.
 When a fault could belong to two owners, the runbook says which check
 tells them apart. If it still is not clear, ask the shift lead rather
 than sending the ticket to both.
+
+## By equipment
+
+Each kind of equipment in the [room inventory](../rooms/index.md), by
+the name the room pages give it, and who takes a fault in it that its
+runbooks have not fixed. The shift lead decides rather than owns, so is
+not listed here.
+
+| Equipment | Takes it |
+| --- | --- |
+| Laser projector | [AV engineering](#av-engineering); [Facilities](#facilities) when the room has no power |
+| Short-throw projector | [AV engineering](#av-engineering); [Facilities](#facilities) when the room has no power |
+| Motorized projection screen | [AV engineering](#av-engineering) |
+| Flat-panel display | [AV engineering](#av-engineering) |
+| Interactive touch display | [AV engineering](#av-engineering); [Service desk](#service-desk) when the computer reports a problem with the touch device |
+| Confidence monitor | [AV engineering](#av-engineering) |
+| Ceiling speakers | [AV engineering](#av-engineering) |
+| Audio processor and amplifier | [AV engineering](#av-engineering) |
+| Lectern gooseneck microphone | [AV engineering](#av-engineering) |
+| Wireless handheld microphone | [AV engineering](#av-engineering) |
+| Wireless lapel microphone | [AV engineering](#av-engineering) |
+| Ceiling microphone array | [AV engineering](#av-engineering) |
+| Assistive listening system | [AV engineering](#av-engineering) |
+| Lectern HDMI and USB-C inputs | [AV engineering](#av-engineering) |
+| Table HDMI and USB-C inputs | [AV engineering](#av-engineering) |
+| HDBaseT video extender | [AV engineering](#av-engineering) |
+| Presentation switcher | [AV engineering](#av-engineering) |
+| Control processor and touch panel | [AV engineering](#av-engineering) |
+| Wall button panel | [AV engineering](#av-engineering) |
+| Wireless presentation receiver | [AV engineering](#av-engineering); [Network team](#network-team) when no device can reach a receiver that shows its welcome page |
+| Lecture capture appliance and camera | [AV engineering](#av-engineering); [Teaching-technology team](#teaching-technology-team) for a class that was never scheduled to record |
+| Lectern network connection | [Network team](#network-team) when no device connects on the lectern's cable; [Service desk](#service-desk) when only the lectern computer fails |
+| Wall network port | [Network team](#network-team) |
+| Room network switch | [Network team](#network-team); [Service desk](#service-desk) for the workstations |
+| Wi-Fi access point | [Network team](#network-team) |
+| Document camera | [AV engineering](#av-engineering) |
+| Room webcam | [Service desk](#service-desk) when the computer does not list it; [AV engineering](#av-engineering) when it is listed but shows nothing |
+| Wireless keyboard and mouse | [Service desk](#service-desk), for a replacement set paired to the room |
+| Wireless presenter | [Service desk](#service-desk), for a replacement paired to the room |
+| Lectern USB hub | [Service desk](#service-desk) |
+| Lectern computer | [Service desk](#service-desk) |
+| Student workstations (one set) | [Service desk](#service-desk); [Network team](#network-team) when the room switch or its cabling has failed |
 
 ## How urgent it is
 

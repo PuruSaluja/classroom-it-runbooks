@@ -164,7 +164,7 @@ runbook, by [the validator](#the-validator).
 
 | Page | What it sets out |
 | --- | --- |
-| [Escalation matrix](docs/procedures/escalation-matrix.md) | Six roles and what each takes, three urgencies set by the effect on a class, and what every escalation hands on |
+| [Escalation matrix](docs/procedures/escalation-matrix.md) | Six roles and what each takes, who takes a fault in each of the 32 kinds of equipment, three urgencies set by the effect on a class, and what every escalation hands on |
 | [Shift handoff](docs/procedures/shift-handoff.md) | The start of a shift, a kit bag holding what the runbooks ask a technician to bring, and a handoff note template |
 | [Onboarding path](docs/start/onboarding.md) | Four stages to taking calls alone, a sign-off list, and eight first runbooks |
 
@@ -205,7 +205,7 @@ On this repository it prints:
 ```text
 sections: 29 runbooks checked against the template and the matrix
 coverage: 220 of 220 rooms have a runbook for every piece of equipment; 3,612 of 3,612 pieces and 32 of 32 kinds of equipment are covered
-links: 6,346 links (347 to a heading) on 56 pages followed; 56 of 56 pages reached from the home page
+links: 6,388 links (388 to a heading) on 56 pages followed; 56 of 56 pages reached from the home page
 0 problems
 ```
 

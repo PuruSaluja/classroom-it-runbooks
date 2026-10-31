@@ -88,6 +88,23 @@ def test_the_matrix_assigns_each_of_its_roles_and_links_its_definition() -> None
     assert sorted(linked) == sorted((role, role.lower().replace(" ", "-")) for role in roles)
 
 
+def test_the_matrix_gives_each_kind_of_equipment_the_owners_its_runbooks_name(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    roles = [role for role in validate.roles(_matrix()) if role != "Shift lead"]
+    table = _matrix().split("\n## By equipment\n", 1)[1].split("\n## ", 1)[0]
+    rows = re.findall(r"^\| (.+?) \| (.+) \|$", table, re.MULTILINE)[2:]  # after the header
+    assert [name for name, _ in rows] == [e.name for e in EQUIPMENT]
+    sections = {e.id: dict(runbook.read(ROOT / "docs" / e.path).sections) for e in runbooks}
+    for item, (name, owners) in zip(EQUIPMENT, rows, strict=True):
+        listed = set(re.findall(r"\[([^]]+)\]\(#", owners))
+        covering = [sections[e.id] for e in runbooks if item.id in e.equipment]
+        escalated = {r for s in covering for r in roles if validate.names(s["Escalate"], r)}
+        handed = {r for s in covering for r in roles if validate.names(s["Fix"], r)}
+        # Every owner its runbooks escalate to, and none they do not hand the fault to.
+        assert escalated <= listed <= escalated | handed, name
+
+
 def test_the_first_runbooks_cover_what_four_rooms_in_five_have(
     runbooks: tuple[runbook.Entry, ...],
 ) -> None:
