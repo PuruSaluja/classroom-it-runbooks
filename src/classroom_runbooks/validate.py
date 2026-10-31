@@ -402,7 +402,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"{covers.kinds[0]} of {covers.kinds[1]} kinds of equipment are covered"
     )
     print(
-        f"links: {followed.links:,} links ({followed.anchored:,} to a heading) on "
+        f"links: {followed.links:,} links ({followed.anchored:,} to an anchor) on "
         f"{followed.pages} pages followed; {followed.reached} of {followed.pages} pages "
         "reached from the home page"
     )

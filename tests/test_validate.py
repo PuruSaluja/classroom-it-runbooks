@@ -233,7 +233,7 @@ def test_the_command_lists_problems_and_exits_1(tmp_path: Path, capsys, monkeypa
     assert "pieces and 1 of 32 kinds of equipment are covered" in out
     # The tree has no home page, so none of its pages is reached.
     assert f"{(docs / 'runbooks' / 'av' / NAME).resolve()} is not reached by following" in err
-    assert "links: 4 links (2 to a heading) on 3 pages followed; 0 of 3 pages reached" in out
+    assert "links: 4 links (2 to an anchor) on 3 pages followed; 0 of 3 pages reached" in out
     assert out.endswith(f"\n{len(err.splitlines())} problems\n")
 
 

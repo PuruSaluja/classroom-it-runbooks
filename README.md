@@ -206,7 +206,7 @@ On this repository it prints:
 ```text
 sections: 29 runbooks checked against the template and the matrix
 coverage: 220 of 220 rooms have a runbook for every piece of equipment; 3,612 of 3,612 pieces and 32 of 32 kinds of equipment are covered
-links: 6,388 links (388 to a heading) on 56 pages followed; 56 of 56 pages reached from the home page
+links: 6,388 links (388 to an anchor) on 56 pages followed; 56 of 56 pages reached from the home page
 0 problems
 ```
 
