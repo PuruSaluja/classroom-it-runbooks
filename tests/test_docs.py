@@ -1,12 +1,14 @@
 """The repository's own docs/ against its own structure.toml, and its runbooks."""
 
+import datetime
 import re
+import xml.etree.ElementTree as ET
 from collections import Counter
 from pathlib import Path
 
 import pytest
 
-from classroom_runbooks import inventory, runbook, validate
+from classroom_runbooks import inventory, kb, runbook, validate
 from classroom_runbooks.structure import check, links, load
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -133,3 +135,47 @@ def test_the_readme_quotes_what_the_validator_prints(capsys, monkeypatch) -> Non
     monkeypatch.chdir(ROOT)
     assert validate.main([]) == 0
     assert quoted.split("```", 1)[0] == capsys.readouterr().out
+
+
+def _table(page: str, heading: str) -> list[list[str]]:
+    """The rows of the first table under ``heading``, its header and rule left out."""
+    section = page.split(f"\n## {heading}\n", 1)[1].split("\n## ", 1)[0]
+    rows = [line for line in section.splitlines() if line.startswith("| ")]
+    return [[cell.strip() for cell in row.strip("|").split(" | ")] for row in rows[2:]]
+
+
+def test_the_taxonomy_page_maps_what_the_export_makes() -> None:
+    page = (ROOT / "docs" / "reference" / "taxonomy-mapping.md").read_text(encoding="utf-8")
+    exported = kb.export(ROOT / "docs", SECTIONS, INVENTORY, "0" * 32)
+    top, *below = exported.categories
+    folders = {}
+    for a in exported.articles:
+        folders.setdefault(a.category.label, f"`{a.source.parent.as_posix()}/`")
+    assert _table(page, "Categories") == [
+        [c.label, folders[c.label], f"{top.label} > {c.label}"] for c in below
+    ]
+    assert _table(page, "Status and workflow state") == [
+        [f"`{status}`", f"`{state}`"] for status, state in kb.STATES.items()
+    ]
+    assert list(kb.STATES) == list(runbook.STATUSES)
+    assert "arrives as a draft" in page and kb.UNFILED_STATE == "draft"
+
+
+def test_the_export_format_page_names_every_field_the_export_writes() -> None:
+    page = (ROOT / "docs" / "reference" / "kb-export-format.md").read_text(encoding="utf-8")
+    exported = kb.export(ROOT / "docs", SECTIONS, INVENTORY, "0" * 32)
+    root = ET.fromstring(kb.unload(exported, datetime.datetime.now(datetime.UTC)))
+    for table, heading in (("kb_knowledge", "An article: `kb_knowledge`"),
+                           ("kb_category", "A category: `kb_category`")):  # fmt: skip
+        section = page.split(f"\n### {heading}\n", 1)[1].split("\n#", 1)[0]
+        named = re.findall(r"^\| ((?:`[a-z_]+`(?:, )?)+) \|", section, re.MULTILINE)
+        fields = [f for cell in named for f in re.findall(r"`([a-z_]+)`", cell)]
+        assert fields == [child.tag for child in root.find(table)], table
+    runbooks = sum(1 for a in exported.articles if a.runbook)
+    assert f"that is the {runbooks} runbooks and the [escalation matrix]" in page
+    assert [a.source.as_posix() for a in exported.articles if not a.runbook] == [
+        "procedures/escalation-matrix.md"
+    ]
+    unlinked = {t for _, t in exported.unlinked}
+    assert unlinked == {"../rooms/index.md", "shift-handoff.md"}
+    assert "Today there are two, both on the\n  escalation matrix" in page
