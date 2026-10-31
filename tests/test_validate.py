@@ -439,3 +439,10 @@ def test_a_page_that_is_not_utf_8_is_a_problem_not_a_crash(tmp_path: Path) -> No
     (docs / "sub" / "b.md").write_bytes(b"# B\xff\n")
     _, problems = validate.links(docs)
     assert problems == [f"{(docs / 'sub' / 'b.md').resolve()} is not UTF-8 text"]
+
+
+def test_slugs_number_a_repeated_heading_as_github_does() -> None:
+    slugs = validate.Slugs()
+    given = [slugs(h, "-") for h in ("Fix", "Stage 1: learn", "Fix", "Fix")]
+    assert given == ["fix", "stage-1-learn", "fix-1", "fix-2"]
+    assert validate.Slugs()("Fix") == "fix"  # a new one starts its count again

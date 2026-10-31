@@ -248,6 +248,21 @@ def anchor(heading: str) -> str:
     return re.sub(r"[^\w\- ]", "", text).replace(" ", "-")
 
 
+class Slugs:
+    """A page's heading anchors, given heading by heading in order: GitHub's, a repeated
+    one numbered from ``-1``. It takes the arguments Markdown's ``toc`` passes its
+    ``slugify``, so a page rendered with a new one has the anchors checked here."""
+
+    def __init__(self) -> None:
+        self.seen: dict[str, int] = {}
+
+    def __call__(self, heading: str, _separator: str = "-") -> str:
+        base = anchor(heading)
+        count = self.seen.get(base, 0)
+        self.seen[base] = count + 1
+        return base if count == 0 else f"{base}-{count}"
+
+
 def _headings(lines: Sequence[str]) -> list[str]:
     """The text of each heading, in order: ``#`` headings and underlined (setext) ones."""
     found: list[str] = []
@@ -278,13 +293,8 @@ def anchors(markdown: str) -> set[str]:
     lines = structure.split_lines(markdown)
     if lines and lines[0] == "---" and "---" in lines[1:]:
         lines = lines[lines.index("---", 1) + 1 :]
-    found: set[str] = set()
-    seen: dict[str, int] = {}
-    for heading in _headings(lines):
-        base = anchor(heading)
-        count = seen.get(base, 0)
-        seen[base] = count + 1
-        found.add(base if count == 0 else f"{base}-{count}")
+    slugs = Slugs()
+    found = {slugs(heading) for heading in _headings(lines)}
     for quoted in _HTML_ID.findall(structure.prose("\n".join(lines))):
         found.add("".join(quoted))  # one of the three forms matched
     return found

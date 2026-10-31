@@ -161,18 +161,10 @@ def html(body: str, page: Path, ids: dict[Path, str], unlinked: list) -> str:
     """A page's Markdown as an article's HTML, headings given the anchors GitHub gives
     them (a repeated one numbered from ``-1``), so the page's ``#anchor`` links still
     reach them."""
-    seen: dict[str, int] = {}
-
-    def slugify(text: str, _separator: str) -> str:  # once per heading, in order
-        base = validate.anchor(text)
-        count = seen.get(base, 0)
-        seen[base] = count + 1
-        return base if count == 0 else f"{base}-{count}"
-
     return markdown.markdown(
         body,
         extensions=["tables", "sane_lists", "toc", _LinksExtension(page, ids, unlinked)],
-        extension_configs={"toc": {"slugify": slugify}},
+        extension_configs={"toc": {"slugify": validate.Slugs()}},
     )
 
 
