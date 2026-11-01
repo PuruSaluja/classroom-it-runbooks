@@ -223,3 +223,19 @@ def test_a_runbook_s_article_is_keyed_on_its_identifier_not_its_file(docs: Path)
     assert before["RB-AV-002"] == kb.sys_id(BASE, "kb_knowledge/RB-AV-002")
     matrix = article(after, Path("procedures/escalation-matrix.md"))
     assert matrix.sys_id == kb.sys_id(BASE, "kb_knowledge/procedures/escalation-matrix.md")
+
+
+def test_a_docs_folder_that_is_missing_or_has_no_runbooks_is_refused(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    with pytest.raises(kb.ExportError, match="is not a folder"):
+        kb.export(tmp_path / "docs", SECTIONS, ROOMS, BASE)
+    (tmp_path / "docs").mkdir()
+    with pytest.raises(kb.ExportError, match="has no runbooks in the categories' folders"):
+        kb.export(tmp_path / "docs", SECTIONS, ROOMS, BASE)
+    monkeypatch.chdir(ROOT)
+    out = tmp_path / "kb.xml"
+    args = ["--knowledge-base", BASE, "--out", str(out), "--docs", str(tmp_path / "nowhere")]
+    assert kb.main(args) == 1
+    assert "is not a folder" in capsys.readouterr().err
+    assert not out.exists()

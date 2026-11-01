@@ -201,7 +201,12 @@ def export(
     if not _SYS_ID.fullmatch(knowledge_base):
         raise ExportError([f"{knowledge_base!r} is not a sys_id: 32 hex digits in lower case"])
     docs = Path(docs)
+    if not docs.is_dir():
+        raise ExportError([f"{docs} is not a folder; is it the site's docs folder?"])
     entries = runbook.catalog(docs, sections, [e.id for e in rooms.equipment])
+    if not entries:
+        # An empty export would replace nothing and pass for a successful one.
+        raise ExportError([f"{docs} has no runbooks in the categories' folders"])
     names = {e.id: e.name for e in rooms.equipment}
     pages: dict[Path, runbook.Entry | None] = {e.path: e for e in entries}
     problems: list[str] = []
