@@ -151,6 +151,35 @@ def test_the_site_is_built_for_the_path_it_is_served_from(built: Path) -> None:
     assert sitemap.count("<loc>") == len(list((ROOT / "docs").rglob("*.md")))
 
 
+def test_the_site_is_published_from_main_only_after_its_checks() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+    parsed = yaml.safe_load(workflow)
+    assert parsed[True]["push"] == {"branches": ["main"]}  # YAML reads the key on: as true
+    # A newer push replaces a waiting run; cancelling one could interrupt a deployment.
+    assert parsed["concurrency"] == {"group": "pages", "cancel-in-progress": False}
+    assert parsed["permissions"] == {"contents": "read"}
+
+    steps = parsed["jobs"]["build"]["steps"]
+    runs = [step.get("run", step.get("uses")) for step in steps]
+    assert "-c constraints.txt" in next(run for run in runs if "pip install" in run)
+    built = runs.index("mkdocs build --strict")
+    upload = next(i for i, run in enumerate(runs) if "upload-pages-artifact" in run)
+    assert runs[built - 3 : built] == [
+        "python -m classroom_runbooks.structure",
+        "python -m classroom_runbooks.inventory --check",
+        "python -m classroom_runbooks.validate",
+    ]
+    assert upload == built + 1
+    config = load_config(config_file=str(ROOT / "mkdocs.yml"))
+    assert (ROOT / steps[upload]["with"]["path"]).resolve() == Path(config.site_dir).resolve()
+
+    deploy = parsed["jobs"]["deploy"]
+    assert deploy["needs"] == "build"
+    assert deploy["if"] == "github.event.repository.has_pages"
+    assert deploy["permissions"] == {"pages": "write", "id-token": "write"}
+    assert "permissions" not in parsed["jobs"]["build"]
+
+
 def test_only_pages_written_by_hand_have_an_edit_button(built: Path) -> None:
     docs = ROOT / "docs"
     for page in sorted(docs.rglob("*.md")):
