@@ -5,30 +5,50 @@ campus's classrooms (projectors, displays, audio, control systems, network,
 peripherals and account access), written in Markdown, with Python tools that
 check them and export them to ServiceNow's knowledge base.
 
-> **Status:** in progress. The site's sections, the check that keeps `docs/`
-> to them, the room inventory with its pages, the runbook template and
-> conventions, the runbooks in all four categories, the procedures, the
-> onboarding path, the validator, the knowledge-base export, the site build
-> and its publishing workflow are in place. The site is not live yet: see
-> [the site](#the-site).
+A site built from them with MkDocs Material is ready to publish but not live
+yet: [the site](#the-site) says what is left.
 
-## What this repository is, and is not
+## What this repository proves, and what it cannot
 
-The runbooks are written as a student technician on a classroom support team
-would use them: one fault, its symptoms, the checks in order, the fix, and
-when to hand it on. They are general to the equipment, not copied from any
-institution's knowledge base.
+### What it contains and proves
 
-**The room inventory is illustrative.** Buildings, room numbers and the
-equipment in each room are made up to resemble a large campus; they are not
-any university's real inventory, which would not be published.
+Every figure here is printed by a command in this repository, CI runs those
+commands on each commit, and a test checks the figures below against what
+they print.
 
-What the repository can show is what it contains: how many rooms and
-runbooks there are, and whether every piece of equipment in every room has a
-runbook, which its tools check. It cannot show what happened when runbooks
-like these were used by a real support team (fewer repeat tickets, faster
-onboarding); where those are mentioned they are reported, not demonstrated
-here.
+| What | Figure | Printed by |
+| --- | --- | --- |
+| Illustrative room inventory | 10 buildings, 220 rooms, 10,729 seats; 3,612 pieces of equipment of 32 kinds | `python -m classroom_runbooks.inventory` |
+| Draft runbooks | 29 runbooks in 4 categories, each with the template's six sections in order | `python -m classroom_runbooks.validate` |
+| Room-to-runbook coverage | 220 of 220 rooms, 3,612 of 3,612 pieces and 32 of 32 kinds of equipment have a runbook | `python -m classroom_runbooks.validate` |
+| Links | 6,398 links (390 to an anchor) on 58 pages all reach their target; 58 of 58 pages reached from the home page | `python -m classroom_runbooks.validate` |
+| Rendering | 58 of 58 pages read the same on GitHub as on the site and in the export | `python -m classroom_runbooks.validate` |
+| ServiceNow knowledge-base export | 30 articles in 6 categories, as XML records | `python -m classroom_runbooks.kb` |
+
+These show that the documentation is complete and consistent by the rules
+it is checked against. They do not show that what it says is right:
+
+- **The rooms are made up.** Buildings, room numbers and the equipment in
+  each room are illustrative, made to resemble a large campus; they are not
+  any university's real inventory, which would not be published. Full
+  coverage means every piece of equipment in made-up rooms has a runbook.
+- **The runbooks are drafts.** They are written as a student technician on a
+  classroom support team would use them (one fault, its symptoms, the checks
+  in order, the fix, when to hand it on), and are general to the equipment,
+  not copied from any institution's knowledge base. A runbook existing for a
+  piece of equipment does not show that its steps fix the fault: none has yet
+  been followed on real equipment by a second author.
+- **The export has not been imported** into a ServiceNow instance.
+
+### What it cannot show
+
+Fewer repeat tickets and faster onboarding are outcomes observed in classroom
+support work at Georgia State University. They are real-world results that
+this repository cannot demonstrate: it holds no tickets, onboarding records or
+other data from Georgia State, gives no measure of either, and its tools count
+pages, links and equipment, not what happens in a classroom. They are reported
+here as experience, not as anything the figures above support; showing them
+for these runbooks would take a support team using them and measuring both.
 
 ## How the site is organised
 

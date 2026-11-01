@@ -148,6 +148,52 @@ def test_the_readme_quotes_what_the_validator_prints(capsys, monkeypatch) -> Non
     assert quoted.split("```", 1)[0] == capsys.readouterr().out
 
 
+def _proves_and_cannot_show() -> tuple[str, str]:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    section = readme.split("\n## What this repository proves, and what it cannot\n", 1)[1]
+    section = section.split("\n## ", 1)[0]
+    proves, cannot = section.split("\n### What it cannot show\n", 1)
+    return proves, cannot
+
+
+def test_the_readme_s_summary_gives_the_figures_the_tools_print(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    table = _proves_and_cannot_show()[0].split("| --- |", 1)[1].split("\n\n", 1)[0]
+    monkeypatch.chdir(ROOT)
+    assert validate.main([]) == 0
+    assert kb.main(["--knowledge-base", "0" * 32, "--out", str(tmp_path / "kb.xml")]) == 0
+    printed = capsys.readouterr().out
+    held = re.findall(
+        r"\d+ runbooks"
+        r"|[\d,]+ of [\d,]+ (?:rooms|pieces|kinds)"
+        r"|[\d,]+ links \(\d+ to an anchor\) on \d+ pages"
+        r"|\d+ of \d+ pages (?:reached from the home page|read the same on GitHub)"
+        r"|\d+ articles in \d+ categories",
+        printed,
+    )
+    assert len(held) == 9
+    summary = inventory.summary(INVENTORY)
+    held += [summary[0], re.match(r"[\d,]+ pieces of equipment", summary[-1])[0]]
+    held += [
+        f"equipment of {len(EQUIPMENT)} kinds",
+        f"in {sum(bool(s.prefix) for s in SECTIONS)} categories",
+    ]
+    for figure in held:
+        assert figure in table, figure
+
+
+def test_the_readme_keeps_what_was_observed_apart_from_what_it_proves() -> None:
+    proves, cannot = _proves_and_cannot_show()
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    # The outcomes are named once, in the section that says they are not shown here.
+    assert readme.count("Georgia State") == cannot.count("Georgia State") > 0
+    assert "repeat tickets" not in proves
+    assert "cannot demonstrate" in cannot
+    # No figure: none has been measured.
+    assert not re.search(r"\d", cannot)
+
+
 def _table(page: str, heading: str) -> list[list[str]]:
     """The rows of the first table under ``heading``, its header and rule left out."""
     section = page.split(f"\n## {heading}\n", 1)[1].split("\n## ", 1)[0]
