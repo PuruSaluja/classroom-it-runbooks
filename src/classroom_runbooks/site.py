@@ -5,7 +5,9 @@
   links them (any it does not link after, by file name), then the sections under it;
 - ``on_page_markdown`` gives each page a new ``validate.Slugs`` for its heading ids,
   so they are GitHub's anchors, the ones the validator checks every ``#anchor``
-  against, a repeated heading numbered from ``-1`` as GitHub numbers it.
+  against, a repeated heading numbered from ``-1`` as GitHub numbers it; and a page
+  written from the inventory (the room pages) gets no edit button, as an edit to it
+  would be overwritten.
 
 ``mkdocs build --strict`` then fails on a link or ``#anchor`` that reaches nothing,
 a page left out of the navigation, or any other warning.
@@ -18,7 +20,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from urllib.parse import unquote
 
-from classroom_runbooks import structure, validate
+from classroom_runbooks import inventory, structure, validate
 
 
 def _pages(folder: Path, docs: Path) -> list[str]:
@@ -62,4 +64,6 @@ def on_config(config):
 def on_page_markdown(markdown, page, config, files):
     # MkDocs renders each page with a new Markdown, which reads this then.
     config.mdx_configs.setdefault("toc", {})["slugify"] = validate.Slugs()
+    if inventory.GENERATED in markdown:
+        page.edit_url = None  # written from the inventory: an edit here is overwritten
     return markdown

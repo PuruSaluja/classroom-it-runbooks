@@ -4,11 +4,12 @@ import re
 from pathlib import Path
 
 import pytest
+import yaml
 from mkdocs.commands.build import build
 from mkdocs.config import load_config
 from mkdocs.exceptions import Abort
 
-from classroom_runbooks import site, structure, validate
+from classroom_runbooks import inventory, kb, site, structure, validate
 
 ROOT = Path(__file__).resolve().parents[1]
 SECTIONS = structure.load(ROOT / "structure.toml")
@@ -130,6 +131,22 @@ def test_the_site_has_search_and_the_sections_in_its_navigation(built: Path) -> 
     for s in (s for s in SECTIONS if s.parent is None):
         assert f'href="{s.path}/"' in home, s.path
     assert "fonts.googleapis.com" not in home
+
+
+def test_only_pages_written_by_hand_have_an_edit_button(built: Path) -> None:
+    docs = ROOT / "docs"
+    for page in sorted(docs.rglob("*.md")):
+        relative = page.relative_to(docs).with_suffix("")
+        html = built / (relative.parent if relative.name == "index" else relative) / "index.html"
+        generated = inventory.GENERATED in page.read_text(encoding="utf-8")
+        assert ('rel="edit"' in html.read_text(encoding="utf-8")) != generated, page
+    assert inventory.GENERATED in (docs / "rooms" / "ald.md").read_text(encoding="utf-8")
+
+
+def test_the_site_renders_the_markdown_the_export_does() -> None:
+    config = yaml.safe_load((ROOT / "mkdocs.yml").read_text(encoding="utf-8"))
+    names = [next(iter(e)) if isinstance(e, dict) else e for e in config["markdown_extensions"]]
+    assert tuple(names) == kb.MARKDOWN_EXTENSIONS
 
 
 def test_headings_get_github_s_anchors_and_a_repeat_is_numbered(tmp_path: Path) -> None:
