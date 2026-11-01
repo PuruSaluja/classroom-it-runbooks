@@ -6,8 +6,8 @@
 
 site_name: Classroom IT Runbooks
 site_description: Runbooks, a room inventory and support procedures for classroom technology
-# The theme shows the repository's star and fork counts beside this link, which each
-# visitor's browser asks GitHub's API for.
+# The theme shows the repository's latest release and star and fork counts beside
+# this link, which each visitor's browser asks GitHub's API for.
 repo_url: https://github.com/PuruSaluja/classroom-it-runbooks
 repo_name: classroom-it-runbooks
 edit_uri: edit/main/docs/
@@ -51,8 +51,8 @@ theme:
 plugins:
   - search
 
-# The Markdown GitHub and the knowledge-base export also render, so a page reads the
-# same in all three.
+# The knowledge-base export's extensions, and none GitHub lacks, so a page uses no
+# syntax one of the three does not render.
 markdown_extensions:
   - tables
   - sane_lists

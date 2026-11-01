@@ -92,8 +92,8 @@ each problem with its file (and line, for a link):
 - **Coverage:** every piece of equipment in every room has a runbook of its
   own category that is not retired; it counts the rooms, pieces and kinds
   covered and names each gap with the rooms it reaches.
-- **Links:** every relative link on every page (its `%20`s decoded)
-  reaches a file inside `docs/`, written in the file's own case; every
+- **Links:** every relative link on every page, inline or by a reference
+  definition (its `%20`s decoded), reaches a file inside `docs/`, written in the file's own case; every
   `#anchor` names a heading on its page (GitHub's anchor: `## Shift lead`
   is `#shift-lead`, and an underlined heading counts) or an HTML element's
   id; and every page, not only the section indexes, is reached by
@@ -108,7 +108,8 @@ README's quoted validator output to what the validator prints.
 
 `python -m classroom_runbooks.kb` exports the runbooks, and the pages they
 link to, as ServiceNow knowledge articles; it fails if an `#anchor` names
-nothing in the article it reaches or a linked page has no `#` title. CI
+nothing in the article it reaches, a linked page has no `#` title, a page
+holds a character XML cannot, links a page in HTML or shows an image. CI
 runs it, and the tests hold the
 [export format](../reference/kb-export-format.md) and
 [taxonomy mapping](../reference/taxonomy-mapping.md) pages to what it

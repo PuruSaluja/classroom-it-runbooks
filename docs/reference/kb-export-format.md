@@ -15,8 +15,11 @@ python -m classroom_runbooks.kb --knowledge-base 0123456789abcdef0123456789abcde
 `--knowledge-base` is the `sys_id` of the knowledge base the articles go
 in (32 hex digits, from the knowledge base's record). The command prints
 what it exported and each link it had to drop, and writes nothing if
-there is a problem: a runbook's front matter that does not check, a linked
-page with no `#` title, or an `#anchor` that names nothing in its article.
+there is a problem: a docs folder that is missing or has no runbooks, a
+runbook's front matter that does not check, a linked page with no `#`
+title, a character XML cannot hold (a control character such as a form
+feed, or U+FFFE), an `#anchor` that names nothing in its article, a link
+to a page written in HTML rather than Markdown, or an image.
 
 **Not yet loaded into an instance.** The file uses the field names of
 ServiceNow's `kb_knowledge` and `kb_category` tables and its XML record
@@ -79,25 +82,30 @@ in `meta` and in the article's last line.
 
 ## The article's text
 
-The page's Markdown is turned into HTML, with tables. The front matter is
-left out, and so is the `#` heading, which is the article's title. Each
-heading gets the id GitHub gives it on this site (`## Close the ticket` is
-`id="close-the-ticket"`, a repeated heading `-1`, `-2`), so a runbook's
-`[Fix](#fix)` still reaches its Fix section. The last line says where the
+The page's Markdown is turned into HTML, with tables, as the site renders
+it. The front matter is left out, and so is the `#` heading, which is the
+article's title. Each heading gets the id GitHub gives it
+(`## Close the ticket` is `id="close-the-ticket"`, a repeated heading
+`-1`, `-2`, the title counted), so a runbook's `[Fix](#fix)` still
+reaches its Fix section. The last line says where the
 article came from and that the page, not the article, is what to change:
 *Generated from RB-AV-001; change the runbook, not this article.*
 
 Links:
 
-- a link to another exported page becomes a link to its article,
-  `/kb_view.do?sys_kb_id=` and its `sys_id`, keeping any `#anchor`;
+- a link to another exported page, inline or by reference, becomes a link
+  to its article, `/kb_view.do?sys_kb_id=` and its `sys_id`, keeping any
+  `#anchor`; one to a page's title is a link to its article, which shows
+  the title;
 - a link to a page that is not exported keeps its text and loses its
   target, and the command lists it. Today there are two, both on the
   escalation matrix: to the room inventory and to the shift handoff;
 - a link with a scheme (`https:`, `mailto:`) is kept as it is.
 
 Every `#anchor` must name an id in the article it reaches, or the export
-fails.
+fails. A link written in HTML (`<a href="…">`) is not pointed at an
+article, so one to a page fails the export too. Links and ids shown as
+code are text, and are not checked.
 
 ## Identifiers
 
@@ -113,4 +121,6 @@ copies; exporting to another knowledge base gives different ones.
 ## What is not exported
 
 The room pages, the section indexes and every page no runbook links to;
-a runbook's `reviewed` date; and images, which no page has yet.
+a runbook's `reviewed` date; and images, which no page has yet: a page
+that shows one fails the export, as the article would show a broken
+image.

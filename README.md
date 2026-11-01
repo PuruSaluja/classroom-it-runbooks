@@ -195,7 +195,8 @@ link), and fails if there is any:
   its own category that is not retired. It counts the rooms, pieces and
   kinds of equipment covered, and names each kind that is not, with the
   rooms that have it.
-- **Links.** Every link on every page reaches a file inside `docs/`, with
+- **Links.** Every link on every page, inline or by a reference
+  definition (`[h]: page.md`), reaches a file inside `docs/`, with
   its case as the file's (Windows ignores case, GitHub does not), every
   `#anchor` names a heading on its page (made into an anchor as GitHub
   makes them, `#` or underlined) or an HTML element's id, and every page is
@@ -247,7 +248,10 @@ how sections, statuses and equipment map. CI runs the export.
 the field names of the `kb_knowledge` and `kb_category` tables and the
 format ServiceNow exports records in, and its tests read it back and
 check every record, link and anchor; how an instance takes it is for a
-first load into a sub-production instance to show.
+first load into a sub-production instance to show. The export writes
+nothing, and lists each problem, if a page holds a character XML cannot
+hold, an anchor that names nothing in its article, a link to a page
+written in HTML, or an image.
 
 ## The site
 
@@ -259,14 +263,22 @@ mkdocs serve             # serves it at http://127.0.0.1:8000, rebuilt on each c
 [`mkdocs.yml`](mkdocs.yml) builds `docs/` with the Material theme: a
 navigation made from [`structure.toml`](structure.toml) (each section in
 order, its pages in the order its index links them), search, a light and
-a dark scheme, and no fonts or scripts from other sites. A build hook,
-[`site.py`](src/classroom_runbooks/site.py), sets that navigation and
-gives every heading the anchor GitHub gives it, the one the validator
-checks links against, so a link that works on GitHub works on the site.
-The build is strict: a link or `#anchor` that reaches nothing, or a page
-missing from the navigation, fails it. CI builds it after the validator,
-and the tests build it to check that every page's heading ids are the
-anchors the validator expects.
+a dark scheme, and system fonts. The one thing a page fetches from
+another site is the repository's latest release and star and fork
+counts, which the theme asks GitHub's API for beside the repository link. A build hook,
+[`site.py`](src/classroom_runbooks/site.py), sets that navigation, gives
+every heading the anchor GitHub gives it, the one the validator checks
+links against, so a link that works on GitHub works on the site, and
+leaves the edit button off the room pages, which are written from the
+inventory. The site renders Markdown with the knowledge-base export's
+extensions (tables, lists and heading ids), none that GitHub lacks;
+Python-Markdown, which both use, still differs from GitHub in places (a
+list needs a blank line before it). The build is
+strict: a link or `#anchor` that reaches nothing, or a page missing from
+the navigation, fails it (with `-q` the warnings are hidden and it
+passes). CI builds it after the validator, and the tests build it to
+check that every page's heading ids are the anchors the validator
+expects.
 
 Material for MkDocs says, when it builds, that it reaches end of life on
 2027-05-05 (critical fixes until then) and names Zensical as its
