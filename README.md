@@ -329,21 +329,6 @@ Material for MkDocs says, when it builds, that it reaches end of life on
 2027-05-05 (critical fixes until then) and names Zensical as its
 successor; the site will need to move before that date.
 
-## Parts
-
-| Part | State |
-| --- | --- |
-| Repository scaffold and information architecture | done |
-| Room inventory: 200+ classrooms with equipment profiles | done (220 rooms) |
-| Runbook template and authoring conventions | done |
-| AV runbooks: projectors, displays, audio, cabling, control systems | done (16 runbooks) |
-| Network, peripheral and account-access runbooks | done (13 runbooks) |
-| Escalation matrix, shift handoff and the onboarding path for new technicians | done |
-| Validator: required sections, room-to-runbook coverage, dead cross-links | done |
-| ServiceNow knowledge-base export and taxonomy mapping | done (30 articles in 6 categories) |
-| MkDocs Material site, with the validator in CI | done (`mkdocs build --strict` in CI) |
-| Published site | workflow in place, each run stops at the checked build; live once Pages is turned on |
-
 ## Development
 
 ```bash
@@ -352,6 +337,10 @@ python -m venv .venv
 pytest
 ruff check . && ruff format --check .
 ```
+
+Python 3.11 or newer. CI runs these on the oldest and newest versions it
+allows, then the commands above that check `docs/` and the inventory, the
+export and the strict build.
 
 ## License
 
