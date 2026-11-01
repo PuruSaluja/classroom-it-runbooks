@@ -59,6 +59,12 @@ NAMESPACE = uuid.UUID("6f1d3c2e-4b5a-4e8f-9a7b-2c1d0e9f8a6b")
 _SYS_ID = re.compile(r"[0-9a-f]{32}")
 _ID_ATTR = re.compile(r'\sid="([^"]+)"')
 _HREF = re.compile(r'\shref="([^"]+)"')
+# A character XML 1.0 cannot hold: a control character other than tab and the line
+# breaks, a lone surrogate, U+FFFE or U+FFFF. Written as it is, the file does not parse.
+_NOT_XML = re.compile(
+    "[^" + chr(9) + chr(10) + chr(13) + " -" + chr(0xD7FF) + chr(0xE000) + "-" + chr(0xFFFD)
+    + chr(0x10000) + "-" + chr(0x10FFFF) + "]"
+)  # fmt: skip
 
 
 class ExportError(ValueError):
@@ -168,6 +174,18 @@ def html(body: str, page: Path, ids: dict[Path, str], unlinked: list) -> str:
     )
 
 
+def _xml_problems(where: Path | str, text: str) -> list[str]:
+    """Each character in ``text`` that XML cannot hold, by line and column."""
+    problems = []
+    for found in _NOT_XML.finditer(text):
+        line = text.count("\n", 0, found.start()) + 1
+        column = found.start() - (text.rfind("\n", 0, found.start()) + 1) + 1
+        problems.append(
+            f"{where}:{line}:{column}: U+{ord(found.group()):04X} cannot be written to XML"
+        )
+    return problems
+
+
 def _anchor_problems(articles: Sequence[Article]) -> list[str]:
     ids = {a.sys_id: set(_ID_ATTR.findall(a.html)) for a in articles}
     problems = []
@@ -222,6 +240,11 @@ def export(
             texts[path] = (docs / path).read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
             problems.append(f"{docs / path} cannot be read: {exc}")
+    for path, text in texts.items():
+        problems += _xml_problems(docs / path, text)
+    for entry in entries:
+        problems += [f"{p} (equipment of {entry.id})" for e in entry.equipment
+                     for p in _xml_problems(f"the name of {e}", names[e])]  # fmt: skip
     if problems:
         raise ExportError(problems)
 

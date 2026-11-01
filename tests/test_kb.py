@@ -1,3 +1,4 @@
+import dataclasses
 import datetime
 import re
 import shutil
@@ -239,3 +240,24 @@ def test_a_docs_folder_that_is_missing_or_has_no_runbooks_is_refused(
     assert kb.main(args) == 1
     assert "is not a folder" in capsys.readouterr().err
     assert not out.exists()
+
+
+@pytest.mark.parametrize("code", [0x0C, 0x1B, 0x00, 0xFFFE])
+def test_a_character_xml_cannot_hold_is_refused_with_its_place(docs: Path, code: int) -> None:
+    edit(docs / NO_SIGNAL, "The projector is on", "The projector" + chr(code) + " is on")
+    with pytest.raises(kb.ExportError) as error:
+        kb.export(docs, SECTIONS, ROOMS, BASE)
+    assert error.value.problems == (
+        f"{docs / NO_SIGNAL}:11:14: U+{code:04X} cannot be written to XML",
+    )
+
+
+def test_an_equipment_name_xml_cannot_hold_is_refused() -> None:
+    renamed = [dataclasses.replace(e, name=e.name + chr(0xFFFF)) if e.id == "laser-projector"
+               else e for e in ROOMS.equipment]  # fmt: skip
+    rooms = dataclasses.replace(ROOMS, equipment=tuple(renamed))
+    with pytest.raises(kb.ExportError) as error:
+        kb.export(ROOT / "docs", SECTIONS, rooms, BASE)
+    assert error.value.problems[0] == (
+        "the name of laser-projector:1:16: U+FFFF cannot be written to XML (equipment of RB-AV-001)"
+    )
