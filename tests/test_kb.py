@@ -261,3 +261,29 @@ def test_an_equipment_name_xml_cannot_hold_is_refused() -> None:
     assert error.value.problems[0] == (
         "the name of laser-projector:1:16: U+FFFF cannot be written to XML (equipment of RB-AV-001)"
     )
+
+
+def test_an_html_link_to_a_page_or_an_image_is_refused(docs: Path) -> None:
+    edit(docs / NO_SIGNAL, "## Symptoms", '<a href="rb-av-002-projector-will-not-turn-on.md">'
+         "Projector will not turn on</a>\n\n![The panel](panel.png)\n\n## Symptoms")  # fmt: skip
+    with pytest.raises(kb.ExportError) as error:
+        kb.export(docs, SECTIONS, ROOMS, BASE)
+    assert error.value.problems == (
+        f"{NO_SIGNAL.as_posix()}: the image panel.png is not exported",
+        f"{NO_SIGNAL.as_posix()}: the link rb-av-002-projector-will-not-turn-on.md reaches no "
+        "article (a link written in HTML is not pointed at one)",
+    )
+
+
+def test_links_and_ids_shown_as_code_are_not_checked(docs: Path) -> None:
+    edit(docs / NO_SIGNAL, "## Symptoms", 'Written `<a href="#nowhere" id="x">`, or\n\n'
+         '    <img src="panel.png">\n\nSee <a href="https://example.com/a">the maker</a>, '
+         "[its manual](https://example.com/m.pdf), ![its logo](https://example.com/l.png)."
+         "\n\n## Symptoms")  # fmt: skip
+    found = article(kb.export(docs, SECTIONS, ROOMS, BASE), NO_SIGNAL)
+    assert "&lt;img src=" in found.html
+    assert 'href="https://example.com/a"' in found.html
+    assert 'href="https://example.com/m.pdf"' in found.html
+    edit(docs / NO_SIGNAL, "\n## Symptoms", "\n[The example](#x)\n\n## Symptoms")
+    with pytest.raises(kb.ExportError, match="the link #x names no id"):  # an id shown as code
+        kb.export(docs, SECTIONS, ROOMS, BASE)

@@ -59,6 +59,8 @@ NAMESPACE = uuid.UUID("6f1d3c2e-4b5a-4e8f-9a7b-2c1d0e9f8a6b")
 _SYS_ID = re.compile(r"[0-9a-f]{32}")
 _ID_ATTR = re.compile(r'\sid="([^"]+)"')
 _HREF = re.compile(r'\shref="([^"]+)"')
+_SRC = re.compile(r'<img\s[^>]*?src="([^"]+)"')
+_CODE = re.compile(r"<pre>.*?</pre>|<code>.*?</code>", re.DOTALL)
 # A character XML 1.0 cannot hold: a control character other than tab and the line
 # breaks, a lone surrogate, U+FFFE or U+FFFF. Written as it is, the file does not parse.
 _NOT_XML = re.compile(
@@ -186,16 +188,35 @@ def _xml_problems(where: Path | str, text: str) -> list[str]:
     return problems
 
 
-def _anchor_problems(articles: Sequence[Article]) -> list[str]:
-    ids = {a.sys_id: set(_ID_ATTR.findall(a.html)) for a in articles}
+def _outside_code(html: str) -> str:
+    """An article's HTML without its code, where a link or id is shown, not made."""
+    return _CODE.sub("", html)
+
+
+def _link_problems(articles: Sequence[Article]) -> list[str]:
+    """Each link that names no id in the article it reaches, each link the export could
+    not point at an article (one written in HTML), and each image, which is not exported."""
+    ids = {a.sys_id: set(_ID_ATTR.findall(_outside_code(a.html))) for a in articles}
     problems = []
     for article in articles:
-        for href in _HREF.findall(article.html):
+        html = _outside_code(article.html)
+        for src in _SRC.findall(html):
+            if not structure.external(src):
+                problems.append(f"{article.source.as_posix()}: the image {src} is not exported")
+        for href in _HREF.findall(html):
             if href.startswith("#"):
                 target, name = article.sys_id, href[1:]
-            elif href.startswith(ARTICLE_LINK.format("")) and "#" in href:
+            elif href.startswith(ARTICLE_LINK.format("")):
+                if "#" not in href:
+                    continue
                 target, name = href[len(ARTICLE_LINK.format("")) :].split("#", 1)
+            elif structure.external(href):
+                continue
             else:
+                problems.append(
+                    f"{article.source.as_posix()}: the link {href} reaches no article (a link "
+                    "written in HTML is not pointed at one)"
+                )
                 continue
             if name not in ids.get(target, set()):
                 problems.append(
@@ -213,8 +234,9 @@ def export(
     """The runbooks under ``docs``, and the pages they link to, as articles and categories.
 
     Raises ``runbook.CatalogError`` if a runbook's front matter is wrong, and
-    ``ExportError`` listing every page that cannot be read and every ``#anchor`` that
-    names nothing in its article.
+    ``ExportError`` listing every page that cannot be read or holds a character XML
+    cannot, every ``#anchor`` that names nothing in its article, every link written in
+    HTML to a page, and every image.
     """
     if not _SYS_ID.fullmatch(knowledge_base):
         raise ExportError([f"{knowledge_base!r} is not a sys_id: 32 hex digits in lower case"])
@@ -285,7 +307,7 @@ def export(
         articles.append(Article(ids[path], path, entry.id if entry else None, title,
                                 by_section[section(path).title], state, keywords,
                                 html(body, path, ids, unlinked)))  # fmt: skip
-    problems += _anchor_problems(articles)
+    problems += _link_problems(articles)
     if problems:
         raise ExportError(problems)
     return Export(knowledge_base, tuple(categories), tuple(articles), tuple(unlinked))
