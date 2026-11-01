@@ -6,6 +6,9 @@
 
 site_name: Classroom IT Runbooks
 site_description: Runbooks, a room inventory and support procedures for classroom technology
+# A project site is served under the repository's name. Without this the built 404 page,
+# which can be shown at any depth, loads its assets from /assets/, which is not there.
+site_url: https://purusaluja.github.io/classroom-it-runbooks/
 # The theme shows the repository's latest release and star and fork counts beside
 # this link, which each visitor's browser asks GitHub's API for.
 repo_url: https://github.com/PuruSaluja/classroom-it-runbooks

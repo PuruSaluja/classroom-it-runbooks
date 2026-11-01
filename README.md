@@ -270,7 +270,7 @@ written in HTML, or an image.
 
 ```bash
 mkdocs build --strict    # writes the site to site/
-mkdocs serve             # serves it at http://127.0.0.1:8000, rebuilt on each change
+mkdocs serve             # serves it at http://127.0.0.1:8000/classroom-it-runbooks/, rebuilt on each change
 ```
 
 [`mkdocs.yml`](mkdocs.yml) builds `docs/` with the Material theme: a

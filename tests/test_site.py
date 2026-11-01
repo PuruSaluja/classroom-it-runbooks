@@ -2,6 +2,7 @@
 
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 import yaml
@@ -131,6 +132,23 @@ def test_the_site_has_search_and_the_sections_in_its_navigation(built: Path) -> 
     for s in (s for s in SECTIONS if s.parent is None):
         assert f'href="{s.path}/"' in home, s.path
     assert "fonts.googleapis.com" not in home
+
+
+def test_the_site_is_built_for_the_path_it_is_served_from(built: Path) -> None:
+    config = load_config(config_file=str(ROOT / "mkdocs.yml"))
+    url = urlsplit(config.site_url)
+    # GitHub serves a project site at https://<owner, in lower case>.github.io/<repository>/.
+    owner, repository = urlsplit(config.repo_url).path.strip("/").split("/")
+    assert (url.scheme, url.netloc) == ("https", f"{owner.lower()}.github.io")
+    assert url.path == f"/{repository}/"
+    # The 404 page is shown at any depth, so its links start from the root.
+    missing = (built / "404.html").read_text(encoding="utf-8")
+    assert f'href="{url.path}assets/stylesheets/' in missing
+    assert f'src="{url.path}assets/javascripts/' in missing
+    assert not re.search(r'(?:href|src)="/(?!' + repository + r"/)", missing)
+    sitemap = (built / "sitemap.xml").read_text(encoding="utf-8")
+    assert sitemap.count(f"<loc>{config.site_url}") == sitemap.count("<loc>")
+    assert sitemap.count("<loc>") == len(list((ROOT / "docs").rglob("*.md")))
 
 
 def test_only_pages_written_by_hand_have_an_edit_button(built: Path) -> None:
