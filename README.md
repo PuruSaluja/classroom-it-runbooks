@@ -144,7 +144,7 @@ python -m classroom_runbooks.runbook new AV "Projector shows no signal" --equipm
 ```
 
 writes a draft into `docs/runbooks/av/` with the category's next number
-(`rb-av-001-projector-shows-no-signal.md`), its equipment checked against
+(`rb-av-017-projector-shows-no-signal.md`), its equipment checked against
 the inventory, and never over an existing file.
 [The template page](docs/contributing/runbook-template.md) explains each
 part, and [the authoring conventions](docs/contributing/authoring-conventions.md)
@@ -338,9 +338,8 @@ pytest
 ruff check . && ruff format --check .
 ```
 
-Python 3.11 or newer. CI runs these on the oldest and newest versions it
-allows, then the commands above that check `docs/` and the inventory, the
-export and the strict build.
+Python 3.11 or newer. CI runs these on Python 3.11 and 3.14, then the commands
+above that check `docs/` and the inventory, the export and the strict build.
 
 ## License
 

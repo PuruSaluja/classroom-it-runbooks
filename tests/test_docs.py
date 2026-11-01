@@ -148,6 +148,13 @@ def test_the_readme_quotes_what_the_validator_prints(capsys, monkeypatch) -> Non
     assert quoted.split("```", 1)[0] == capsys.readouterr().out
 
 
+def test_the_readme_names_the_file_its_new_runbook_command_would_write() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    title = re.search(r'runbook new AV "([^"]+)"', readme)[1]
+    number = runbook.next_number(ROOT / "docs" / "runbooks" / "av", "AV")
+    assert f"`rb-av-{number:03d}-{runbook.slug(title)}.md`" in readme
+
+
 def _proves_and_cannot_show() -> tuple[str, str]:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     section = readme.split("\n## What this repository proves, and what it cannot\n", 1)[1]
