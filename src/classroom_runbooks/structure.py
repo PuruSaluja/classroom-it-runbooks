@@ -37,6 +37,13 @@ _SECTION_PATH = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)
 _PREFIX = re.compile(r"[A-Z]{2,4}")
 # A Markdown link's target: [text](target) or [text](target "title").
 _LINK = re.compile(r"\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
+# A link reference definition: [label]: target, the target perhaps in <>, then perhaps
+# a title in quotes or brackets.
+_DEFINITION = re.compile(
+    r"^ {0,3}\[(?:[^\]\\\n]|\\.)+\]:[ \t]*<?([^\s>]+)>?"
+    r"""(?:[ \t]+(?:"[^"\n]*"|'[^'\n]*'|\([^)\n]*\)))?[ \t]*$""",
+    re.MULTILINE,
+)
 # A code span: a run of backticks, then text, then a run of the same length.
 _CODE_SPAN = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 _FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
@@ -214,13 +221,15 @@ def prose(markdown: str) -> str:
 
 
 def targets(markdown: str) -> list[tuple[int, str]]:
-    """Every link's line number (from 1) and target, as written, ``#anchor`` included.
+    """Every link's line number (from 1) and target, as written, ``#anchor`` included,
+    in the page's order: inline links' and reference definitions' (``[h]: page.md``),
+    whose target the links that name them reach.
 
     A link in a code block or a code span is shown, not followed, so it is not one.
     """
     text = prose(markdown)
-    return [(text.count("\n", 0, found.start()) + 1, found.group(1))
-            for found in _LINK.finditer(text)]  # fmt: skip
+    found = sorted([*_LINK.finditer(text), *_DEFINITION.finditer(text)], key=lambda f: f.start())
+    return [(text.count("\n", 0, link.start()) + 1, link.group(1)) for link in found]
 
 
 def external(target: str) -> bool:

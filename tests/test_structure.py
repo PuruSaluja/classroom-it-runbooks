@@ -178,6 +178,26 @@ def test_targets_keep_each_link_s_line_and_anchor() -> None:
     assert targets("\n".join(lines)) == expected
 
 
+def test_reference_definitions_are_targets_in_the_page_s_order() -> None:
+    lines = [
+        "See the [matrix][m] and [handoff][].",
+        "",
+        "[m]: ../procedures/escalation-matrix.md#av-engineering",
+        '  [handoff]: <shift-handoff.md> "Shift handoff"',
+        "[x]: https://example.org (Example)",
+        "[a](a.md)",
+        "",
+        "    [code]: shown.md",
+        "[not]: a definition with words.md",
+    ]
+    assert targets("\n".join(lines)) == [
+        (3, "../procedures/escalation-matrix.md#av-engineering"),
+        (4, "shift-handoff.md"),
+        (5, "https://example.org"),
+        (6, "a.md"),
+    ]
+
+
 def test_a_target_with_a_scheme_is_external() -> None:
     assert external("https://example.org") and external("mailto:a@b.c")
     assert not external("a.md") and not external("#fix") and not external("../a.md:1")
