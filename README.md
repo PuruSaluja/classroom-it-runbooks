@@ -181,7 +181,7 @@ it could measure.
 python -m classroom_runbooks.validate
 ```
 
-checks three things, names each problem with its file (and line, for a
+checks four things, names each problem with its file (and line, for a
 link), and fails if there is any:
 
 - **Sections.** Each runbook has the template's six sections in order,
@@ -201,6 +201,16 @@ link), and fails if there is any:
   `#anchor` names a heading on its page (made into an anchor as GitHub
   makes them, `#` or underlined) or an HTML element's id, and every page is
   reached by following links from the home page.
+- **Rendering.** Every page reads the same on GitHub as on the site and in
+  the knowledge-base export. The site and the export render with
+  Python-Markdown, which differs from GitHub's Markdown in places: a list
+  straight after a paragraph's line, a list nested by two spaces, a step's
+  second paragraph indented three, a bare URL, struck-out text, `#Heading`
+  without a space, a code fence inside a list item. Each page is rendered
+  both ways, GitHub's by markdown-it (CommonMark, on which GitHub's
+  Markdown is built, with its tables, struck-out text and bare links), and
+  the first place they part is named with its line. The cases its tests
+  use were checked against GitHub's own renderer.
 
 On this repository it prints:
 
@@ -208,11 +218,12 @@ On this repository it prints:
 sections: 29 runbooks checked against the template and the matrix
 coverage: 220 of 220 rooms have a runbook for every piece of equipment; 3,612 of 3,612 pieces and 32 of 32 kinds of equipment are covered
 links: 6,397 links (389 to an anchor) on 58 pages followed; 58 of 58 pages reached from the home page
+rendering: 58 of 58 pages read the same on GitHub as on the site and in the export
 0 problems
 ```
 
 The coverage figures are for the illustrative inventory. CI runs the
-validator, a test runs its three checks on `docs/`, and another reruns it
+validator, a test runs its four checks on `docs/`, and another reruns it
 to check the output above; its own tests give it damaged runbooks, gaps
 and broken links to find, and valid links written in unusual ways to
 accept.

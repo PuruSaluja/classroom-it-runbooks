@@ -446,3 +446,80 @@ def test_slugs_number_a_repeated_heading_as_github_does() -> None:
     given = [slugs(h, "-") for h in ("Fix", "Stage 1: learn", "Fix", "Fix")]
     assert given == ["fix", "stage-1-learn", "fix-1", "fix-2"]
     assert validate.Slugs()("Fix") == "fix"  # a new one starts its count again
+
+
+# Each case below was rendered by GitHub's own Markdown API (mode "markdown", as it
+# renders a repository's files) on 2026-11-01, and these are the ones it showed
+# differently from Python-Markdown, then the ones it showed the same.
+SHOWN_DIFFERENTLY = {
+    "a list straight after a paragraph's line": ("Steps:\n- one\n- two\n", 2),
+    "a list nested by two spaces": ("- one\n  - inner\n- two\n", 2),
+    # Where the two part: the next step, which GitHub keeps in the list.
+    "a step's second paragraph indented three": ("1. Do this.\n\n   More.\n2. Next.\n", 4),
+    "a bare https URL": ("See https://example.com/manual for it.\n", 1),
+    "a bare www address": ("See www.example.com for it.\n", 1),
+    "struck-out text": ("This is ~~old~~ new.\n", 1),
+    "a heading without a space": ("#Heading\n\nText.\n", 1),
+    "a backslash line break": ("First line\\\nsecond line.\n", 1),
+    "a fence inside a list item": ("1. Run:\n\n   ```\n   cmd\n   ```\n2. Done.\n", 1),
+    "a list numbered 1)": ("1) one\n2) two\n", 1),
+}
+SHOWN_ALIKE = {
+    "a list nested by four spaces": "- one\n    - inner\n- two\n",
+    "a step's line continued by three spaces": "1. Look. **Expected:** on,\n   and lit.\n",
+    "task boxes": "- [ ] check the lamp\n- [x] done\n",
+    "file names like domains": "Run site.py and read rooms.csv; visit example.com.\n",
+    "a numbered list from 2 after a paragraph": "Text\n2. two\n",
+    "a fence": "```\ncmd\n```\n",
+    "a table without outer pipes": "a | b\n--- | ---\n1 | 2\n",
+    "an HTML block": "<div>\n*text*\n</div>\n",
+    "a link in angle brackets": "<https://example.com>\n",
+    "a quote's lazy line": "> quoted\nlazy\n",
+    "a list after a blank line": "Steps:\n\n- one\n- two\n",
+    "a list with its items spaced": "- one\n\n- two\n- three\n",
+    "a URL as code": "Not `https://example.com` or `www.example.com`.\n",
+}
+
+
+@pytest.mark.parametrize("case", SHOWN_DIFFERENTLY)
+def test_markdown_github_shows_differently_is_a_problem_at_its_line(
+    tmp_path: Path, case: str
+) -> None:
+    text, line = SHOWN_DIFFERENTLY[case]
+    (tmp_path / "page.md").write_text("# Page\n\n" + text, encoding="utf-8")
+    pages, problems = validate.rendering(tmp_path)
+    assert pages == 1
+    assert len(problems) == 1, problems
+    assert problems[0].startswith(f"{tmp_path / 'page.md'}:{line + 2}: GitHub shows "), problems
+
+
+@pytest.mark.parametrize("case", SHOWN_ALIKE)
+def test_markdown_github_shows_alike_passes(tmp_path: Path, case: str) -> None:
+    (tmp_path / "page.md").write_text("# Page\n\n" + SHOWN_ALIKE[case], encoding="utf-8")
+    assert validate.rendering(tmp_path) == (1, [])
+
+
+def test_the_command_lists_a_rendering_problem(tmp_path: Path, capsys, monkeypatch) -> None:
+    monkeypatch.chdir(ROOT)
+    docs = _docs(tmp_path, RUNBOOK.replace("shows no picture.\n", "shows no picture:\n- none\n"))
+    assert validate.main(["--docs", str(docs)]) == 1
+    out, err = capsys.readouterr()
+    assert f"{docs / 'runbooks' / 'av' / NAME}:12: GitHub shows a bulleted list" in err
+    assert "rendering: 2 of 3 pages read the same on GitHub as on the site" in out
+
+
+def test_a_rendering_problem_says_what_each_shows_and_counts_front_matter(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "page.md").write_text(
+        "---\nid: x\n---\n\n# Page\n\nSteps:\n- one\n", encoding="utf-8"
+    )
+    assert validate.rendering(tmp_path) == (1, [
+        f"{tmp_path / 'page.md'}:8: GitHub shows a bulleted list where the site and the "
+        "export show nothing more"
+    ])  # fmt: skip
+    (tmp_path / "page.md").write_text("# Page\n\nSee www.example.com.\n", encoding="utf-8")
+    assert validate.rendering(tmp_path)[1] == [
+        f"{tmp_path / 'page.md'}:3: GitHub shows a link to http://www.example.com where the "
+        "site and the export show nothing more"
+    ]

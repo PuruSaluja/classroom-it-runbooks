@@ -76,6 +76,7 @@ def test_the_docs_pass_the_validator(runbooks: tuple[runbook.Entry, ...]) -> Non
     followed, broken = validate.links(ROOT / "docs")
     assert broken == []
     assert followed.reached == followed.pages > len(SECTIONS)
+    assert validate.rendering(ROOT / "docs") == (followed.pages, [])
 
 
 def _matrix() -> str:

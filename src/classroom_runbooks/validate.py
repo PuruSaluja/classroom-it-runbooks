@@ -25,6 +25,16 @@ anchor as GitHub does (``## Shift lead`` is ``#shift-lead``; a repeated heading 
 ``-1``, ``-2``). Every page is reached by following links from the home page. A link
 in a code block or a code span is shown, not followed, so it is not checked.
 
+Then **rendering**: every page reads the same on GitHub as on the site and in the
+knowledge-base export. Those two render with Python-Markdown (``MARKDOWN_EXTENSIONS``);
+GitHub renders a repository's files as CommonMark with its own extensions, which
+markdown-it's "gfm-like" mode stands in for (tables, struck-out text, bare URLs made
+into links), with GitHub's rule that a bare ``www.`` address is a link too. Each page
+is rendered both ways and their blocks, links and emphasis compared; the first place
+they part is a problem, with its line. A list straight after a paragraph's line, a
+list nested by two spaces, a step's second paragraph indented three, a bare URL and
+``#Heading`` are each shown one way on GitHub and another on the site.
+
 It prints each problem with its file, then what it checked, and exits 1 if there is
 any problem.
 """
@@ -37,13 +47,33 @@ import re
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote
+
+import markdown
+from markdown_it import MarkdownIt
 
 from classroom_runbooks import inventory, runbook, structure
 
 MATRIX = Path("procedures/escalation-matrix.md")
 """The escalation matrix, within the docs folder."""
+MARKDOWN_EXTENSIONS = ("tables", "fenced_code", "sane_lists", "toc")
+"""Python-Markdown's extensions the site and the export render pages with: mkdocs.yml's,
+with the two MkDocs always adds (fenced_code, toc) whether it lists them or not."""
+# A bare www. address, which GitHub makes a link (and not a bare domain such as site.py).
+_WWW = re.compile(r"(?:^|(?<=[\s*_~(]))www\.[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*")
+# What the rendering check compares, and how a problem names it.
+_SHAPES = {
+    "p": "a paragraph", "ul": "a bulleted list", "ol": "a numbered list",
+    "li": "a list item", "h1": "a heading", "h2": "a heading", "h3": "a heading",
+    "h4": "a heading", "h5": "a heading", "h6": "a heading", "table": "a table",
+    "tr": "a table row", "th": "a table cell", "td": "a table cell", "pre": "a code block",
+    "blockquote": "a quote", "hr": "a rule", "em": "emphasis", "strong": "bold text",
+    "s": "struck-out text", "del": "struck-out text", "code": "code", "img": "an image",
+    "br": "a line break",
+}  # fmt: skip
+_VOID = {"br", "hr", "img", "input"}
 # A numbered step's text, up to the next step or the section's end.
 _STEP = re.compile(r"^[0-9]+\. (.*?)(?=^[0-9]+\. |\Z)", re.MULTILINE | re.DOTALL)
 # "go to step 2 of [Fix](#fix)", which a line may break anywhere in.
@@ -366,6 +396,98 @@ def links(docs: Path) -> tuple[Links, list[str]]:
     return Links(len(texts), total, anchored, len(reached)), problems
 
 
+class _Shape(HTMLParser):
+    """The blocks, links and emphasis a page's HTML holds, in order, each with the line
+    it is on: the ``data-line`` of the block it is in, where the HTML gives one. A list
+    item's paragraph is left out: whether a list's items are spaced is not its shape."""
+
+    def __init__(self, www: bool) -> None:
+        super().__init__()
+        self.found: list[tuple[str, int]] = []
+        self.open: list[str] = []
+        self.line = 1
+        self.www = www
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        if values.get("data-line"):
+            self.line = int(values["data-line"] or 1)
+        inside = self.open[-1] if self.open else None
+        if tag not in _VOID:
+            self.open.append(tag)
+        if tag == "p" and inside == "li":
+            return
+        if tag in _SHAPES:
+            self.found.append((_SHAPES[tag], self.line))
+        elif tag == "a":
+            self.found.append((f"a link to {unquote(values.get('href') or '')}", self.line))
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self.open:
+            while self.open.pop() != tag:
+                pass
+
+    def handle_data(self, data: str) -> None:
+        if self.www and not {"a", "code", "pre"} & set(self.open):
+            for address in _WWW.finditer(data):
+                self.found.append((f"a link to http://{address.group()}", self.line))
+
+
+def _shape(html: str, www: bool = False) -> list[tuple[str, int]]:
+    shape = _Shape(www)
+    shape.feed(html)
+    shape.close()
+    return shape.found
+
+
+def _github() -> MarkdownIt:
+    """markdown-it as GitHub renders a repository's files, each block marked with the
+    line it starts on."""
+    md = MarkdownIt("gfm-like")
+    md.linkify.set({"fuzzy_link": False})  # https://… and www.… only, as on GitHub
+
+    def lines(state) -> None:
+        for token in state.tokens:
+            if token.map and token.nesting != -1:
+                token.attrSet("data-line", str(token.map[0] + 1))
+
+    md.core.ruler.push("data_line", lines)
+    return md
+
+
+def rendering(docs: Path) -> tuple[int, list[str]]:
+    """How many pages under ``docs`` were rendered both ways, and each that GitHub
+    shows differently from the site and the export: what each shows at the first place
+    they part, at the line of the block GitHub shows there (a cause just above it, such
+    as a paragraph indented too little to stay in its list item, comes before it)."""
+    github = _github()
+    pages, problems = 0, []
+    for page in sorted(Path(docs).rglob("*.md")):
+        try:
+            text = page.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue  # the link check names it
+        lines = structure.split_lines(text)
+        skip = 0
+        if lines and lines[0] == "---" and "---" in lines[1:]:
+            skip = lines.index("---", 1) + 1
+        body = "\n".join(lines[skip:]) + "\n"
+        html = markdown.markdown(body, extensions=list(MARKDOWN_EXTENSIONS))
+        site = [what for what, _ in _shape(html)]
+        on_github = _shape(github.render(body), www=True)
+        pages += 1
+        if site == [what for what, _ in on_github]:
+            continue
+        at = next((i for i, (a, (b, _)) in enumerate(zip(site, on_github, strict=False))
+                   if a != b), min(len(site), len(on_github)))  # fmt: skip
+        line = on_github[min(at, len(on_github) - 1)][1] if on_github else 1
+        theirs = on_github[at][0] if at < len(on_github) else "nothing more"
+        ours = site[at] if at < len(site) else "nothing more"
+        problems.append(f"{page}:{line + skip}: GitHub shows {theirs} where the site and the "
+                        f"export show {ours}")  # fmt: skip
+    return pages, problems
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m classroom_runbooks.validate",
@@ -403,6 +525,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     problems += gaps
     followed, broken = links(args.docs)
     problems += broken
+    rendered, unlike = rendering(args.docs)
+    problems += unlike
     for problem in problems:
         print(f"problem: {problem}", file=sys.stderr)
     print(f"sections: {len(entries)} runbooks checked against the template and the matrix")
@@ -416,6 +540,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"{followed.pages} pages followed; {followed.reached} of {followed.pages} pages "
         "reached from the home page"
     )
+    print(f"rendering: {rendered - len(unlike)} of {rendered} pages read the same on GitHub as "
+          "on the site and in the export")  # fmt: skip
     print(f"{len(problems)} problems")
     return 1 if problems else 0
 
