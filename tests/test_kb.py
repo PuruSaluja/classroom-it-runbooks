@@ -100,6 +100,12 @@ def test_a_link_to_a_page_not_exported_keeps_its_text(exported: kb.Export) -> No
     assert "<span>Shift handoff</span>" in matrix.html
 
 
+def test_a_code_block_in_fences_is_a_code_block(docs: Path) -> None:
+    edit(docs / NO_SIGNAL, "## Symptoms", "Type:\n\n```text\nipconfig /all\n```\n\n## Symptoms")
+    found = article(kb.export(docs, SECTIONS, ROOMS, BASE), NO_SIGNAL)
+    assert '<pre><code class="language-text">ipconfig /all\n</code></pre>' in found.html
+
+
 def test_a_page_linked_by_reference_is_exported_too(docs: Path) -> None:
     edit(docs / NO_SIGNAL, "## Symptoms", "Hand the room over as the [handoff][h] says.\n\n"
          "[h]: ../../procedures/shift-handoff.md\n\n## Symptoms")  # fmt: skip

@@ -144,9 +144,12 @@ def test_only_pages_written_by_hand_have_an_edit_button(built: Path) -> None:
 
 
 def test_the_site_renders_the_markdown_the_export_does() -> None:
+    # The extensions MkDocs loads, the ones it always adds (toc, fenced_code) among them.
+    loaded = load_config(config_file=str(ROOT / "mkdocs.yml")).markdown_extensions
+    assert sorted(loaded) == sorted(kb.MARKDOWN_EXTENSIONS)
     config = yaml.safe_load((ROOT / "mkdocs.yml").read_text(encoding="utf-8"))
     names = [next(iter(e)) if isinstance(e, dict) else e for e in config["markdown_extensions"]]
-    assert tuple(names) == kb.MARKDOWN_EXTENSIONS
+    assert tuple(names) == kb.MARKDOWN_EXTENSIONS  # all of them written out
 
 
 def test_headings_get_github_s_anchors_and_a_repeat_is_numbered(tmp_path: Path) -> None:

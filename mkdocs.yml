@@ -55,6 +55,7 @@ plugins:
 # syntax one of the three does not render.
 markdown_extensions:
   - tables
+  - fenced_code
   - sane_lists
   - toc:
       permalink: true

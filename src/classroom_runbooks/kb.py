@@ -54,8 +54,9 @@ STATES = {"draft": "draft", "current": "published", "retired": "retired"}
 UNFILED_STATE = "draft"
 """The ``workflow_state`` of a page that is not a runbook, which has no status."""
 ARTICLE_LINK = "/kb_view.do?sys_kb_id={}"
-MARKDOWN_EXTENSIONS = ("tables", "sane_lists", "toc")
-"""Python-Markdown's extensions the articles are rendered with, the site's too."""
+MARKDOWN_EXTENSIONS = ("tables", "fenced_code", "sane_lists", "toc")
+"""Python-Markdown's extensions the articles are rendered with: the site's, with the
+two MkDocs always adds (fenced_code, toc) whether mkdocs.yml lists them or not."""
 NAMESPACE = uuid.UUID("6f1d3c2e-4b5a-4e8f-9a7b-2c1d0e9f8a6b")
 """Fixed, so a page's ``sys_id`` is the same in every export."""
 _SYS_ID = re.compile(r"[0-9a-f]{32}")
