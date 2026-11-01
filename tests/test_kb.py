@@ -100,6 +100,16 @@ def test_a_link_to_a_page_not_exported_keeps_its_text(exported: kb.Export) -> No
     assert "<span>Shift handoff</span>" in matrix.html
 
 
+def test_a_page_linked_by_reference_is_exported_too(docs: Path) -> None:
+    edit(docs / NO_SIGNAL, "## Symptoms", "Hand the room over as the [handoff][h] says.\n\n"
+         "[h]: ../../procedures/shift-handoff.md\n\n## Symptoms")  # fmt: skip
+    exported = kb.export(docs, SECTIONS, ROOMS, BASE)
+    handoff = article(exported, Path("procedures/shift-handoff.md"))
+    assert handoff.title == "Shift handoff"
+    found = article(exported, NO_SIGNAL)
+    assert f'<a href="/kb_view.do?sys_kb_id={handoff.sys_id}">handoff</a>' in found.html
+
+
 def test_an_anchor_on_another_page_is_kept_and_must_name_an_id(docs: Path) -> None:
     page = docs / NO_SIGNAL
     edit(page, "(rb-av-002-projector-will-not-turn-on.md)",

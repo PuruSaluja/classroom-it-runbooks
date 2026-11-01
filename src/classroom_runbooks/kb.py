@@ -263,7 +263,12 @@ def export(
     texts: dict[Path, str] = {}
     for entry in entries:
         texts[entry.path] = (docs / entry.path).read_text(encoding="utf-8")
-        for target in sorted(structure.links(texts[entry.path])):
+        # The links Markdown makes, reference-style ones too; with no page known, each
+        # one to a page is listed as one the article could not point anywhere.
+        found: list[tuple[Path, str]] = []
+        html(_split(texts[entry.path])[1], entry.path, {}, {}, found)
+        targets = {target.partition("#")[0] for _, target in found}
+        for target in sorted(targets):
             linked = Path(os.path.normpath(entry.path.parent / unquote(target)))
             if linked.suffix == ".md" and linked not in pages:
                 pages[linked] = None
