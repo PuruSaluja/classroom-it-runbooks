@@ -210,14 +210,16 @@ link), and fails if there is any:
   both ways, GitHub's by markdown-it (CommonMark, on which GitHub's
   Markdown is built, with its tables, struck-out text and bare links), and
   the first place they part is named with its line. The cases its tests
-  use were checked against GitHub's own renderer.
+  use were checked against GitHub's own renderer, and
+  [the authoring conventions](docs/contributing/authoring-conventions.md#markdown-that-reads-the-same-everywhere)
+  say how to write what differs.
 
 On this repository it prints:
 
 ```text
 sections: 29 runbooks checked against the template and the matrix
 coverage: 220 of 220 rooms have a runbook for every piece of equipment; 3,612 of 3,612 pieces and 32 of 32 kinds of equipment are covered
-links: 6,397 links (389 to an anchor) on 58 pages followed; 58 of 58 pages reached from the home page
+links: 6,398 links (390 to an anchor) on 58 pages followed; 58 of 58 pages reached from the home page
 rendering: 58 of 58 pages read the same on GitHub as on the site and in the export
 0 problems
 ```

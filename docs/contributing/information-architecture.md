@@ -79,7 +79,7 @@ the folder's category that the file's name starts with, the title as the
 heading, equipment the inventory has, a status, a date (unquoted, and no
 more than a day after today), and no identifier used twice.
 
-`python -m classroom_runbooks.validate` then checks three things, naming
+`python -m classroom_runbooks.validate` then checks four things, naming
 each problem with its file (and line, for a link):
 
 - **Sections:** each runbook has the template's six sections, in order and
@@ -93,11 +93,16 @@ each problem with its file (and line, for a link):
   own category that is not retired; it counts the rooms, pieces and kinds
   covered and names each gap with the rooms it reaches.
 - **Links:** every relative link on every page, inline or by a reference
-  definition (its `%20`s decoded), reaches a file inside `docs/`, written in the file's own case; every
-  `#anchor` names a heading on its page (GitHub's anchor: `## Shift lead`
-  is `#shift-lead`, and an underlined heading counts) or an HTML element's
-  id; and every page, not only the section indexes, is reached by
-  following links from the home page.
+  definition (its `%20`s decoded), reaches a file inside `docs/`, written
+  in the file's own case; every `#anchor` names a heading on its page
+  (GitHub's anchor: `## Shift lead` is `#shift-lead`, and an underlined
+  heading counts) or an HTML element's id; and every page, not only the
+  section indexes, is reached by following links from the home page.
+- **Rendering:** every page reads the same on GitHub as on the site and
+  in the knowledge-base export: each page is rendered both ways and the
+  first place they part is named with its line. The
+  [authoring conventions](authoring-conventions.md#markdown-that-reads-the-same-everywhere)
+  say how to write what differs.
 
 The tests also hold the onboarding path's first runbooks to every kind of
 equipment that at least four rooms in five have, in every category; the

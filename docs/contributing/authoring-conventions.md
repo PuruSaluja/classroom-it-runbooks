@@ -92,7 +92,29 @@ these are the rules for what goes in them.
   and the room's heading: `../../rooms/ald.md#ald-104` from a runbook.
 - Put images in an `assets` folder beside the page, and give each one alt
   text that says what it shows ("The switcher's input buttons, HDMI 1
-  lit"), not "image".
+  lit"), not "image". The knowledge-base export does not carry images
+  yet, so a runbook, or a page a runbook links to, cannot show one: the
+  export refuses it.
+
+## Markdown that reads the same everywhere
+
+A page is read on GitHub, on the site and in the knowledge base, and the
+site and the knowledge base render Markdown a little differently from
+GitHub. Write it so all three show the same, and the validator's
+rendering check passes:
+
+- Leave a blank line before a list. A list straight after a paragraph's
+  line is a list on GitHub and part of the paragraph on the site.
+- Nest a list, or a further paragraph of a step, by four spaces, and
+  leave a blank line before the next step after such a paragraph.
+- Put code inside a step as a block indented eight spaces, not in ```
+  fences, which the site cannot show inside a list; fences are fine
+  outside lists.
+- Write a web address as a link, `[the manual](https://example.com/m)`
+  or `<https://example.com/m>`, never bare.
+- Number a list `1.`, not `1)`; put a space after a heading's `#`s; start
+  a new paragraph rather than ending a line with `\`; say that something
+  no longer applies rather than striking it out with `~~`.
 
 ## Review
 
