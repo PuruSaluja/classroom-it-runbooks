@@ -61,6 +61,7 @@ _ID_ATTR = re.compile(r'\sid="([^"]+)"')
 _HREF = re.compile(r'\shref="([^"]+)"')
 _SRC = re.compile(r'<img\s[^>]*?src="([^"]+)"')
 _CODE = re.compile(r"<pre>.*?</pre>|<code>.*?</code>", re.DOTALL)
+_TITLE = re.compile(r"<h1 [^>]*>.*?</h1>\n?", re.DOTALL)
 # A character XML 1.0 cannot hold: a control character other than tab and the line
 # breaks, a lone surrogate, U+FFFE or U+FFFF. Written as it is, the file does not parse.
 _NOT_XML = re.compile(
@@ -119,7 +120,11 @@ def _value(label: str) -> str:
 
 
 def _split(text: str) -> tuple[str | None, str]:
-    """A page's ``#`` heading, and the rest of it after any front matter."""
+    """A page's ``#`` heading, and the page from it on, after any front matter.
+
+    The heading stays in the page, so the headings after it are numbered as GitHub
+    numbers them (one with the title's text is ``-1``); it is taken out of the HTML.
+    """
     lines = structure.split_lines(text)
     if lines and lines[0] == "---" and "---" in lines[1:]:
         lines = lines[lines.index("---", 1) + 1 :]
@@ -127,53 +132,58 @@ def _split(text: str) -> tuple[str | None, str]:
         lines = lines[1:]
     title = None
     if lines and lines[0].startswith("# "):
-        title, lines = lines[0][2:].strip(), lines[1:]
+        title = re.sub(r"[ \t]+#+[ \t]*$", "", lines[0][2:]).strip()
     return title, "\n".join(lines) + "\n"
 
 
 class _Links(Treeprocessor):
-    """Points each link to another page at its article, or keeps only its text."""
+    """Points each link to another page at its article, or keeps only its text. A link
+    to a page's title points at its article, which shows the title above the text."""
 
     def __init__(self, md: markdown.Markdown, page: Path, ids: dict[Path, str],
-                 unlinked: list[tuple[Path, str]]) -> None:  # fmt: skip
+                 titles: dict[Path, str], unlinked: list[tuple[Path, str]]) -> None:  # fmt: skip
         super().__init__(md)
-        self.page, self.ids, self.unlinked = page, ids, unlinked
+        self.page, self.ids, self.titles, self.unlinked = page, ids, titles, unlinked
 
     def run(self, root: ET.Element) -> None:
         for link in root.iter("a"):
             href = link.get("href", "")
-            if not href or href.startswith("#") or structure.external(href):
+            if not href or structure.external(href):
                 continue
             path, _, name = href.partition("#")
-            target = Path(os.path.normpath(self.page.parent / unquote(path)))
-            if target in self.ids:
-                anchor = f"#{name}" if name else ""
+            target = Path(os.path.normpath(self.page.parent / unquote(path))) if path else self.page
+            if target in self.ids and (path or name == self.titles.get(target)):
+                anchor = f"#{name}" if name and name != self.titles.get(target) else ""
                 link.set("href", ARTICLE_LINK.format(self.ids[target]) + anchor)
-            else:
+            elif path:
                 self.unlinked.append((self.page, href))
                 link.tag = "span"
                 del link.attrib["href"]
 
 
 class _LinksExtension(Extension):
-    def __init__(self, page: Path, ids: dict[Path, str], unlinked: list) -> None:
+    def __init__(self, page: Path, ids: dict[Path, str], titles: dict[Path, str],
+                 unlinked: list) -> None:  # fmt: skip
         super().__init__()
-        self.page, self.ids, self.unlinked = page, ids, unlinked
+        self.args = page, ids, titles, unlinked
 
     def extendMarkdown(self, md: markdown.Markdown) -> None:  # noqa: N802 (the API's name)
         # After the inline links are made (priority 20) and before they are serialised.
-        md.treeprocessors.register(_Links(md, self.page, self.ids, self.unlinked), "kb-links", 5)
+        md.treeprocessors.register(_Links(md, *self.args), "kb-links", 5)
 
 
-def html(body: str, page: Path, ids: dict[Path, str], unlinked: list) -> str:
+def html(body: str, page: Path, ids: dict[Path, str], titles: dict[Path, str],
+         unlinked: list) -> str:  # fmt: skip
     """A page's Markdown as an article's HTML, headings given the anchors GitHub gives
     them (a repeated one numbered from ``-1``), so the page's ``#anchor`` links still
-    reach them."""
-    return markdown.markdown(
+    reach them, and its ``#`` title taken out. ``titles`` is each page's title anchor."""
+    rendered = markdown.markdown(
         body,
-        extensions=["tables", "sane_lists", "toc", _LinksExtension(page, ids, unlinked)],
+        extensions=["tables", "sane_lists", "toc", _LinksExtension(page, ids, titles, unlinked)],
         extension_configs={"toc": {"slugify": validate.Slugs()}},
     )
+    title = _TITLE.match(rendered)
+    return rendered[title.end() :] if title else rendered
 
 
 def _xml_problems(where: Path | str, text: str) -> list[str]:
@@ -290,10 +300,12 @@ def export(
     # A runbook by its identifier, which a new title and file name leave as it is.
     keys = {path: entry.id if entry else path.as_posix() for path, entry in pages.items()}
     ids = {path: sys_id(knowledge_base, f"kb_knowledge/{keys[path]}") for path in pages}
+    split = {path: _split(texts[path]) for path in pages}
+    titles = {path: validate.anchor(title) for path, (title, _) in split.items() if title}
     unlinked: list[tuple[Path, str]] = []
     articles = []
     for path, entry in pages.items():
-        title, body = _split(texts[path])
+        title, body = split[path]
         if entry is not None:
             body += f"\n*Generated from {entry.id}; change the runbook, not this article.*\n"
             state = STATES[entry.status]
@@ -306,7 +318,7 @@ def export(
             continue
         articles.append(Article(ids[path], path, entry.id if entry else None, title,
                                 by_section[section(path).title], state, keywords,
-                                html(body, path, ids, unlinked)))  # fmt: skip
+                                html(body, path, ids, titles, unlinked)))  # fmt: skip
     problems += _link_problems(articles)
     if problems:
         raise ExportError(problems)

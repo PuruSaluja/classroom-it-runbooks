@@ -129,6 +129,32 @@ def test_a_repeated_heading_is_numbered_as_github_numbers_it(docs: Path) -> None
     assert '<h2 id="fix">' in found.html and '<h2 id="fix-1">' in found.html
 
 
+def test_a_link_to_a_title_reaches_its_article_and_headings_count_the_title(
+    docs: Path,
+) -> None:
+    edit(docs / NO_SIGNAL, "## Symptoms", "[Top](#projector-shows-no-signal), [another]"
+         "(rb-av-002-projector-will-not-turn-on.md#projector-will-not-turn-on), "
+         "[again](#projector-shows-no-signal-1).\n\n## Projector shows no signal\n\n"
+         "## Symptoms")  # fmt: skip
+    exported = kb.export(docs, SECTIONS, ROOMS, BASE)
+    found = article(exported, NO_SIGNAL)
+    other = article(exported, Path("runbooks/av/rb-av-002-projector-will-not-turn-on.md"))
+    assert f'<a href="/kb_view.do?sys_kb_id={found.sys_id}">Top</a>' in found.html
+    assert f'<a href="/kb_view.do?sys_kb_id={other.sys_id}">another</a>' in found.html
+    # GitHub numbers a heading with the title's text -1, as the title comes first.
+    assert '<h2 id="projector-shows-no-signal-1">' in found.html
+    assert 'href="#projector-shows-no-signal-1"' in found.html
+    assert "<h1" not in found.html
+
+
+def test_a_title_s_closing_hashes_are_not_part_of_it(docs: Path) -> None:
+    edit(
+        docs / "procedures/escalation-matrix.md", "# Escalation matrix\n", "# Escalation matrix #\n"
+    )
+    found = article(kb.export(docs, SECTIONS, ROOMS, BASE), Path("procedures/escalation-matrix.md"))
+    assert found.title == "Escalation matrix"
+
+
 def test_status_sets_the_workflow_state(docs: Path) -> None:
     edit(docs / NO_SIGNAL, "status: draft", "status: current")
     other = docs / "runbooks/av/rb-av-002-projector-will-not-turn-on.md"
