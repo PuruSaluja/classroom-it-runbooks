@@ -139,7 +139,9 @@ def test_only_pages_written_by_hand_have_an_edit_button(built: Path) -> None:
         relative = page.relative_to(docs).with_suffix("")
         html = built / (relative.parent if relative.name == "index" else relative) / "index.html"
         generated = inventory.GENERATED in page.read_text(encoding="utf-8")
-        assert ('rel="edit"' in html.read_text(encoding="utf-8")) != generated, page
+        # The page's edit link (not rel="edit", which Material 9.5.0 does not write).
+        edit = f'href="https://github.com/PuruSaluja/classroom-it-runbooks/edit/main/docs/{page.relative_to(docs).as_posix()}"'
+        assert (edit in html.read_text(encoding="utf-8")) != generated, page
     assert inventory.GENERATED in (docs / "rooms" / "ald.md").read_text(encoding="utf-8")
 
 
