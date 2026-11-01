@@ -130,6 +130,16 @@ def test_the_first_runbooks_cover_what_four_rooms_in_five_have(
     assert {e.id.split("-")[1] for e in chosen} == {s.prefix for s in SECTIONS if s.prefix}
 
 
+def test_the_site_says_the_runbooks_are_drafts_while_they_are(
+    runbooks: tuple[runbook.Entry, ...],
+) -> None:
+    # A reader of the site does not see the README, or a page's front matter.
+    drafts = [entry.id for entry in runbooks if entry.status == "draft"]
+    for page in ("index.md", "runbooks/index.md"):
+        text = (ROOT / "docs" / page).read_text(encoding="utf-8")
+        assert ("The runbooks are drafts" in text) == bool(drafts), page
+
+
 def test_the_readme_quotes_what_the_validator_prints(capsys, monkeypatch) -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     quoted = readme.split("\n## The validator\n", 1)[1].split("```text\n", 1)[1]

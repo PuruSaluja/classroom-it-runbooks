@@ -31,3 +31,8 @@ every class.
 
 The room inventory is illustrative: buildings, rooms and equipment are
 made up to resemble a large campus, not taken from any institution.
+
+The runbooks are drafts: they are written from how such equipment generally
+works, not from any one model's manual or any institution's procedures, and
+none has yet been followed on real equipment by a second author. Check a
+step against your own equipment before relying on it.

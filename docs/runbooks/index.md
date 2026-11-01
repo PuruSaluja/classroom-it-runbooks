@@ -5,6 +5,10 @@ to escalate. Each runbook has an identifier made of its category's prefix
 and a number, such as `RB-AV-001`, which tickets and the knowledge base
 quote.
 
+The runbooks are drafts: none has yet been followed on real equipment by a
+second author, so check a step against your own equipment before relying on
+it.
+
 | Category | Prefix | Covers |
 | --- | --- | --- |
 | [Audio-visual](av/index.md) | AV | Projectors, displays, audio, cabling and room control systems |
