@@ -125,7 +125,9 @@ from `structure.toml`: each section in order, its index first and its
 pages in the order the index links them. It fails on a link or `#anchor`
 that reaches nothing on the site, or a page missing from the navigation.
 Headings get the same anchors as on GitHub, so the validator and the site
-agree on every link.
+agree on every link. On `main`, `.github/workflows/pages.yml` runs the
+layout, inventory and validator checks and this build, and deploys the
+result to GitHub Pages when Pages is turned on for the repository.
 
 To add a section, add it to `structure.toml`, create its folder with an
 `index.md` whose first line is `# <title>`, and link it from the page above.

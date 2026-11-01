@@ -8,8 +8,9 @@ check them and export them to ServiceNow's knowledge base.
 > **Status:** in progress. The site's sections, the check that keeps `docs/`
 > to them, the room inventory with its pages, the runbook template and
 > conventions, the runbooks in all four categories, the procedures, the
-> onboarding path, the validator, the knowledge-base export and the site
-> build are in place; publishing the site comes next in [Parts](#parts).
+> onboarding path, the validator, the knowledge-base export, the site build
+> and its publishing workflow are in place. The site is not live yet: see
+> [the site](#the-site).
 
 ## What this repository is, and is not
 
@@ -293,6 +294,17 @@ passes). CI builds it after the validator, and the tests build it to
 check that every page's heading ids are the anchors the validator
 expects.
 
+[`pages.yml`](.github/workflows/pages.yml) publishes it from `main`: on each
+push it runs the layout, inventory and validator checks and the strict
+build, with the versions in `constraints.txt`, and deploys the result to
+`https://purusaluja.github.io/classroom-it-runbooks/`, the address
+`mkdocs.yml` builds it for. **The site is not live yet.** The deploy job runs
+only on a repository with GitHub Pages turned on (Settings > Pages > Source:
+GitHub Actions), which this one does not have yet, so each run stops at the
+checked build and the deploy job has not run. The build's output has been
+served locally under that path: all 58 pages, every link and anchor between
+them, search and the 404 page work.
+
 Material for MkDocs says, when it builds, that it reaches end of life on
 2027-05-05 (critical fixes until then) and names Zensical as its
 successor; the site will need to move before that date.
@@ -310,7 +322,7 @@ successor; the site will need to move before that date.
 | Validator: required sections, room-to-runbook coverage, dead cross-links | done |
 | ServiceNow knowledge-base export and taxonomy mapping | done (30 articles in 6 categories) |
 | MkDocs Material site, with the validator in CI | done (`mkdocs build --strict` in CI) |
-| Published site | to come |
+| Published site | workflow in place, each run stops at the checked build; live once Pages is turned on |
 
 ## Development
 
