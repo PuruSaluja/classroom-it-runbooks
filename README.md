@@ -5,8 +5,9 @@ campus's classrooms (projectors, displays, audio, control systems, network,
 peripherals and account access), written in Markdown, with Python tools that
 check them and export them to ServiceNow's knowledge base.
 
-A site built from them with MkDocs Material is ready to publish but not live
-yet: [the site](#the-site) says what is left.
+A site built from them with MkDocs Material is published at
+<https://purusaluja.github.io/classroom-it-runbooks/>; [the site](#the-site)
+says how it is built.
 
 ## What this repository proves, and what it cannot
 
@@ -317,13 +318,12 @@ expects.
 [`pages.yml`](.github/workflows/pages.yml) publishes it from `main`: on each
 push it runs the layout, inventory and validator checks and the strict
 build, with the versions in `constraints.txt`, and deploys the result to
-`https://purusaluja.github.io/classroom-it-runbooks/`, the address
-`mkdocs.yml` builds it for. **The site is not live yet.** The deploy job runs
-only on a repository with GitHub Pages turned on (Settings > Pages > Source:
-GitHub Actions), which this one does not have yet, so each run stops at the
-checked build and the deploy job has not run. The build's output has been
-served locally under that path: all 58 pages, every link and anchor between
-them, search and the 404 page work.
+<https://purusaluja.github.io/classroom-it-runbooks/>, the address
+`mkdocs.yml` builds it for. The deploy job runs only on a repository with
+GitHub Pages turned on (Settings > Pages > Source: GitHub Actions), so a fork
+without it stops at the checked build. Read back from the published address,
+all 58 pages, every link and anchor between them, search and the 404 page
+work.
 
 Material for MkDocs says, when it builds, that it reaches end of life on
 2027-05-05 (critical fixes until then) and names Zensical as its
