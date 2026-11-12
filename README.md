@@ -340,6 +340,10 @@ ruff check . && ruff format --check .
 
 Python 3.11 or newer. CI runs these on Python 3.11 and 3.14, then the commands
 above that check `docs/` and the inventory, the export and the strict build.
+It installs the newest tools `pyproject.toml` allows, and once the versions
+in `constraints.txt`. Dependabot (`.github/dependabot.yml`) opens a pull
+request once a week when an action the workflows use has a newer version,
+and none for the Python tools, which those runs cover on every push.
 
 ## License
 
